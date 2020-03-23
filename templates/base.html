@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }} - Flask server</title>
+      {% else %}
+      <title>Flask Server</title>
+      {% endif %}
+      <link rel="stylesheet" href="./static/mystyle.css">
+    </head>
+    <body>
+        <div>Menu: <a href="./">Home</a> : </div>
+        <hr>
+        {% block content %}{% endblock %}
+    </body>
+</html>

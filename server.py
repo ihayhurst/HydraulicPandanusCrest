@@ -2,7 +2,8 @@ import os, sys
 from flask import Flask, request, render_template
 import flask
 from datetime import datetime as dt
-import xml.etree.cElementTree as et
+from bs4 import BeautifulSoup
+import pandas as pd
 
 #Imports for plot test
 import io
@@ -12,7 +13,8 @@ from flask import Response
 #from matplotlib.figure import Figure
 
 #Application imports
-from HPCapps.queue import getGrid
+from HPCapps.queue import *
+import HPCapps.xmltree as xp
 
 app = Flask(__name__)
 flaskVer = flask.__version__
@@ -22,8 +24,8 @@ def index():
     return render_template('index.html', flaskVer=flaskVer)
 
 @app.route('/showpatching')
-def geneious():
-    gen_result =  showpatching.getPatching()
+def showpatching():
+    result =  showpatching.getPatching()
     return
 	
 @app.route('/queue')
@@ -31,7 +33,23 @@ def queue():
     gridjobs = getGrid()
     #print(gridjobs)
     return render_template('queue.html', gridjobs=gridjobs)
-    	
+
+@app.route('/queue-xml')
+def queuexml():
+    gridjobs = getGridXML()
+    soup = BeautifulSoup(gridjobs, 'xml')
+    #gridjobs = soup.find_all('queue_info')
+    #df = pd.read_html(str(gridjobs))
+    #gridjobs =xp.XML2DataFrame(soup)
+    #return render_template('queue.html', gridjobs=df.to_html())
+    return render_template('queue.html', gridjobs=gridjobs)
+
+@app.route('/file')    	
+def file_out():
+    flaskVer = os.listdir()
+    with open('tmp/foobar', 'w+') as f:
+        f.write(f'hello world:{flaskVer}')
+    return render_template('index.html', flaskVer=flaskVer)
 
 #@app.route('/plot.png')
 #def plot_png():

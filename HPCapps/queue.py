@@ -14,3 +14,14 @@ def getGrid():
                                     universal_newlines = True)
 
     return (get_queueinfo.communicate()[0])
+
+def getGridXML():
+    get_queueinfo = subprocess.Popen([f'{CMD_PATH}/get-queueinfoxml.sh'],
+                                    shell = True,
+                                    stdout = subprocess.PIPE,
+                                    stderr = subprocess.STDOUT,
+                                    close_fds = True,
+                                    encoding = 'UTF-8',
+                                    universal_newlines = True)
+
+    return (get_queueinfo.communicate()[0])

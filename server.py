@@ -4,17 +4,18 @@ import flask
 from datetime import datetime as dt
 from bs4 import BeautifulSoup
 import pandas as pd
+#import base64
 
 #Imports for plot test
-import io
-import random
-from flask import Response
+#import io
+#import random
+#from flask import Response
 #from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 #from matplotlib.figure import Figure
 
 #Application imports
 from HPCapps.queue import *
-import HPCapps.xmltree as xp
+#import HPCapps.xmltree as xp
 
 app = Flask(__name__)
 flaskVer = flask.__version__
@@ -25,14 +26,17 @@ def index():
 
 @app.route('/showpatching')
 def showpatching():
-    result =  showpatching.getPatching()
-    return
+    result = getPatching()
+    return render_template('patching.html', result=result)
 	
 @app.route('/queue')
 def queue():
     gridjobs = getGrid()
+    jobhistory = getGridHistory()
+    #gridjobs = gridjobs.decode('utf-8')
+    #gridjobs = gridjobs.replace('\n', '<br>')
     #print(gridjobs)
-    return render_template('queue.html', gridjobs=gridjobs)
+    return render_template('queue.html', gridjobs=gridjobs, jobhistory=jobhistory)
 
 @app.route('/queue-xml')
 def queuexml():
@@ -42,7 +46,7 @@ def queuexml():
     #df = pd.read_html(str(gridjobs))
     #gridjobs =xp.XML2DataFrame(soup)
     #return render_template('queue.html', gridjobs=df.to_html())
-    return render_template('queue.html', gridjobs=gridjobs)
+    return render_template('queue.html', gridjobs=gridjobs, jobhistory=None)
 
 @app.route('/file')    	
 def file_out():

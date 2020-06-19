@@ -70,3 +70,7 @@ input[type=submit]:active {
   box-shadow: 0 1px #666;
   transform: translateY(2px);
 }
+span.command-text {
+    white-space: pre-wrap;
+    font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New;
+}

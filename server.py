@@ -15,7 +15,7 @@ import pandas as pd
 
 #Application imports
 from HPCapps.queue import *
-#import HPCapps.xmltree as xp
+from HPCapps.patching_load import *
 
 app = Flask(__name__)
 flaskVer = flask.__version__
@@ -24,11 +24,6 @@ flaskVer = flask.__version__
 def index():
     return render_template('index.html', flaskVer=flaskVer)
 
-@app.route('/showpatching')
-def showpatching():
-    result = getPatching()
-    return render_template('patching.html', result=result)
-	
 @app.route('/queue')
 def queue():
     gridjobs = getGrid()
@@ -47,6 +42,11 @@ def queuexml():
     #gridjobs =xp.XML2DataFrame(soup)
     #return render_template('queue.html', gridjobs=df.to_html())
     return render_template('queue.html', gridjobs=gridjobs, jobhistory=None)
+
+@app.route('/showpatching')
+def patching():
+    df = getPatching()
+    return render_template('patching.html', data=df.to_html(index=False, border=0, justify='left'))
 
 @app.route('/file')    	
 def file_out():

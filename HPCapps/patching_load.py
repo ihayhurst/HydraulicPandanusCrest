@@ -35,10 +35,13 @@ def getPatching():
     df.rename(columns={'id': 'Hostname'}, inplace=True)
     # Calculate how long since last update, show smallest unit as Days
     df['last-update'] = df.apply(lambda row: dt.now() - row['last-update'], axis=1) 
-    df['last-update'] = df['last-update'].dt.floor('D')
+    df['last-update'] = df['last-update'].dt.days
     # Calculate how long since last boot
     df['boot-time'] = df.apply(lambda row: dt.now() - row['boot-time'], axis=1)
-    df['boot-time'] = df['boot-time'].dt.floor('D')
+    df['boot-time'] = df['boot-time'].dt.days
+    #df['release'] = df['release'].str.replace(r'^.*(release|Linux)?.', '\1')
+    df.replace(to_replace=r'(Linux|release)?', value='CentOS', regex=True, inplace=True)
+    df.replace(to_replace=r'(@syngenta.com)?', value='', regex=True, inplace=True)
     # Jiggle colum order for output
     #  ['Hostname', 'description', 'owner', 'boot-time', 'release', 'last-update', 'update-candidate-summary']
     df = df[['Hostname', 'release', 'boot-time', 'last-update', 'owner', 'description']]
@@ -57,7 +60,7 @@ def aboutData(df):
 
 def main(args=None):
     df = getPatching()
-    # aboutData(df)
+    aboutData(df)
 
 if __name__ == '__main__':
     try:

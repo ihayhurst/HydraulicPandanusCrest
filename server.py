@@ -1,17 +1,9 @@
 import os, sys
 from flask import Flask, request, render_template
 import flask
-from datetime import datetime as dt
+import datetime 
 from bs4 import BeautifulSoup
 import pandas as pd
-#import base64
-
-#Imports for plot test
-#import io
-#import random
-#from flask import Response
-#from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-#from matplotlib.figure import Figure
 
 #Application imports
 from HPCapps.queue import *
@@ -28,25 +20,45 @@ def index():
 def queue():
     gridjobs = getGrid()
     jobhistory = getGridHistory()
-    #gridjobs = gridjobs.decode('utf-8')
-    #gridjobs = gridjobs.replace('\n', '<br>')
-    #print(gridjobs)
     return render_template('queue.html', gridjobs=gridjobs, jobhistory=jobhistory)
 
 @app.route('/queue-xml')
 def queuexml():
     gridjobs = getGridXML()
     soup = BeautifulSoup(gridjobs, 'xml')
-    #gridjobs = soup.find_all('queue_info')
-    #df = pd.read_html(str(gridjobs))
-    #gridjobs =xp.XML2DataFrame(soup)
-    #return render_template('queue.html', gridjobs=df.to_html())
     return render_template('queue.html', gridjobs=gridjobs, jobhistory=None)
 
 @app.route('/showpatching')
 def patching():
     df = getPatching()
-    return render_template('patching.html', data=df.to_html(index=False, border=0, justify='left'))
+    pd.set_option('colheader_justify', 'left')
+    #df.style.format({"B": lambda x: "±{:.2f}".format(abs(x))})
+    patchingStyle = (df.style.applymap(red_over_time, subset=['last-update', 'boot-time'])
+                    .hide_index()
+                    .render())
+    #with open('tmp/patching-style', 'w+') as f:
+        #f.write(patchingStyle)
+    #return render_template('patching.html', data=df.to_html(index=False, border=0, justify='left'))
+    
+    return render_template('patching.html', data=patchingStyle)
+
+def red_over_time(val):
+    """
+    Takes a scalar and returns a string with
+    the css property `'color: red'` for timedelta over specified
+    strings, black otherwise.
+    """
+    #days = datetime.timedelta(days=1)
+    #val = val.datetime.timedelta.days
+    patchingCritical = 60
+    patchingUrgent = 50
+    if (val >= patchingCritical):
+        color = 'red'
+    elif (val >= patchingUrgent):
+        color = 'orange'
+    else:
+        color = 'white'
+    return f'color: {color}'
 
 @app.route('/file')    	
 def file_out():
@@ -54,18 +66,3 @@ def file_out():
     with open('tmp/foobar', 'w+') as f:
         f.write(f'hello world:{flaskVer}')
     return render_template('index.html', flaskVer=flaskVer)
-
-#@app.route('/plot.png')
-#def plot_png():
-#    fig = create_figure()
-#    output = io.BytesIO()
-#    FigureCanvas(fig).print_png(output)
-#    return Response(output.getvalue(), mimetype='image/png')
-#
-#def create_figure():
-#    fig = Figure()
-#    axis = fig.add_subplot(1, 1, 1)
-#    xs = range(100)
-#    ys = [random.randint(1, 50) for x in xs]
-#    axis.plot(xs, ys)
-#    return fig

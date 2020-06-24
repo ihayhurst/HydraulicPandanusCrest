@@ -48,14 +48,14 @@ def concatToDataframe(li):
     # Calculate how long since last boot
     df['boot-time'] = df.apply(lambda row: dt.now() - row['boot-time'], axis=1)
     df['boot-time'] = df['boot-time'].dt.days
-    #df['release'] = df['release'].str.replace(r'^.*(release|Linux)?.', '\1')
-    #df.replace(to_replace=r'(Linux|release)?', value='CentOS', regex=True, inplace=True)
-    df.replace(to_replace=r'(@syngenta.com)?', value='', regex=True, inplace=True)
+    df['release'].replace(to_replace=r'(CentOS).*(\s\d+)\.(\d+)(?:.).*', value=r'\1 \2.\3', regex=True, inplace=True )
+    df['owner'].replace(to_replace=r'([\w\.-]+)@([\w\.-]+)', value=r'\1', regex=True, inplace=True)
     # Jiggle colum order for output
     #  ['Hostname', 'description', 'owner', 'boot-time', 'release', 'last-update', 'update-candidate-summary']
     df = df[['Hostname', 'release', 'boot-time', 'last-update', 'owner', 'description']]
     # Sort by days since last patched
-    df.sort_values(by=['last-update'], ascending=False, inplace=True)
+    #df.sort_values(by=['last-update'], ascending=False, inplace=True)
+    df.sort_values(by=['boot-time'], ascending=False, inplace=True)
     return df
 
 

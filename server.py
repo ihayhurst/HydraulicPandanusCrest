@@ -30,12 +30,12 @@ def queuexml():
     return render_template('queue.html', gridjobs=gridjobs, jobhistory=None)
 
 @app.route('/showpatching')
-@functools.lru_cache(maxsize=128, typed=False)
+#@functools.lru_cache(maxsize=128, typed=False)
 def patching():
     df = getPatching()
-    pd.set_option('colheader_justify', 'left')
+    #pd.set_option('colheader_justify', 'left')
     #df.style.format({"B": lambda x: "±{:.2f}".format(abs(x))})
-    patchingStyle = (df.style.applymap(red_over_time, subset=['last-update', 'boot-time'])
+    patchingStyle = (df.style.applymap(colorGrade, subset=['last-update', 'boot-time'])
                     .hide_index()
                     .render())
     #with open('tmp/patching-style', 'w+') as f:
@@ -44,7 +44,7 @@ def patching():
     
     return render_template('patching.html', data=patchingStyle)
 
-def red_over_time(val):
+def colorGrade(val):
     """
     Takes a scalar and returns a string with
     the css property `'color: red'` for timedelta over specified

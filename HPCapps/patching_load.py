@@ -10,6 +10,12 @@ import glob
 from datetime import datetime as dt
 
 def getPatching():
+    '''Returns dataframe'''
+    li = loadDataFiles()
+    df = concatToDataframe(li)
+    return df
+
+def loadDataFiles():
     path = r'/home/admin/patching/cache'
     all_files = glob.glob(path + "/*.json")
     li = []
@@ -26,7 +32,10 @@ def getPatching():
             # Drop long list of indicidual patched before concatenation
             df = df[df.columns.drop(list(df.filter(regex='update-candidates')))]
             li.append(df)
+    return li
 
+def concatToDataframe(li):
+    '''Convertl JSON dict to dataframe'''
     df = pd.concat(li, axis=0, ignore_index=True)
     # Convert unixtime to datetime [even though we drop unixtime we may need it later]
     df[['unixtime', 'boot-time', 'last-update']] = df[['unixtime', 'boot-time', 'last-update']].apply(pd.to_datetime, unit='s')
@@ -40,7 +49,7 @@ def getPatching():
     df['boot-time'] = df.apply(lambda row: dt.now() - row['boot-time'], axis=1)
     df['boot-time'] = df['boot-time'].dt.days
     #df['release'] = df['release'].str.replace(r'^.*(release|Linux)?.', '\1')
-    df.replace(to_replace=r'(Linux|release)?', value='CentOS', regex=True, inplace=True)
+    #df.replace(to_replace=r'(Linux|release)?', value='CentOS', regex=True, inplace=True)
     df.replace(to_replace=r'(@syngenta.com)?', value='', regex=True, inplace=True)
     # Jiggle colum order for output
     #  ['Hostname', 'description', 'owner', 'boot-time', 'release', 'last-update', 'update-candidate-summary']
@@ -51,6 +60,8 @@ def getPatching():
 
 
 def aboutData(df):
+    '''Prints properties and sample of dataframe'''
+
     print(f'type:{df.dtypes}')    
     print(f'Shape:{df.shape}')
     print(df.columns)

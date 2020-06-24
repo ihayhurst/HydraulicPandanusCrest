@@ -4,6 +4,7 @@ import flask
 import datetime 
 from bs4 import BeautifulSoup
 import pandas as pd
+import functools
 
 #Application imports
 from HPCapps.queue import *
@@ -29,6 +30,7 @@ def queuexml():
     return render_template('queue.html', gridjobs=gridjobs, jobhistory=None)
 
 @app.route('/showpatching')
+@functools.lru_cache(maxsize=128, typed=False)
 def patching():
     df = getPatching()
     pd.set_option('colheader_justify', 'left')

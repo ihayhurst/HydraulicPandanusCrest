@@ -12,6 +12,12 @@ from HPCapps.patching_load import *
 
 app = Flask(__name__)
 flaskVer = flask.__version__
+'''
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
+'''
 
 @app.route('/')
 def index():
@@ -35,8 +41,10 @@ def patching():
     df = getPatching()
     #pd.set_option('colheader_justify', 'left')
     #df.style.format({"B": lambda x: "±{:.2f}".format(abs(x))})
+    df.style.set_properties(subset=['owner'], **{'width': '300px'})
     patchingStyle = (df.style.applymap(colorGrade, subset=['last-update', 'boot-time'])
                     .hide_index()
+                    .set_precision(2)
                     .render())
     #with open('tmp/patching-style', 'w+') as f:
         #f.write(patchingStyle)

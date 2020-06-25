@@ -41,21 +41,22 @@ def concatToDataframe(li):
     df[['unixtime', 'boot-time', 'last-update']] = df[['unixtime', 'boot-time', 'last-update']].apply(pd.to_datetime, unit='s')
     # Drop hostname (FQDN) and use id as Hostname
     df.drop(['hostname', 'unixtime'], axis=1, inplace=True)
-    df.rename(columns={'id': 'Hostname'}, inplace=True)
     # Calculate how long since last update, show smallest unit as Days
     df['last-update'] = df.apply(lambda row: dt.now() - row['last-update'], axis=1) 
     df['last-update'] = df['last-update'].dt.days
-    # Calculate how long since last boot
+    # Calculate how long since last boot, Reduce resolution down to the day
     df['boot-time'] = df.apply(lambda row: dt.now() - row['boot-time'], axis=1)
     df['boot-time'] = df['boot-time'].dt.days
     df['release'].replace(to_replace=r'(CentOS).*(\s\d+)\.(\d+)(?:.).*', value=r'\1 \2.\3', regex=True, inplace=True )
     df['owner'].replace(to_replace=r'([\w\.-]+)@([\w\.-]+)', value=r'\1', regex=True, inplace=True)
+    df['id'].replace(to_replace=r'([^.]*).*', value=r'\1', regex=True, inplace=True)
     # Jiggle colum order for output
     #  ['Hostname', 'description', 'owner', 'boot-time', 'release', 'last-update', 'update-candidate-summary']
+    df.rename(columns={'id': 'Hostname'}, inplace=True)
     df = df[['Hostname', 'release', 'boot-time', 'last-update', 'owner', 'description']]
     # Sort by days since last patched
-    #df.sort_values(by=['last-update'], ascending=False, inplace=True)
-    df.sort_values(by=['boot-time'], ascending=False, inplace=True)
+    df.sort_values(by=['last-update'], ascending=False, inplace=True)
+    #df.sort_values(by=['boot-time'], ascending=False, inplace=True)
     return df
 
 

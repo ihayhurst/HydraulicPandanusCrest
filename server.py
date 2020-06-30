@@ -35,8 +35,16 @@ def patching():
     df = getPatching()
     #pd.set_option('colheader_justify', 'left')
     #df.style.format({"B": lambda x: "±{:.2f}".format(abs(x))})
-    df.style.set_properties(subset=['owner'], **{'width': '300px'})
+    styles = [
+              hover(),
+              dict(selector="th", props=[("font-size", "110%"),
+              ("text-align", "left")]),
+              dict(selector="caption", props=[("caption-side", "bottom")])
+              ]
     patchingStyle = (df.style.applymap(colorGrade, subset=['last-update', 'boot-time'])
+                    .set_table_styles(styles)
+                    .set_properties(subset=['owner'], **{'width': '300px'})
+                    .set_properties(subset=['release'], **{'width': '150px'})
                     .hide_index()
                     .set_precision(2)
                     .render())
@@ -45,6 +53,10 @@ def patching():
     #return render_template('patching.html', data=df.to_html(index=False, border=0, justify='left'))
     
     return render_template('patching.html', data=patchingStyle)
+
+def hover(hover_color="#000033"):
+    return dict(selector="tr:hover",
+                props=[("background-color", "%s" % hover_color)])
 
 def colorGrade(val):
     """

@@ -12,12 +12,6 @@ from HPCapps.patching_load import *
 
 app = Flask(__name__)
 flaskVer = flask.__version__
-'''
-@app.route('/favicon.ico')
-def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static'),
-                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
-'''
 
 @app.route('/')
 def index():

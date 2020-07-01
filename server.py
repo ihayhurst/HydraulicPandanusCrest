@@ -1,17 +1,19 @@
-import os, sys
-from flask import Flask, request, render_template
+# I.M. Hayhurst 2020 06 30
+
+from flask import Flask, render_template
 import flask
 import datetime 
-from bs4 import BeautifulSoup
 import pandas as pd
-import functools
 
-#Application imports
+from bs4 import BeautifulSoup
+# Application imports
 from HPCapps.queue import *
 from HPCapps.patching_load import *
 
+
 app = Flask(__name__)
 flaskVer = flask.__version__
+
 
 @app.route('/')
 def index():
@@ -29,12 +31,10 @@ def queuexml():
     soup = BeautifulSoup(gridjobs, 'xml')
     return render_template('queue.html', gridjobs=gridjobs, jobhistory=None)
 
+
 @app.route('/showpatching')
-#@functools.lru_cache(maxsize=128, typed=False)
 def patching():
     df = getPatching()
-    #pd.set_option('colheader_justify', 'left')
-    #df.style.format({"B": lambda x: "±{:.2f}".format(abs(x))})
     styles = [
               hover(),
               dict(selector="th", props=[("font-size", "110%"),
@@ -48,15 +48,14 @@ def patching():
                     .hide_index()
                     .set_precision(2)
                     .render())
-    #with open('tmp/patching-style', 'w+') as f:
-        #f.write(patchingStyle)
-    #return render_template('patching.html', data=df.to_html(index=False, border=0, justify='left'))
     
     return render_template('patching.html', data=patchingStyle)
+
 
 def hover(hover_color="#000033"):
     return dict(selector="tr:hover",
                 props=[("background-color", "%s" % hover_color)])
+
 
 def colorGrade(val):
     """
@@ -64,8 +63,6 @@ def colorGrade(val):
     the css property `'color: red'` for timedelta over specified
     strings, black otherwise.
     """
-    #days = datetime.timedelta(days=1)
-    #val = val.datetime.timedelta.days
     patchingCritical = 60
     patchingUrgent = 50
     if (val >= patchingCritical):
@@ -75,6 +72,7 @@ def colorGrade(val):
     else:
         color = 'white'
     return f'color: {color}'
+
 
 @app.route('/file')    	
 def file_out():

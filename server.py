@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template
 import flask
-import datetime 
+import datetime
 import pandas as pd
 
 from bs4 import BeautifulSoup
@@ -48,7 +48,7 @@ def patching():
                     .hide_index()
                     .set_precision(2)
                     .render())
-    
+
     return render_template('patching.html', data=patchingStyle)
 
 
@@ -74,7 +74,7 @@ def colorGrade(val):
     return f'color: {color}'
 
 
-@app.route('/file')    	
+@app.route('/file')
 def file_out():
     flaskVer = os.listdir()
     with open('tmp/foobar', 'w+') as f:

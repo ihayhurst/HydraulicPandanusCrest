@@ -7,8 +7,9 @@ import pandas as pd
 
 from bs4 import BeautifulSoup
 # Application imports
-from HPCapps.queue import *
+from HPCapps.uqueue import *
 from HPCapps.patching_load import *
+from HPCapps.inventory_load_host import *
 
 
 app = Flask(__name__)
@@ -83,8 +84,10 @@ def make_clickable(val):
 @app.route('/inventory/<hostname>', methods=['GET', 'POST'])
 def inventory_host(hostname):
     para1 = hostname
-    para2 = "wibble" # call the inv from git function module
-    return render_template("inventory_host.html", para1=para1, para2=para2)
+    #para2 = "wibble" # call the inv from git function module
+    df = pd.json_normalize(getInventoryHost(hostname))
+
+    return render_template("inventory_host.html", para1=para1, data=df.to_html())
 
 
 @app.route('/file')

@@ -15,7 +15,7 @@ app = Flask(__name__)
 flaskVer = flask.__version__
 
 
-@app.route('/')
+@app.route('/') # Needs a landing page about HPC
 def index():
     return render_template('index.html', flaskVer=flaskVer)
 
@@ -25,7 +25,7 @@ def queue():
     jobhistory = getGridHistory()
     return render_template('queue.html', gridjobs=gridjobs, jobhistory=jobhistory)
 
-@app.route('/queue-xml')
+@app.route('/queue-xml') # No menu link yet as experimental
 def queuexml():
     gridjobs = getGridXML()
     soup = BeautifulSoup(gridjobs, 'xml')
@@ -38,16 +38,19 @@ def patching():
     styles = [
               hover(),
               dict(selector="th", props=[("font-size", "110%"),
-              ("text-align", "left")]),
-              dict(selector="caption", props=[("caption-side", "bottom")])
+                   ("text-align", "left"), ("text-transform", "capitalize"),
+                   ("background-color", "#000033")]),
+              dict(selector="caption", props=[("caption-side", "bottom")]),
+              dict(selector="td a", props=[("display", "block")])
               ]
     patchingStyle = (df.style.applymap(colorGrade, subset=['last-update', 'boot-time'])
-                    .set_table_styles(styles)
-                    .set_properties(subset=['owner'], **{'width': '300px'})
-                    .set_properties(subset=['release'], **{'width': '150px'})
-                    .hide_index()
-                    .set_precision(2)
-                    .render())
+                     .set_table_styles(styles)
+                     .set_properties(subset=['owner'], **{'width': '300px'})
+                     .set_properties(subset=['release'], **{'width': '150px'})
+                     .hide_index()
+                     .format({'hostname': make_clickable})
+                     .set_precision(2)
+                     .render())
 
     return render_template('patching.html', data=patchingStyle)
 
@@ -72,6 +75,16 @@ def colorGrade(val):
     else:
         color = 'white'
     return f'color: {color}'
+
+def make_clickable(val):
+    #return '<a target="_blank" href="/inventory/{}">{}</a>'.format(val,val)
+    return '<a href="/inventory/{}">{}</a>'.format(val,val)
+
+@app.route('/inventory/<hostname>', methods=['GET', 'POST'])
+def inventory_host(hostname):
+    para1 = hostname
+    para2 = "wibble" # call the inv from git function module
+    return render_template("inventory_host.html", para1=para1, para2=para2)
 
 
 @app.route('/file')

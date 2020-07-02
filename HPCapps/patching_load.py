@@ -67,8 +67,8 @@ def concatToDataframe(li):
     df['id'].replace(to_replace=r'([^.]*).*', value=r'\1',
                      regex=True, inplace=True)
     # Jiggle colum order for output
-    df.rename(columns={'id': 'Hostname'}, inplace=True)
-    df = df[['Hostname', 'release', 'boot-time', 'last-update',
+    df.rename(columns={'id': 'hostname'}, inplace=True)
+    df = df[['hostname', 'release', 'boot-time', 'last-update',
              'owner', 'description', 'last-scan']]
     # Sort by days since last patched
     df.sort_values(by=['last-scan', 'boot-time', 'last-update'],

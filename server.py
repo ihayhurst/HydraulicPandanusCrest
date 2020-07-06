@@ -50,7 +50,7 @@ def patching():
                      .set_properties(subset=['release'], **{'width': '150px'})
                      .hide_index()
                      .format({'hostname': make_clickable})
-                     .set_precision(2)
+                     .set_precision(0)
                      .render())
 
     return render_template('patching.html', data=patchingStyle)
@@ -84,9 +84,9 @@ def make_clickable(val):
 @app.route('/inventory/<hostname>', methods=['GET', 'POST'])
 def inventory_host(hostname):
     para1 = hostname
-    #para2 = "wibble" # call the inv from git function module
-    df = pd.json_normalize(getInventoryHost(hostname))
-
+    d = getInventoryHost(hostname)
+    #df = pd.json_normalize(d['contacts'], errors='ignore')
+    df = pd.json_normalize(d, errors='ignore')
     return render_template("inventory_host.html", para1=para1, data=df.to_html())
 
 

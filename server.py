@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 from HPCapps.uqueue import *
 from HPCapps.patching_load import *
 from HPCapps.inventory_load_host import *
+from HPCapps.structures_api import *
 
 
 app = Flask(__name__)
@@ -70,7 +71,7 @@ def colorGrade(val):
     patchingCritical = 60
     patchingUrgent = 50
     if (val >= patchingCritical):
-        color = 'red'
+        color = 'red' 
     elif (val >= patchingUrgent):
         color = 'orange'
     else:
@@ -89,7 +90,13 @@ def inventory_host(hostname):
     df = pd.json_normalize(d, errors='ignore')
     return render_template("inventory_host.html", para1=para1, data=df.to_html())
 
+@app.route('/structures')
+def structuresapi():
+    data = getStructuresApi() 
+    df = pd.json_normalize(data, errors='ignore')
+    return render_template('inventory_host.html', para1='wibble', data=df.to_html())
 
+ 
 @app.route('/file')
 def file_out():
     flaskVer = os.listdir()

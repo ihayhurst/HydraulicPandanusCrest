@@ -1,7 +1,24 @@
-/* static/style.css */
+/* static/mystyle.css */
+header {
+  background-color: #2B2B2B;
+  height: 35px;
+  width: 100%;
+  opacity: .9;
+  margin-bottom: 10px;
+}
+
+.container {
+}
+/*
+  width: 1024px;
+  margin: 0 auto;
+}
+*/
+
 a {
     color: green;
 }
+
 html, body {
   font-family: "Lato", sans-serif;
   background-color: #38373a;
@@ -38,11 +55,32 @@ h3 {
   color: white;
   font-size: 36px;
 }
+/*
+ * Display navigation links inline
+ */
 
-li {
-  color: red;
-  font-size: 50px;
+.menu {
+  float: left;
+  margin-top: 8px;
 }
+
+.menu li {
+  display: inline;
+}
+
+.menu li + li {
+  margin-left: 15px;
+}
+
+.menu li a {
+  color: orange;
+  text-decoration: none;
+}
+
+.menu li a:hover {
+  background-color: #666;
+}
+
 input[type=button], input[type=submit], input[type=reset] .form-submit-button {
   display: inline-block;
   padding: 5px 5px;
@@ -54,7 +92,7 @@ input[type=button], input[type=submit], input[type=reset] .form-submit-button {
   transition: 0.3s;
   outline: none;
   color: #fff;
-  background-color: green;
+  background-color: orange;
   border: none;
   border-radius: 15px;
   box-shadow: 0 2px #999;

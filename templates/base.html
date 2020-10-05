@@ -6,16 +6,26 @@
       {% else %}
       <title>Flask Server</title>
       {% endif %}
-      <link rel="stylesheet" href="{{ url_for('static',filename='mystyle.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='mystyle.css') }}">
       <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     </head>
     <body>
-        <div>Menu:  <a href="/">Home</a> :
-                    <a href="/queue">Grid queue</a> :
-                    <a href="/showpatching">Show patching</a> :
-                    <a href="/file">File test</a> :
+        <header>
+        <div class="container">
+            <strong><nav>
+                <ul class="menu">
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('queue') }}">Grid queue</a></li>
+                    <li><a href="{{ url_for('patching') }}">Show patching</a></li>
+                    <li><a href="{{ url_for('structuresapi') }}">Testing: Structures api test</a></li>
+                    <li><a href="{{ url_for('file_out') }}">Testing: file write out</a></li>
+                </ul>
+            </nav></strong>
         </div>
-        <hr>
-        {% block content %}{% endblock %}
+        </header>
+        <div class="container">
+        {% block content %}
+        {% endblock %}
+        <div>
     </body>
 </html>

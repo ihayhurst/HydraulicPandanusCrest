@@ -1,5 +1,4 @@
 from flask import Blueprint
-from flask import current_app as app
 from flask_restful import Api, Resource, reqparse
 import json
 import datetime
@@ -95,7 +94,6 @@ class Group(Resource):
         return data, 201
 
 
-
 class SpeciesProtein(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
@@ -156,6 +154,7 @@ class Indication(Resource):
         data = getData(sql)
         return data, 201
 
+
 class Match(Resource):
     def get(self, matchid=None, synonym1=None, synonym2=None):
         if matchid is not None:
@@ -168,6 +167,7 @@ class Match(Resource):
             sql = "select * from MOA_MATCH"
         data = getData(sql)
         return data, 201
+
 
 class Predicate(Resource):
     def get(self, predicate=None):
@@ -189,6 +189,7 @@ class Synonym(Resource):
             sql = "select * from MOA_SYNONYM"
         data = getData(sql)
         return data, 201
+
 
 # Resources
 # Entity

@@ -9,7 +9,7 @@ from .invapi.views import invapi
 def create_app():
     app = Flask(__name__, instance_relative_config=False)
 
-    app.config.from_object('config.Production')
+    app.config.from_object("config.Production")
 
     with app.app_context():
         app.register_blueprint(website, url_prefix="/")

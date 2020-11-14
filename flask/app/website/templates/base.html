@@ -1,21 +1,23 @@
 <!doctype html>
 <html>
-    <head>
-      {% if title %}
-      <title>{{ title }} - Flask server</title>
-      {% else %}
-      <title>Flask Server</title>
-      {% endif %}
-      <link rel="stylesheet" href="{{ url_for('static',filename='mystyle.css') }}">
-      <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    </head>
-    <body>
-        <div>Menu:  <a href="/">Home</a> :
-                    <a href="/queue">Grid queue</a> :
-                    <a href="/showpatching">Show patching</a> :
-                    <a href="/file">File test</a> :
-        </div>
-        <hr>
-        {% block content %}{% endblock %}
-    </body>
+
+<head>
+    {% if title %}
+    <title>{{ title }} - Flask server</title>
+    {% else %}
+    <title>Flask Server</title>
+    {% endif %}
+    <link rel="stylesheet" href="{{ url_for('website.static',filename='mystyle.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('website.static', filename='favicon.ico') }}">
+</head>
+
+<body>
+    <div>Menu: <a href="/">Home</a> :
+        <a href="/queue">Grid queue</a> :
+        <a href="/showpatching">Show patching</a> :
+        <a href="/file">File test</a> :
+    </div>
+    <hr> {% block content %}{% endblock %}
+</body>
+
 </html>

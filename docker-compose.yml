@@ -11,7 +11,9 @@ services:
       - FLASK_ENV=development
       - APP_NAME=HPCadmin
     volumes:
-      - ./flask/app:/app/app
+      - ./flask:/app
+      - ../cache/:/data/patching
+      - ../inventory/:/data/inventory
     expose:
       - 8080
 

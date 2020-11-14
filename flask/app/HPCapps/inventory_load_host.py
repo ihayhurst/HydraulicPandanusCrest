@@ -18,6 +18,7 @@ def fetchResponse(host):
     response = requests.get(item_url, headers=head, verify=REQUESTS_CA_BUNDLE)
     return response
 # try block to add
+
 def unpackResponse(response):
     dictionary = json.loads(response.content)
     #print(f'What we get :\n {dictionary}\n')
@@ -30,7 +31,17 @@ def unpackResponse(response):
     #print (newdict)
     return newdict
 
-def getInventoryHost(host):
+def gitInventoryHost(host):
     response = fetchResponse(host)
     data = unpackResponse(response)
     return data
+
+def fileInventoryHost(host):
+    path = r'/data/inventory/'
+    filename = f'{path}{host}.json'
+    with open(filename) as json_file:
+            try:
+                d = json.load(json_file)
+            except ValueError:
+                print(f'Dodgy JSON mate aint it =={filename}==')
+    return d

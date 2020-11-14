@@ -249,8 +249,12 @@ api.add_resource(MClass, "/class/<int:clid>", endpoint="clid")
 # Indication
 api.add_resource(Indication, "/indication", endpoint="indications")
 api.add_resource(Indication, "/indication/<int:indicid>", endpoint="indication")
-api.add_resource(Indication, "/indication/indication/<int:indicid>", endpoint="indicationid")
-api.add_resource(Indication, "/indication/entity/<int:entityid>", endpoint="indicentityid")
+api.add_resource(
+    Indication, "/indication/indication/<int:indicid>", endpoint="indicationid"
+)
+api.add_resource(
+    Indication, "/indication/entity/<int:entityid>", endpoint="indicentityid"
+)
 
 # Match
 api.add_resource(Match, "/match", endpoint="matches")

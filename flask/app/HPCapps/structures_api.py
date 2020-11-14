@@ -14,7 +14,7 @@ REQUESTS_CA_BUNDLE = "/etc/pki/tls/certs/ca-bundle.crt"
 def fetchResponse():
     # private_token = 'bvci5iEFxxUzt1WmUqxt'
     # head = {'PRIVATE-TOKEN': f'{private_token}'}
-    item_url = f"http://gbjhvice081.eame.syngenta.org/api/structures/?format=json"
+    item_url = "http://gbjhvice081.eame.syngenta.org/api/structures/?format=json"
 
     response = requests.get(item_url)
     return response

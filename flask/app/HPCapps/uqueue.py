@@ -1,6 +1,4 @@
 import subprocess
-import os.path, sys
-import re
 
 CMD_PATH = "/var/www/hpc-gbjh.app.intra/html/HPCapps"
 

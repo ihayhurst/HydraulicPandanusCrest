@@ -1,10 +1,8 @@
 # I.M. Hayhurst 2020 06 30
 
-import os
 from flask import Flask, render_template
 from flask import Blueprint
 import flask
-import datetime
 import pandas as pd
 
 # Application imports
@@ -113,11 +111,3 @@ def structuresapi():
     data = structures_api.getStructuresApi()
     df = pd.json_normalize(data, errors="ignore")
     return render_template("inventory_host.html", para1="wibble", data=df.to_html())
-
-
-@website.route("/file")
-def file_out():
-    flaskVer = os.listdir()
-    with open("tmp/foobar", "w+") as f:
-        f.write(f"hello world:{flaskVer}")
-    return render_template("index.html", flaskVer=flaskVer)

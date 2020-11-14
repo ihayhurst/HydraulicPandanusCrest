@@ -93,9 +93,10 @@ def inventory_host(hostname):
     para1 = hostname
     # d = inventory_load_host.gitInventoryHost(hostname)
     d = inventory_load_host.fileInventoryHost(hostname)
-    #df = pd.json_normalize(d['contacts'], errors='ignore')
+    # df = pd.json_normalize(d['contacts'], errors='ignore')
     df = pd.json_normalize(d, errors='ignore')
     return render_template("inventory_host.html", para1=para1, data=df.to_html())
+
 
 @website.route('/structures')
 def structuresapi():

@@ -20,7 +20,7 @@ def getPatching():
 
 
 def loadDataFiles():
-    path = r'/home/admin/patching/cache'
+    path = r'/Users/ihayhurst/Google Drive/Code/python/cache'
     all_files = glob.glob(path + "/*.json")
     li = []
 

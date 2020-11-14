@@ -83,9 +83,9 @@ def colorGrade(val):
         color = 'white'
     return f'color: {color}'
 
+
 def make_clickable(val):
-    #return '<a target="_blank" href="/inventory/{}">{}</a>'.format(val,val)
-    return '<a href="/inventory/{}">{}</a>'.format(val,val)
+    return f'<a href="/inventory/{val}">{val}</a>'
 
 @app.route('/inventory/<hostname>', methods=['GET', 'POST'])
 def inventory_host(hostname):

@@ -25,47 +25,56 @@ app = Flask(__name__)
 flaskVer = flask.__version__
 
 
-@website.route('/') # Needs a landing page about HPC
+@website.route("/")  # Needs a landing page about HPC
 def index():
-    return render_template('index.html', flaskVer=flaskVer)
+    return render_template("index.html", flaskVer=flaskVer)
 
-@website.route('/queue')
+
+@website.route("/queue")
 def queue():
     gridjobs = uqueue.getGrid()
     jobhistory = uqueue.getGridHistory()
-    return render_template('queue.html', gridjobs=gridjobs, jobhistory=jobhistory)
+    return render_template("queue.html", gridjobs=gridjobs, jobhistory=jobhistory)
 
 
-@website.route('/showpatching')
+@website.route("/showpatching")
 def patching():
     df = patching_load.getPatching()
     styledPatchingTable = applyTableStyle(df)
-    return render_template('patching.html', data=styledPatchingTable)
+    return render_template("patching.html", data=styledPatchingTable)
 
 
 def applyTableStyle(df):
 
     styles = [
-              hover(),
-              dict(selector="th", props=[("font-size", "110%"),
-                   ("text-align", "left"), ("text-transform", "capitalize"),
-                   ("background-color", "#000033")]),
-              dict(selector="caption", props=[("caption-side", "bottom")]),
-              dict(selector="td a", props=[("display", "block")])
-              ]
-    patchingStyle = (df.style.applymap(colorGrade, subset=['last-update', 'boot-time'])
-                     .set_table_styles(styles)
-                     .set_properties(subset=['owner'], **{'width': '300px'})
-                     .set_properties(subset=['release'], **{'width': '150px'})
-                     .hide_index()
-                     .format({'hostname': make_clickable})
-                     .set_precision(0)
-                     .render())
+        hover(),
+        dict(
+            selector="th",
+            props=[
+                ("font-size", "110%"),
+                ("text-align", "left"),
+                ("text-transform", "capitalize"),
+                ("background-color", "#000033"),
+            ],
+        ),
+        dict(selector="caption", props=[("caption-side", "bottom")]),
+        dict(selector="td a", props=[("display", "block")]),
+    ]
+    patchingStyle = (
+        df.style.applymap(colorGrade, subset=["last-update", "boot-time"])
+        .set_table_styles(styles)
+        .set_properties(subset=["owner"], **{"width": "300px"})
+        .set_properties(subset=["release"], **{"width": "150px"})
+        .hide_index()
+        .format({"hostname": make_clickable})
+        .set_precision(0)
+        .render()
+    )
     return patchingStyle
 
+
 def hover(hover_color="#000033"):
-    return dict(selector="tr:hover",
-                props=[("background-color", "%s" % hover_color)])
+    return dict(selector="tr:hover", props=[("background-color", "%s" % hover_color)])
 
 
 def colorGrade(val):
@@ -76,38 +85,39 @@ def colorGrade(val):
     """
     patchingCritical = 60
     patchingUrgent = 50
-    if (val >= patchingCritical):
-        color = 'red'
-    elif (val >= patchingUrgent):
-        color = 'orange'
+    if val >= patchingCritical:
+        color = "red"
+    elif val >= patchingUrgent:
+        color = "orange"
     else:
-        color = 'white'
-    return f'color: {color}'
+        color = "white"
+    return f"color: {color}"
 
 
 def make_clickable(val):
     return f'<a href="/inventory/{val}">{val}</a>'
 
-@website.route('/inventory/<hostname>', methods=['GET', 'POST'])
+
+@website.route("/inventory/<hostname>", methods=["GET", "POST"])
 def inventory_host(hostname):
     para1 = hostname
     # d = inventory_load_host.gitInventoryHost(hostname)
     d = inventory_load_host.fileInventoryHost(hostname)
     # df = pd.json_normalize(d['contacts'], errors='ignore')
-    df = pd.json_normalize(d, errors='ignore')
+    df = pd.json_normalize(d, errors="ignore")
     return render_template("inventory_host.html", para1=para1, data=df.to_html())
 
 
-@website.route('/structures')
+@website.route("/structures")
 def structuresapi():
-    data =structures_api.getStructuresApi()
-    df = pd.json_normalize(data, errors='ignore')
-    return render_template('inventory_host.html', para1='wibble', data=df.to_html())
+    data = structures_api.getStructuresApi()
+    df = pd.json_normalize(data, errors="ignore")
+    return render_template("inventory_host.html", para1="wibble", data=df.to_html())
 
- 
-@website.route('/file')
+
+@website.route("/file")
 def file_out():
     flaskVer = os.listdir()
-    with open('tmp/foobar', 'w+') as f:
-        f.write(f'hello world:{flaskVer}')
-    return render_template('index.html', flaskVer=flaskVer)
+    with open("tmp/foobar", "w+") as f:
+        f.write(f"hello world:{flaskVer}")
+    return render_template("index.html", flaskVer=flaskVer)

@@ -12,7 +12,7 @@ services:
       - APP_NAME=HPCadmin
     volumes:
       - ./flask:/app
-      - ../cache/:/data/patching
+      - ../patching/cache/:/data/patching
       - ../inventory/:/data/inventory
     expose:
       - 8080

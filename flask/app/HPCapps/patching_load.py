@@ -46,15 +46,21 @@ def concatToDataframe(li):
     Return dataframe.
     """
     df = pd.concat(li, axis=0, ignore_index=True)
+    # If there is no date for pending patched set it to the last scan time
+    df["first-update-detected-tiem"] = df["first-update-detected-time"].fillna(df["unixtime"], inplace=True)
     # Convert unixtime to datetime.
-    df[["unixtime", "boot-time", "last-update"]] = df[
-        ["unixtime", "boot-time", "last-update"]
+    df[["unixtime", "boot-time", "last-update", "first-update-detected-time"]] = df[
+        ["unixtime", "boot-time", "last-update", "first-update-detected-time"]
     ].apply(pd.to_datetime, unit="s")
     # Drop hostname (FQDN) and use id as Hostname.
     df.drop(["hostname"], axis=1, inplace=True)
     # Calculate how long since last update, show smallest unit as Days.
     df["last-update"] = df.apply(lambda row: dt.now() - row["last-update"], axis=1)
     df["last-update"] = df["last-update"].dt.days
+    # Calculate how long since patches have been available
+    df["first-update-detected-time"] = df.apply(lambda row: dt.now() - row["first-update-detected-time"], axis=1)
+    df["first-update-detected-time"] = df["first-update-detected-time"].dt.days
+    df.rename(columns={"first-update-detected-time": "days-pending"}, inplace=True)
     # Calculate how long since last boot, Reduce resolution down to the day
     df["boot-time"] = df.apply(lambda row: dt.now() - row["boot-time"], axis=1)
     df["boot-time"] = df["boot-time"].dt.days
@@ -70,12 +76,19 @@ def concatToDataframe(li):
     )
     # Trim off domain from host
     df["id"].replace(to_replace=r"([^.]*).*", value=r"\1", regex=True, inplace=True)
+    # remove list[] indicator from owner
+    df['owner'] = df['owner'].astype(str).str[1:-1]
+    df["owner"].replace(to_replace=r"(?=@)[^\']+", value=r"", regex=True, inplace=True)
+    df["owner"].replace(to_replace=r"\'+([^\']*)\'", value=r"\1", regex=True, inplace=True)
+    df["owner"] = df['owner'].str.title()
+    df['owner'] = df["owner"].str.replace(".", " ")
     # Jiggle colum order for output
     df.rename(columns={"id": "hostname"}, inplace=True)
     df = df[
         [
             "hostname",
             "release",
+            "days-pending",
             "boot-time",
             "last-update",
             "owner",

@@ -52,6 +52,8 @@ def concatToDataframe(li):
 
 def processDataframe(df):
     """
+    Take dataframe, Munge dataframe.
+    Return Munged Dataframe.
     """
     # If there is no date for pending patched set it to the last scan time
     df["first-update-detected-tiem"] = df["first-update-detected-time"].fillna(
@@ -61,20 +63,25 @@ def processDataframe(df):
     df[["unixtime", "boot-time", "last-update", "first-update-detected-time"]] = df[
         ["unixtime", "boot-time", "last-update", "first-update-detected-time"]
     ].apply(pd.to_datetime, unit="s")
+
     # Drop hostname (FQDN) and use id as Hostname.
     df.drop(["hostname"], axis=1, inplace=True)
+
     # Calculate how long since last update, show smallest unit as Days.
     df["last-update"] = df.apply(lambda row: dt.now() - row["last-update"], axis=1)
     df["last-update"] = df["last-update"].dt.days
+
     # Calculate how long since patches have been available
     df["first-update-detected-time"] = df.apply(
         lambda row: dt.now() - row["first-update-detected-time"], axis=1
     )
     df["first-update-detected-time"] = df["first-update-detected-time"].dt.days
     df.rename(columns={"first-update-detected-time": "days-pending"}, inplace=True)
+
     # Calculate how long since last boot, Reduce resolution down to the day
     df["boot-time"] = df.apply(lambda row: dt.now() - row["boot-time"], axis=1)
     df["boot-time"] = df["boot-time"].dt.days
+
     # Calculate how long since last scan
     df.rename(columns={"unixtime": "last-scan"}, inplace=True)
     df["last-scan"] = df.apply(lambda row: dt.now() - row["last-scan"], axis=1)
@@ -85,18 +92,20 @@ def processDataframe(df):
         regex=True,
         inplace=True,
     )
+
     # Trim off domain from host
     df["id"].replace(to_replace=r"([^.]*).*", value=r"\1", regex=True, inplace=True)
 
     # Tidy Owner field
     # remove list[] indicator from owner
     df["owner"] = df["owner"].astype(str).str[1:-1]
+
     # remove @domain from email
     df["owner"].replace(to_replace=r"(?=@)[^\']+", value=r"", regex=True, inplace=True)
+
     # remove single quotes
-    df["owner"].replace(
-        to_replace=r"\'+([^\']*)\'", value=r"\1", regex=True, inplace=True
-    )
+    df["owner"].replace(to_replace=r"\'+([^\']*)\'", value=r"\1", regex=True, inplace=True)
+
     # set Title Case
     df["owner"] = df["owner"].str.title()
     # replace . with space

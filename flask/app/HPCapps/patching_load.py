@@ -16,6 +16,7 @@ def getPatching():
     """
     li = loadDataFiles()
     df = concatToDataframe(li)
+    df = processDataframe(df)
     return df
 
 
@@ -46,6 +47,12 @@ def concatToDataframe(li):
     Return dataframe.
     """
     df = pd.concat(li, axis=0, ignore_index=True)
+    return df
+
+
+def processDataframe(df):
+    """
+    """
     # If there is no date for pending patched set it to the last scan time
     df["first-update-detected-tiem"] = df["first-update-detected-time"].fillna(
         df["unixtime"], inplace=True
@@ -86,7 +93,7 @@ def concatToDataframe(li):
     df["owner"] = df["owner"].astype(str).str[1:-1]
     # remove @domain from email
     df["owner"].replace(to_replace=r"(?=@)[^\']+", value=r"", regex=True, inplace=True)
-    # remove single quotes 
+    # remove single quotes
     df["owner"].replace(
         to_replace=r"\'+([^\']*)\'", value=r"\1", regex=True, inplace=True
     )

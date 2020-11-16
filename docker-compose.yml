@@ -1,0 +1,36 @@
+
+services:
+
+  flask:
+    build: ./flask
+    container_name: flask
+    restart: always
+    depends_on:
+      - redis
+    environment:
+      - FLASK_ENV=development
+      - APP_NAME=HPCadmin
+    volumes:
+      - ./flask:/app
+      - ../patching/cache/:/data/patching
+      - ../inventory/:/data/inventory
+      - /mnt/svm-chem/grid/univa:/mnt/svm-chem/grid/univa:ro
+    expose:
+      - 8080
+    hostname: gbjhccx00
+    domainname: eame.syngenta.org"
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+
+  redis:
+    image: redis
+
+
+volumes:
+    app: {}
+

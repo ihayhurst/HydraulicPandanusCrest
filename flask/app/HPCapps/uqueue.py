@@ -1,6 +1,7 @@
 import subprocess
 
-CMD_PATH = "/var/www/hpc-gbjh.app.intra/html/HPCapps"
+#CMD_PATH = "/var/www/hpc-gbjh.app.intra/html/HPCapps"
+CMD_PATH = "/app/app/HPCapps"
 
 
 def getGrid():

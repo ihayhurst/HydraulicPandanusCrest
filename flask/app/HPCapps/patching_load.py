@@ -111,7 +111,7 @@ def concatToDataframe(li):
     ]
     # Sort by days since last patched
     df.sort_values(
-        by=["last-scan", "last-update", "boot-time"],
+        by=["last-scan", "days-pending", "boot-time"],
         ascending=[True, False, False],
         inplace=True,
     )

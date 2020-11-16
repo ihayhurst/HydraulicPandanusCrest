@@ -14,8 +14,11 @@ services:
       - ./flask:/app
       - ../patching/cache/:/data/patching
       - ../inventory/:/data/inventory
+      - /mnt/svm-chem/grid/univa:/mnt/svm-chem/grid/univa:ro
     expose:
       - 8080
+    hostname: gbjhccx00
+    domainname: eame.syngenta.org"
 
   nginx:
     build: ./nginx
@@ -27,5 +30,7 @@ services:
   redis:
     image: redis
 
+
 volumes:
     app: {}
+

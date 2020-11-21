@@ -121,7 +121,7 @@ def processDataframe(df):
             "updates",
             "last-scan",
         ]
-    ]
+    ].copy()
     # Sort by days since last patched
     df.sort_values(
         by=["last-scan", "days-pending", "boot-time"],

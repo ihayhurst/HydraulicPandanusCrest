@@ -7,6 +7,7 @@ import pandas as pd
 import json
 import glob
 from datetime import datetime as dt
+from multiprocessing import Pool
 
 
 def getPatching():
@@ -25,21 +26,21 @@ def loadDataFiles():
     path = r"/data/patching"
     all_files = glob.glob(path + "/*.json")
     li = []
+    pool = Pool(4)
+    li = pool.map(readDataFileToFrame, all_files)
+    return li
 
-    for filename in all_files:
-        with open(filename) as json_file:
+def readDataFileToFrame(filename):
+    with open(filename) as json_file:
             try:
                 d = json.load(json_file)
             except ValueError:
                 print(f"Dodgy JSON mate aint it =={filename}==")
-                continue
 
             df = pd.json_normalize(d, errors="ignore")
             # Drop long list of individual patches before concatenation
             df = df[df.columns.drop(list(df.filter(regex="update-candidates")))]
-            li.append(df)
-    return li
-
+    return df
 
 def concatToDataframe(li):
     """

@@ -59,7 +59,8 @@ def applyTableStyle(df):
         dict(selector="td a", props=[("display", "block")]),
     ]
     patchingStyle = (
-        df.style.applymap(colorGrade, subset=["last-update", "boot-time", "days-pending"])
+        df.style.applymap(colorGrade, subset=["boot-time", "days-pending"])
+        .set_table_attributes('id="PatchingTable"')
         .apply(oldscandate, axis=1)
         .set_table_styles(styles)
         .set_properties(subset=["owner"], **{"width": "300px"})
@@ -99,10 +100,11 @@ def oldscandate(s):
     the css property `'color: rgba(r,g,b,alpha)'` for scandate >2
     otherwise empty string '' for each column [8]
     """
+    columns = len(s)
     if s["last-scan"] >=2:
-        return ['color: rgba(0,0,0,0.2)']*8
+        return ['color: rgba(128,128,255,0.7)']*columns
     else:
-        return ['']*8
+        return ['']*columns
 
 
 def make_clickable(val):

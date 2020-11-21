@@ -60,16 +60,12 @@ def processDataframe(df):
         df["unixtime"], inplace=True
     )
     # Convert unixtime to datetime.
-    df[["unixtime", "boot-time", "last-update", "first-update-detected-time"]] = df[
-        ["unixtime", "boot-time", "last-update", "first-update-detected-time"]
+    df[["unixtime", "boot-time", "first-update-detected-time"]] = df[
+        ["unixtime", "boot-time", "first-update-detected-time"]
     ].apply(pd.to_datetime, unit="s")
 
     # Drop hostname (FQDN) and use id as Hostname.
     df.drop(["hostname"], axis=1, inplace=True)
-
-    # Calculate how long since last update, show smallest unit as Days.
-    df["last-update"] = df.apply(lambda row: dt.now() - row["last-update"], axis=1)
-    df["last-update"] = df["last-update"].dt.days
 
     # Calculate how long since patches have been available
     df["first-update-detected-time"] = df.apply(
@@ -113,15 +109,16 @@ def processDataframe(df):
 
     # Jiggle colum order for output
     df.rename(columns={"id": "hostname"}, inplace=True)
+    df.rename(columns={"update-candidate-summary": "updates"}, inplace=True)
     df = df[
         [
             "hostname",
             "release",
             "days-pending",
             "boot-time",
-            "last-update",
             "owner",
             "description",
+            "updates",
             "last-scan",
         ]
     ]

@@ -30,17 +30,23 @@ def loadDataFiles():
     li = pool.map(readDataFileToFrame, all_files)
     return li
 
+
 def readDataFileToFrame(filename):
     with open(filename) as json_file:
-            try:
-                d = json.load(json_file)
-            except ValueError:
-                print(f"Dodgy JSON mate aint it =={filename}==")
+        try:
+            d = json.load(json_file)
+        except ValueError:
+            print(f"Dodgy JSON mate aint it =={filename}==")
 
-            df = pd.json_normalize(d, errors="ignore")
-            # Drop long list of individual patches before concatenation
-            df = df[df.columns.drop(list(df.filter(regex="update-candidates")))]
+        df = pd.json_normalize(d, errors="ignore")
+        # Drop long list of individual patches before concatenation
+        df = df[
+            df.columns.drop(list(df.filter(regex="update-candidates"))).drop(
+                "last-update"
+            )
+        ]
     return df
+
 
 def concatToDataframe(li):
     """
@@ -101,7 +107,9 @@ def processDataframe(df):
     df["owner"].replace(to_replace=r"(?=@)[^\']+", value=r"", regex=True, inplace=True)
 
     # remove single quotes
-    df["owner"].replace(to_replace=r"\'+([^\']*)\'", value=r"\1", regex=True, inplace=True)
+    df["owner"].replace(
+        to_replace=r"\'+([^\']*)\'", value=r"\1", regex=True, inplace=True
+    )
 
     # set Title Case
     df["owner"] = df["owner"].str.title()

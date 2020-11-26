@@ -3,22 +3,19 @@
 <h3 id="wibble">Patching Status from cache scan</h3>
 <br/> {{data|safe }}
 <script>
-    window.onclick = e => { //Run when a window is clicked
-        var hostname = e.target.id;
-        console.log(hostname);
-        var hostnameClicked = false;
-        if (hostname.includes('hostname-') == true) { //Check if the clicked element is a hostname
-            var hostnameClicked = true;
-        } else { //Get the parent id element
-            hostname = e.target.parentNode.id;
-            if (hostname.includes('hostname-') == true) { //Try again
-                var hostnameClicked = true;
-            }
-        }
-        if (hostnameClicked == true) { //Open the inventory page for the clicked hostname
-            var inventoryUrl = window.location.href.replace('showpatching', 'inventory/') + hostnamereplace('hostname-', '');
-            window.open(inventoryUrl, "_self");
+ var table = document.getElementById("PatchingTable");
+    if (table != null) {
+        for (var i = 0; i < table.rows.length; i++) {
+            for (var j = 0; j < table.rows[i].cells.length; j++)
+            table.rows[i].cells[j].onclick = function () {
+                tableText(this);
+            };
         }
     }
+
+    function tableText(tableCell) {
+        alert(tableCell.innerHTML);
+    }
+-->
 </script>
 {% endblock %}

@@ -35,6 +35,17 @@ def queue():
     return render_template("queue.html", gridjobs=gridjobs, jobhistory=jobhistory)
 
 
+@website.route("/inventory/<hostname>", methods=["GET", "POST"])
+def inventory_host(hostname):
+    para1 = hostname
+    title = f"Inventory page for {hostname}"
+    # d = inventory_load_host.gitInventoryHost(hostname)
+    d = inventory_load_host.fileInventoryHost(hostname)
+    # df = pd.json_normalize(d['contacts'], errors='ignore')
+    df = pd.json_normalize(d, errors="ignore")
+    return render_template("inventory_host.html",title=title, para1=para1, data=df.to_html())
+
+
 @website.route("/showpatching")
 def patching():
     title = "GBJH Linux Patching Status"
@@ -96,12 +107,14 @@ def colorGrade(val):
         color = "white"
     return f"color: {color}"
 
+
 def endOfLife(s):
     columns = len(s)
     if "- EOL" in s["updates"]:
         return ['font-style: italic;color: white']*columns
     else:
         return ['']*columns
+
 
 def oldscandate(s):
     """
@@ -115,6 +128,13 @@ def oldscandate(s):
     else:
         return ['']*columns
 
+"""
+def patchlist(s):
+    columns = len(s)
+    if s["updates"] not None:
+        patchLink= s["hostname"]
+        return   
+"""
 
 def make_clickable(val):
     return f'<a href="/inventory/{val}" class="button">{val}</a>'
@@ -122,23 +142,10 @@ def make_clickable(val):
 
 def make_human(val):
     if val == 0:
-         return 'Today'
+        return 'Today'
     else:
         return val
 
 
-@website.route("/inventory/<hostname>", methods=["GET", "POST"])
-def inventory_host(hostname):
-    para1 = hostname
-    # d = inventory_load_host.gitInventoryHost(hostname)
-    d = inventory_load_host.fileInventoryHost(hostname)
-    # df = pd.json_normalize(d['contacts'], errors='ignore')
-    df = pd.json_normalize(d, errors="ignore")
-    return render_template("inventory_host.html", para1=para1, data=df.to_html())
 
 
-@website.route("/structures")
-def structuresapi():
-    data = structures_api.getStructuresApi()
-    df = pd.json_normalize(data, errors="ignore")
-    return render_template("inventory_host.html", para1="wibble", data=df.to_html())

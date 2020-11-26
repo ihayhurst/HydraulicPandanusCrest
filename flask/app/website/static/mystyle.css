@@ -1,14 +1,16 @@
 /* static/mystyle.css */
+
 header {
-  background-color: #2B2B2B;
-  height: 35px;
-  width: 100%;
-  opacity: .9;
-  margin-bottom: 10px;
+    background-color: #2B2B2B;
+    height: 35px;
+    width: 100%;
+    opacity: .9;
+    margin-bottom: 10px;
 }
 
-.container {
-}
+.container {}
+
+
 /*
   width: 1024px;
   margin: 0 auto;
@@ -19,30 +21,33 @@ a {
     color: green;
 }
 
-html, body {
-  font-family: "Lato", sans-serif;
-  background-color: #38373a;
-  color: white;
+html,
+body {
+    font-family: "Lato", sans-serif;
+    background-color: #38373a;
+    color: white;
 }
 
-
 ::selection {
-  background: #4ace4f;
+    background: #4ace4f;
 }
 
 ::-moz-selection {
-  background: #4ace4f;
-}
-.tableborder {
-  border: 1px solid black;
-  border-collapse: collapse;
+    background: #4ace4f;
 }
 
-th, td {
-  padding: 10px;
+.tableborder {
+    border: 1px solid black;
+    border-collapse: collapse;
 }
+
+th,
+td {
+    padding: 10px;
+}
+
 input[type="radio"] {
-  display: none;
+    display: none;
 }
 
 h1 {
@@ -52,75 +57,87 @@ h1 {
 }
 
 h3 {
-  color: white;
-  font-size: 36px;
+    color: white;
+    font-size: 36px;
 }
+
+
 /*
  * Display navigation links inline
  */
 
 .menu {
-  float: left;
-  margin-top: 8px;
+    float: left;
+    margin-top: 8px;
 }
 
 .menu li {
-  display: inline;
+    display: inline;
 }
 
-.menu li + li {
-  margin-left: 15px;
+.menu li+li {
+    margin-left: 15px;
 }
 
 .menu li a {
-  color: orange;
-  text-decoration: none;
+    color: orange;
+    text-decoration: none;
 }
 
 .menu li a:hover {
-  background-color: #666;
+    background-color: #666;
 }
 
 .button {
-  font: bold Arial;
-  text-decoration: none;
-  background-color: #EEEEEE;
-  color: #333333;
-  padding: 2px 6px 2px 6px;
-  border-top: 1px solid #CCCCCC;
-  border-right: 1px solid #333333;
-  border-bottom: 1px solid #333333;
-  border-left: 1px solid #CCCCCC;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    background-color: #EEEEEE;
+    color: #333333;
+    padding: 2px 6px 2px 6px;
+    border-top: 1px solid #CCCCCC;
+    border-right: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+    border-left: 1px solid #CCCCCC;
+    border-radius: 4px;
 }
 
-input[type=button], input[type=submit], input[type=reset] .form-submit-button {
-  display: inline-block;
-  padding: 5px 5px;
-  font-size: 12px;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  opacity: 0.6;
-  transition: 0.3s;
-  outline: none;
-  color: #fff;
-  background-color: orange;
-  border: none;
-  border-radius: 15px;
-  box-shadow: 0 2px #999;
+.button:hover {
+    background-color: #BBBBBB;
+    color: green;
+}
+
+input[type=button],
+input[type=submit],
+input[type=reset] .form-submit-button {
+    display: inline-block;
+    padding: 5px 5px;
+    font-size: 12px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    opacity: 0.6;
+    transition: 0.3s;
+    outline: none;
+    color: #fff;
+    background-color: orange;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 2px #999;
 }
 
 input[type=submit]:hover {
-  opacity:1;
-  background-color: #3e8e41;
+    opacity: 1;
+    background-color: #3e8e41;
 }
 
 input[type=submit]:active {
-  background-color: #3e8e41;
-  box-shadow: 0 1px #666;
-  transform: translateY(2px);
+    background-color: #3e8e41;
+    box-shadow: 0 1px #666;
+    transform: translateY(2px);
 }
+
 span.command-text {
     white-space: pre-wrap;
-    font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New;
+    font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New;
 }

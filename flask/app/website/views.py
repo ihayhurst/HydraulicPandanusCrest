@@ -64,9 +64,11 @@ def applyTableStyle(df):
         .apply(oldscandate, axis=1)
         .set_table_styles(styles)
         .set_properties(subset=["owner"], **{"width": "300px"})
-        .set_properties(subset=["release"], **{"width": "150px"})
+        .set_properties(subset=["release"], **{"width": "130px"})
         .hide_index()
         .format({"hostname": make_clickable})
+        .format({"last-scan": make_human})
+        .apply(endOfLife, axis=1)
         .set_precision(0)
         .render()
     )
@@ -93,12 +95,18 @@ def colorGrade(val):
         color = "white"
     return f"color: {color}"
 
+def endOfLife(s):
+    columns = len(s)
+    if "- EOL" in s["updates"]:
+        return ['font-style: italic;color: white']*columns
+    else:
+        return ['']*columns
 
 def oldscandate(s):
     """
-    Takes a scalar and returns string for each column [8]
+    Takes a scalar and returns string for each column
     the css property `'color: rgba(r,g,b,alpha)'` for scandate >2
-    otherwise empty string '' for each column [8]
+    otherwise empty string '' for each column
     """
     columns = len(s)
     if s["last-scan"] >=2:
@@ -109,6 +117,13 @@ def oldscandate(s):
 
 def make_clickable(val):
     return f'<a href="/inventory/{val}">{val}</a>'
+
+
+def make_human(val):
+    if val == 0:
+         return 'Today'
+    else:
+        return val
 
 
 @website.route("/inventory/<hostname>", methods=["GET", "POST"])

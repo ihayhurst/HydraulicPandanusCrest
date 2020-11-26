@@ -37,9 +37,10 @@ def queue():
 
 @website.route("/showpatching")
 def patching():
+    title = "GBJH Linux Patching Status"
     df = patching_load.getPatching()
     styledPatchingTable = applyTableStyle(df)
-    return render_template("patching.html", data=styledPatchingTable)
+    return render_template("patching.html", title=title, data=styledPatchingTable)
 
 
 def applyTableStyle(df):
@@ -116,7 +117,7 @@ def oldscandate(s):
 
 
 def make_clickable(val):
-    return f'<a href="/inventory/{val}">{val}</a>'
+    return f'<a href="/inventory/{val}" class="button">{val}</a>'
 
 
 def make_human(val):

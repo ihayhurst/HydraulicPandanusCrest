@@ -7,7 +7,8 @@ import pandas as pd
 import json
 import glob
 from datetime import datetime as dt
-from multiprocessing import Pool
+#from multiprocessing import Pool
+from billiard.pool import Pool
 
 
 def getPatching():
@@ -22,7 +23,6 @@ def getPatching():
 
 
 def loadDataFiles():
-    # path = r'/Users/ihayhurst/Google Drive/Code/python/cache'
     path = r"/data/patching"
     all_files = glob.glob(path + "/*.json")
     li = []

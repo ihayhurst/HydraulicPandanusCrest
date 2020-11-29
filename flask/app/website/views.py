@@ -1,15 +1,17 @@
 # I.M. Hayhurst 2020 06 30
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask import Blueprint
 import flask
+import json
+import pickle
 import pandas as pd
 
 # Application imports
 from ..HPCapps import uqueue
 from ..HPCapps import patching_load
 from ..HPCapps import inventory_load_host
-from ..HPCapps import structures_api
+from ..HPCapps import tasks
 
 website = Blueprint(
     "website",
@@ -49,103 +51,42 @@ def inventory_host(hostname):
 @website.route("/showpatching")
 def patching():
     title = "GBJH Linux Patching Status"
-    df = patching_load.getPatching()
-    styledPatchingTable = applyTableStyle(df)
-    return render_template("patching.html", title=title, data=styledPatchingTable)
+    #df = patching_load.getPatching()
+    job = tasks.getQueuedPatching.delay()
+    #styledPatchingTable = applyTableStyle(df)
+    #return render_template("patching.html", JOBID=job.id, title=title, data=styledPatchingTable)
+    return render_template("patching.html", JOBID=job.id, title=title)
 
 
-def applyTableStyle(df):
+@website.route('/progress')
+def progress():
+    '''
+    Get the progress of our task and return it using a JSON object
+    '''
+    jobid = request.values.get('jobid')
+    if jobid:
+        job = tasks.get_job(jobid)
+        if job.state: # == 'PROGRESS':
+            return json.dumps(dict(
+                state=job.state,
+                progress=job.info,
+            ))
+        elif job.state == 'SUCCESS':
+            return json.dumps(dict(
+                state=job.state,
+                progress=1.0,
+            ))
+    return '{}'
 
-    styles = [
-        hover(),
-        dict(
-            selector="th",
-            props=[
-                ("font-size", "110%"),
-                ("text-align", "left"),
-                ("text-transform", "capitalize"),
-                ("background-color", "#000033"),
-            ],
-        ),
-        dict(selector="caption", props=[("caption-side", "bottom")]),
-        dict(selector="td a", props=[("display", "block")]),
-    ]
-    patchingStyle = (
-        df.style.applymap(colorGrade, subset=["boot-time", "days-pending"])
-        .set_table_attributes('id="PatchingTable"')
-        .apply(oldscandate, axis=1)
-        .set_table_styles(styles)
-        .set_properties(subset=["owner"], **{"width": "300px"})
-        .set_properties(subset=["release"], **{"width": "130px"})
-        .hide_index()
-        .format({"hostname": make_clickable})
-        .format({"last-scan": make_human})
-        .apply(endOfLife, axis=1)
-        .set_precision(0)
-        .render()
-    )
-    return patchingStyle
-
-
-def hover(hover_color="#000033"):
-    return dict(selector="tr:hover", props=[("background-color", "%s" % hover_color)])
-
-
-def colorGrade(val):
-    """
-    Takes a scalar and returns a string with
-    the css property `'color: red'` for timedelta over specified
-    strings, black otherwise.
-    """
-    patchingCritical = 60
-    patchingUrgent = 50
-    if val >= patchingCritical:
-        color = "red"
-    elif val >= patchingUrgent:
-        color = "orange"
+@website.route('/patchresult')
+def result():
+    '''
+    Pull our generated .png binary from redis and return it
+    '''
+    jobid = request.values.get('jobid')
+    if jobid:
+        job = tasks.get_job(jobid)
+        return job.result
     else:
-        color = "white"
-    return f"color: {color}"
-
-
-def endOfLife(s):
-    columns = len(s)
-    if "- EOL" in s["updates"]:
-        return ['font-style: italic;color: white']*columns
-    else:
-        return ['']*columns
-
-
-def oldscandate(s):
-    """
-    Takes a scalar and returns string for each column
-    the css property `'color: rgba(r,g,b,alpha)'` for scandate >2
-    otherwise empty string '' for each column
-    """
-    columns = len(s)
-    if s["last-scan"] >=2:
-        return ['color: rgba(128,128,255,0.7)']*columns
-    else:
-        return ['']*columns
-
-"""
-def patchlist(s):
-    columns = len(s)
-    if s["updates"] not None:
-        patchLink= s["hostname"]
-        return   
-"""
-
-def make_clickable(val):
-    return f'<a href="/inventory/{val}" class="button">{val}</a>'
-
-
-def make_human(val):
-    if val == 0:
-        return 'Today'
-    else:
-        return val
-
-
-
+        return 404
 

@@ -12,13 +12,13 @@ services:
       - APP_NAME=HPCadmin
     volumes:
       - ./flask:/app
-      - ../patching/cache/:/data/patching
+      - ../patching/:/data/patching
       - ../inventory/:/data/inventory
-      - /mnt/svm-chem/grid/univa:/mnt/svm-chem/grid/univa:ro
+      #- /mnt/svm-chem/grid/univa:/mnt/svm-chem/grid/univa:ro
     expose:
       - 8080
-    hostname: gbjhccx00
-    domainname: eame.syngenta.org"
+    #hostname: gbjhccx00
+    #domainname: eame.syngenta.org
 
   nginx:
     build: ./nginx
@@ -26,13 +26,25 @@ services:
     restart: always
     ports:
       - "80:80"
-      - "443:443"
-    volumes:
-      - ./certs/:/etc/nginx/ssl:ro
+      #- "443:443"
+    #volumes:
+      #- ./certs/:/etc/nginx/ssl:ro
 
   redis:
     image: redis
 
+  worker:
+    build: ./flask
+    container_name: worker
+    restart: always 
+    command: "celery -A app.HPCapps.tasks.celery worker --loglevel=DEBUG"
+    user: nobody
+    links:
+        - redis
+    volumes:
+        - ./flask/:/app:ro
+        - ../patching/:/data/patching
+        - ../inventory/:/data/inventory
 
 volumes:
     app: {}

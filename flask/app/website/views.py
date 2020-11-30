@@ -66,10 +66,10 @@ def progress():
     jobid = request.values.get('jobid')
     if jobid:
         job = tasks.get_job(jobid)
-        if job.state: # == 'PROGRESS':
+        if job.state == 'PROGRESS':
             return json.dumps(dict(
                 state=job.state,
-                progress=job.info,
+                progress=job.result['current']*1.0/job.result['total'],
             ))
         elif job.state == 'SUCCESS':
             return json.dumps(dict(

@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 def applyTableStyle(df):
     
     styles = [
@@ -69,7 +70,7 @@ def oldscandate(s):
     otherwise empty string '' for each column
     """
     columns = len(s)
-    if s["last-scan"] >=5:
+    if s["last-scan"] >=7:
         return ['color: rgba(128,128,255,0.7)']*columns
     else:
         return ['']*columns

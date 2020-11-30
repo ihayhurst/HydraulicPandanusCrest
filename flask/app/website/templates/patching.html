@@ -51,10 +51,13 @@
                 });
                 console.log(resp)
                 if (resp.progress >= 0.99) {
+                    $("#bar").css({
+                        backgroundColor: "green"
+                    });
                     $("#wrapper").html('');
                     $.get("patchresult?jobid={{JOBID}}", function(data, status) {
                         end_file = data;
-                        $("#patchesLoading").html('{{data | safe}}');
+                        $("#patchesLoading").html(end_file);
                         console.log("success")
                     });
                     return;

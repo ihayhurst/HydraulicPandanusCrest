@@ -46,6 +46,14 @@ services:
         - ../patching/:/data/patching
         - ../inventory/:/data/inventory
 
+  #celery-beat:
+   # build: ./flask
+   # command: celery -A proj beat -l info
+   # volumes:
+     # - ./flask/:/app
+    #depends_on:
+      #- redis
+
 volumes:
     app: {}
 

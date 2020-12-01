@@ -1,14 +1,15 @@
 from celery import Celery
 from celery.result import AsyncResult
-from flask import current_app as app
 
 # Application imposts
 from .patching_load import getPatching
 from .patching_style import applyTableStyle
 
+
 # TODO load this from config
 CELERY_BROKER_URL = "redis://redis:6379"
 CELERY_RESULT_BACKEND = "redis://redis:6379"
+
 
 # Initialize Celery
 celery = Celery(
@@ -18,6 +19,7 @@ celery = Celery(
 )
 celery.conf.accept_content = ['json', 'msgpack', 'pickle']
 celery.conf.result_serializer = 'pickle'
+
 
 def get_job(job_id):
     '''

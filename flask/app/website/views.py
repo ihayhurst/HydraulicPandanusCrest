@@ -43,7 +43,7 @@ def inventory_host(hostname):
     # df = pd.json_normalize(d['contacts'], errors='ignore')
     df = pd.json_normalize(d, errors="ignore")
     # TODO append call to generate list of patches pending for host
-    return render_template("inventory_host.html",title=title, para1=para1, data=df.to_html())
+    return render_template("inventory_host.html", title=title, para1=para1, data=df.to_html())
 
 
 @website.route("/showpatching")
@@ -72,6 +72,7 @@ def progress():
                 progress=1.0,
             ))
     return '{}'
+
 
 @website.route('/patchresult')
 def result():

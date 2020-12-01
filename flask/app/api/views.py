@@ -14,6 +14,7 @@ left for now so I don't need to rediscover all the quirks and syntax needed
 all over again
 """
 
+
 def getData(sql):
     conn = dbGetConn()
     curr = conn.cursor()

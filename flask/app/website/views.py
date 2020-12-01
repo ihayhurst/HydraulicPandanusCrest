@@ -4,12 +4,10 @@ from flask import Flask, render_template, request
 from flask import Blueprint
 import flask
 import json
-import pickle
 import pandas as pd
 
-# Application imports
+# Application imports direct or via celery tasks
 from ..HPCapps import uqueue
-from ..HPCapps import patching_load
 from ..HPCapps import inventory_load_host
 from ..HPCapps import tasks
 
@@ -41,20 +39,17 @@ def queue():
 def inventory_host(hostname):
     para1 = hostname
     title = f"Inventory page for {hostname}"
-    # d = inventory_load_host.gitInventoryHost(hostname)
     d = inventory_load_host.fileInventoryHost(hostname)
     # df = pd.json_normalize(d['contacts'], errors='ignore')
     df = pd.json_normalize(d, errors="ignore")
+    # TODO append call to generate list of patches pending for host
     return render_template("inventory_host.html",title=title, para1=para1, data=df.to_html())
 
 
 @website.route("/showpatching")
 def patching():
     title = "GBJH Linux Patching Status"
-    #df = patching_load.getPatching()
     job = tasks.getQueuedPatching.delay()
-    #styledPatchingTable = applyTableStyle(df)
-    #return render_template("patching.html", JOBID=job.id, title=title, data=styledPatchingTable)
     return render_template("patching.html", JOBID=job.id, title=title)
 
 

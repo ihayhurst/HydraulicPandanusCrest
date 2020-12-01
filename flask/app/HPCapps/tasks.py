@@ -1,9 +1,10 @@
 from celery import Celery
 from celery.result import AsyncResult
 from flask import current_app as app
+
+# Application imposts
 from .patching_load import getPatching
 from .patching_style import applyTableStyle
-import time
 
 # TODO load this from config
 CELERY_BROKER_URL = "redis://redis:6379"

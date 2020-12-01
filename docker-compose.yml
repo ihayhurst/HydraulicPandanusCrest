@@ -37,7 +37,7 @@ services:
     build: ./flask
     container_name: worker
     restart: always 
-    command: "celery -A app.HPCapps.tasks.celery worker --loglevel=DEBUG"
+    command: "celery -A app.HPCapps.tasks.celery worker --loglevel=INFO"
     user: nobody
     links:
         - redis

@@ -13,7 +13,6 @@ REQUESTS_CA_BUNDLE = "/etc/pki/tls/certs/ca-bundle.crt"
 def fetchResponse(host):
     private_token = "bvci5iEFxxUzt1WmUqxt"
     head = {"PRIVATE-TOKEN": f"{private_token}"}
-    # item_url='https://gitlab.rt.intra/api/v4/projects/790/repository/files/inventory%2Fgbjhccx10%2Ejson?ref=master'
     item_url = f"https://gitlab.rt.intra/api/v4/projects/790/repository/files/inventory%2F{host}%2Ejson?ref=master"
 
     response = requests.get(item_url, headers=head, verify=REQUESTS_CA_BUNDLE)
@@ -32,17 +31,22 @@ def unpackResponse(response):
     # print(f'What we want:\n {packet}')
     # Finaly into a dict we can use
     newdict = json.loads(packet)
-    # print (newdict)
     return newdict
 
 
 def gitInventoryHost(host):
+    """
+    Call from route to pull inventory data for named host from git repo
+    """
     response = fetchResponse(host)
     data = unpackResponse(response)
     return data
 
 
 def fileInventoryHost(host):
+    """
+    Call from route to load inventory data for named host from filesystem
+    """
     path = r"/data/inventory/"
     filename = f"{path}{host}.json"
     with open(filename) as json_file:

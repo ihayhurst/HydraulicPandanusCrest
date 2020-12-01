@@ -2,7 +2,6 @@ import pandas as pd
 
 
 def applyTableStyle(df):
-    
     styles = [
         hover(),
         dict(

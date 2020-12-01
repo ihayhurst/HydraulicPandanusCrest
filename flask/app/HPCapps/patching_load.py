@@ -2,6 +2,14 @@
 # I.M. Hayhurst 2020 06 19
 # /home/admin/patching/cache/*.json files
 
+"""
+Can be called as a command line to proces json to dataframe 
+show head / tail and column stats
+show any JSON files that are not valid
+
+getPatching called as module from route
+"""
+
 import sys
 import pandas as pd
 import json
@@ -12,6 +20,7 @@ from billiard.pool import Pool
 
 def getPatching():
     """
+    Call from route to load json from directory of hostname.json files
     Fetch list of dataframes and pass to concatenation
     Return dataframe.
     """
@@ -22,6 +31,12 @@ def getPatching():
 
 
 def loadDataFiles():
+    """
+    Generate list of patching.json files
+    Divide among pool threads
+    Pool threads read json into dataframes
+    return list of dataframe objects
+    """
     path = r"/data/patching"
     all_files = glob.glob(path + "/*.json")
     li = []
@@ -31,6 +46,11 @@ def loadDataFiles():
 
 
 def readDataFileToFrame(filename):
+    """
+    Read data file JSON into datadrame
+    drop long list of patches
+    return dataframe
+    """
     with open(filename) as json_file:
         try:
             d = json.load(json_file)
@@ -50,7 +70,7 @@ def readDataFileToFrame(filename):
 def concatToDataframe(li):
     """
     Take list of dataframes, concatenate
-    Return dataframe.
+    Return single dataframe.
     """
     df = pd.concat(li, axis=0, ignore_index=True)
     return df

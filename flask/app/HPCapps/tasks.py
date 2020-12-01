@@ -5,12 +5,13 @@ from .patching_load import getPatching
 from .patching_style import applyTableStyle
 import time
 
+# TODO load this from config
 CELERY_BROKER_URL = "redis://redis:6379"
 CELERY_RESULT_BACKEND = "redis://redis:6379"
 
 # Initialize Celery
 celery = Celery(
-    'worker', 
+    'worker',
     broker=CELERY_BROKER_URL,
     backend=CELERY_RESULT_BACKEND
 )
@@ -27,6 +28,6 @@ def get_job(job_id):
 
 @celery.task()
 def getQueuedPatching():
-    df = getPatching()    
-    df =applyTableStyle(df)
+    df = getPatching()
+    df = applyTableStyle(df)
     return df

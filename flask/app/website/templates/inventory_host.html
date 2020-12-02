@@ -1,9 +1,7 @@
-{% extends "base.html" %}      
-
-{% block content%}
+{% extends "base.html" %} {% block content%}
 <h3>Inventory Page for {{ para1 }}</h3>
 <hr/>
 <span class="command-line">
 {{ data|safe }}
 </span>
-{% endblock %}
+<hr> {{patching|safe}} {% endblock %}

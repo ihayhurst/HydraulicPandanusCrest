@@ -9,6 +9,7 @@ import pandas as pd
 # Application imports direct or via celery tasks
 from ..HPCapps import uqueue
 from ..HPCapps import inventory_load_host
+from ..HPCapps import patching_load_host
 from ..HPCapps import tasks
 
 website = Blueprint(
@@ -42,8 +43,9 @@ def inventory_host(hostname):
     d = inventory_load_host.fileInventoryHost(hostname)
     # df = pd.json_normalize(d['contacts'], errors='ignore')
     df = pd.json_normalize(d, errors="ignore")
+    patchingData = patching_load_host.getPatchingDetail(hostname)
     # TODO append call to generate list of patches pending for host
-    return render_template("inventory_host.html", title=title, para1=para1, data=df.to_html())
+    return render_template("inventory_host.html", title=title, para1=para1, data=df.to_html(), patching=patchingData.to_html())
 
 
 @website.route("/showpatching")

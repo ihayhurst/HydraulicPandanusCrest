@@ -3,6 +3,8 @@
 # /home/admin/patching/cache/*.json files
 
 """
+Load Patching files and create a summary dataframe
+
 Can be called as a command line to proces json to dataframe 
 show head / tail and column stats
 show any JSON files that are not valid
@@ -53,17 +55,19 @@ def readDataFileToFrame(filename):
     """
     with open(filename) as json_file:
         try:
-            d = json.load(json_file)
+            data = json.load(json_file)
         except ValueError:
             print(f"Dodgy JSON mate aint it =={filename}==")
+        df = normaliseToDataframe(data)
+    return df
 
-        df = pd.json_normalize(d, errors="ignore")
-        # Drop long list of individual patches before concatenation
-        df = df[
-            df.columns.drop(list(df.filter(regex="update-candidates"))).drop(
-                "last-update"
-            )
-        ]
+
+def normaliseToDataframe(data):
+    """
+    """
+    df = pd.json_normalize(data, errors="ignore")
+    # Drop long list of individual patches before concatenation
+    df = df[df.columns.drop(list(df.filter(regex="update-candidates"))).drop("last-update")]
     return df
 
 

@@ -3,11 +3,23 @@ import json
 import requests
 import ssl
 import base64
+import pandas as pd
 
 # private token authentication
 # curl -k --header "PRIVATE-TOKEN: bvci5iEFxxUzt1WmUqxt" "https://gitlab.rt.intra/api/v4/projects/983/"
 # Python needs the env var set to find the certs
 REQUESTS_CA_BUNDLE = "/etc/pki/tls/certs/ca-bundle.crt"
+
+
+def getInventoryDetail(host):
+    """
+    Call from route to:
+    load inventory JSON from filesystem or git
+    return dataframe
+    """
+    data = fileInventoryHost(host)
+    df = normaliseToDataframe(data)
+    return df
 
 
 def fetchResponse(host):
@@ -36,7 +48,7 @@ def unpackResponse(response):
 
 def gitInventoryHost(host):
     """
-    Call from route to pull inventory data for named host from git repo
+    Pull inventory data for named host from git repo
     """
     response = fetchResponse(host)
     data = unpackResponse(response)
@@ -45,13 +57,21 @@ def gitInventoryHost(host):
 
 def fileInventoryHost(host):
     """
-    Call from route to load inventory data for named host from filesystem
+    Load inventory data for named host from filesystem
     """
     path = r"/data/inventory/"
     filename = f"{path}{host}.json"
     with open(filename) as json_file:
         try:
-            d = json.load(json_file)
+            data = json.load(json_file)
         except ValueError:
             print(f"Dodgy JSON mate aint it =={filename}==")
-    return d
+    return data
+
+
+def normaliseToDataframe(data):
+    """
+    parse inventory JSON data to dataframe
+    """
+    df = pd.json_normalize(data, errors="ignore")
+    return df 

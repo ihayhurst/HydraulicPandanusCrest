@@ -38,19 +38,16 @@ def queue():
 
 @website.route("/inventory/<hostname>", methods=["GET", "POST"])
 def inventory_host(hostname):
-    para1 = hostname
     title = f"Inventory page for {hostname}"
-    d = inventory_load_host.fileInventoryHost(hostname)
-    # df = pd.json_normalize(d['contacts'], errors='ignore')
-    df = pd.json_normalize(d, errors="ignore")
-    patchingData = patching_load_host.getPatchingDetail(hostname)
-    # TODO append call to generate list of patches pending for host
-    return render_template("inventory_host.html", title=title, para1=para1, data=df.to_html(), patching=patchingData.to_html())
+    invdf = inventory_load_host.getInventoryDetail(hostname)
+    patchdf = patching_load_host.getPatchingDetail(hostname)
+    return render_template("inventory_host.html", title=title, hostname=hostname, data=invdf.to_html(), patching=patchdf.to_html())
 
 
 @website.route("/showpatching")
 def patching():
     title = "GBJH Linux Patching Status"
+    # job.id passed to template as result called from template by javascript when done
     job = tasks.getQueuedPatching.delay()
     return render_template("patching.html", JOBID=job.id, title=title)
 

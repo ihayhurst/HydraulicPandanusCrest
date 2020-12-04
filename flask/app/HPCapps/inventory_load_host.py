@@ -71,7 +71,7 @@ def fileInventoryHost(host):
 
 def normaliseToDataframe(data):
     """
-    parse inventory JSON data to dataframe
+    Parse inventory JSON data to dataframe
     """
     df = pd.json_normalize(data, errors="ignore")
     return df 

@@ -7,7 +7,7 @@ def applyTableStyle(df):
         dict(
             selector="th",
             props=[
-                ("font-size", "110%"),
+                ("font-size", "100%"),
                 ("text-align", "left"),
                 ("text-transform", "capitalize"),
                 ("background-color", "#000033"),
@@ -19,15 +19,16 @@ def applyTableStyle(df):
     patchingStyle = (
         df.style.applymap(colorGrade, subset=["boot-time", "days-pending"])
         .set_table_attributes('id="PatchingTable"')
+        .set_precision(0)
         .apply(oldscandate, axis=1)
         .set_table_styles(styles)
         .set_properties(subset=["owner"], **{"width": "300px"})
         .set_properties(subset=["release"], **{"width": "130px"})
         .hide_index()
+        .format({"days-pending": zero_pending})
         .format({"hostname": make_clickable})
         .format({"last-scan": make_human})
         .apply(endOfLife, axis=1)
-        .set_precision(0)
         .render()
     )
     return patchingStyle
@@ -74,13 +75,6 @@ def oldscandate(s):
     else:
         return ['']*columns
 
-"""
-def patchlist(s):
-    columns = len(s)
-    if s["updates"] not None:
-        patchLink= s["hostname"]
-        return   
-"""
 
 def make_clickable(val):
     return f'<a href="/inventory/{val}" class="button">{val}</a>'
@@ -89,5 +83,12 @@ def make_clickable(val):
 def make_human(val):
     if val == 0:
         return 'Today'
+    else:
+        return val
+
+
+def zero_pending(val):
+    if val == 0:
+        return "n/a"
     else:
         return val

@@ -8,6 +8,7 @@ import pandas as pd
 def getPatchingDetail(host):
     data = filePatchingHost(host)
     df = normaliseToDataframe(data)
+    df = processDataFrame(df)
     return df
 
 
@@ -29,5 +30,17 @@ def normaliseToDataframe(data):
     """
     parse update-candidates JSON data to dataframe
     """
-    df = pd.json_normalize(data["update-candidates"], meta=["rpm", "repo", "release"], errors="ignore")
+    df = pd.json_normalize(data["update-candidates"],  errors="ignore")
     return df
+
+
+def processDataFrame(df):
+    """
+    Take dataframe as input, munge data to taste
+    Return munged dataframe 
+    """
+    # Sort by repo
+    if 'repo' in df.columns:
+        df.sort_values(by=["repo"], ascending=True, inplace=True)
+    return df
+

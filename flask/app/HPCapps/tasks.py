@@ -1,7 +1,6 @@
 from celery import Celery
 from celery.result import AsyncResult
 from celery.utils.log import get_task_logger
-import logging
 
 # Application imposts
 from .patching_load import getPatching
@@ -21,8 +20,7 @@ celery = Celery(
 )
 celery.conf.accept_content = ['json', 'msgpack', 'pickle']
 celery.conf.result_serializer = 'pickle'
-#logger = get_task_logger(__name__)
-logger = logging.getLogger(__name__)
+logger = get_task_logger(__name__)
 
 
 def get_job(job_id):
@@ -39,5 +37,5 @@ def getQueuedPatching(self):
     logger.info("startung run")
     df = getPatching()
     logger.info("ending run")
-    df = applyTableStyle(df)
-    return df
+    html = applyTableStyle(df)
+    return html

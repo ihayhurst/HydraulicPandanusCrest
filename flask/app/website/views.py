@@ -4,13 +4,13 @@ from flask import Flask, render_template, request
 from flask import Blueprint
 import flask
 import json
-import pandas as pd
 
 # Application imports direct or via celery tasks
 from ..HPCapps import uqueue
 from ..HPCapps import inventory_load_host
 from ..HPCapps import patching_load_host
 from ..HPCapps import tasks
+from ..HPCapps import inventory_style
 
 website = Blueprint(
     "website",
@@ -40,14 +40,16 @@ def queue():
 def inventory_host(hostname):
     title = f"Inventory page for {hostname}"
     invdf = inventory_load_host.getInventoryDetail(hostname)
+    invdf = inventory_style.applyTableStyle(invdf)
     patchdf = patching_load_host.getPatchingDetail(hostname)
-    return render_template("inventory_host.html", title=title, hostname=hostname, data=invdf.to_html(), patching=patchdf.to_html())
+    patchdf = inventory_style.applyTableStyle(patchdf)
+    return render_template("inventory_host.html", title=title, hostname=hostname, data=invdf, patching=patchdf)
 
 
 @website.route("/showpatching")
 def patching():
     title = "GBJH Linux Patching Status"
-    # job.id passed to template as result called from template by javascript when done
+    # job.id passed to template so job data loaded by javascript
     job = tasks.getQueuedPatching.delay()
     return render_template("patching.html", JOBID=job.id, title=title)
 

@@ -40,9 +40,9 @@ def queue():
 def inventory_host(hostname):
     title = f"Inventory page for {hostname}"
     invdf = inventory_load_host.getInventoryDetail(hostname)
-    invdf = inventory_style.applyTableStyle(invdf)
+    #invdf = inventory_style.applyTableStyle(invdf)
     patchdf = patching_load_host.getPatchingDetail(hostname)
-    patchdf = inventory_style.applyTableStyle(patchdf)
+    patchdf = inventory_style.applyTableStyle(patchdf).render()
     return render_template("inventory_host.html", title=title, hostname=hostname, data=invdf, patching=patchdf)
 
 

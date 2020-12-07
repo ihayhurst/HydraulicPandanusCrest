@@ -1,0 +1,55 @@
+article {
+    border: solid 2px white;
+    margin: 20px;
+    padding: 5px;
+    position: relative;
+}
+
+article h2 {
+    background: #333;
+    padding: 5px 8px;
+    position: relative;
+    top: -15px;
+    left: 5px;
+    display: inline;
+}
+
+article .actions {
+    float: right;
+    width: 25%;
+    text-align: right;
+    position: relative;
+}
+
+article .actions input {
+    display: block;
+    float: right;
+    clear: both;
+}
+
+article .details {
+    position: releative;
+    width: 70%;
+}
+
+.author {
+    float: left;
+    width: 60%;
+}
+
+.created {
+    float: left;
+    width: 40%
+}
+
+.label {
+    float: left;
+    width: 30%;
+}
+
+.label span,
+.author span,
+.created span {
+    font-weight: bold;
+    padding-right: 3px;
+}

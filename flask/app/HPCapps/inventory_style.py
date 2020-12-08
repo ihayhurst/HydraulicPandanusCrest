@@ -13,9 +13,9 @@ def applyTableStyle(df):
         dict(selector="td a", props=[("display", "block")]),
     ]
     patchingStyle = (
-         df.style.set_table_styles(styles)
+        df.style.set_table_styles(styles)
         .hide_index()
         .set_precision(0)
-        #.render()
+        # .render()
     )
     return patchingStyle

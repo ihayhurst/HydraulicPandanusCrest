@@ -60,6 +60,7 @@ def fileInventoryHost(host):
     """
     Load inventory data for named host from filesystem
     """
+    data = None
     path = r"/data/inventory/"
     filename = f"{path}{host}.json"
     with open(filename) as json_file:
@@ -67,6 +68,8 @@ def fileInventoryHost(host):
             data = json.load(json_file)
         except ValueError:
             print(f"Dodgy JSON mate aint it =={filename}==")
+        except FileNotFoundError:
+            return None
     return data
 
 

@@ -1,5 +1,3 @@
-import pandas as pd
-
 
 def applyTableStyle(df):
     styles = [
@@ -16,9 +14,10 @@ def applyTableStyle(df):
         dict(selector="caption", props=[("caption-side", "bottom")]),
         dict(selector="td a", props=[("display", "block")]),
     ]
+
     patchingStyle = (
         df.style.applymap(colorGrade, subset=["boot-time", "days-pending"])
-        .set_table_attributes('id="PatchingTable"')
+        .set_table_attributes('class="fixedhead"')
         .set_precision(0)
         .apply(oldscandate, axis=1)
         .set_table_styles(styles)
@@ -70,7 +69,7 @@ def oldscandate(s):
     otherwise empty string '' for each column
     """
     columns = len(s)
-    if s["last-scan"] >=7:
+    if s["last-scan"] >= 7:
         return ['color: rgba(128,128,255,0.7)']*columns
     else:
         return ['']*columns

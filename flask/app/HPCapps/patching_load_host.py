@@ -5,6 +5,7 @@ group by repository
 import json
 import pandas as pd
 
+
 def getPatchingDetail(host):
     data = filePatchingHost(host)
     df = normaliseToDataframe(data)
@@ -18,6 +19,7 @@ def filePatchingHost(host):
     """
     path = r"/data/patching/"
     filename = f"{path}{host}.json"
+    data = None
     with open(filename) as json_file:
         try:
             data = json.load(json_file)
@@ -37,10 +39,9 @@ def normaliseToDataframe(data):
 def processDataFrame(df):
     """
     Take dataframe as input, munge data to taste
-    Return munged dataframe 
+    Return munged dataframe
     """
     # Sort by repo
     if 'repo' in df.columns:
         df.sort_values(by=["repo"], ascending=True, inplace=True)
     return df
-

@@ -5,6 +5,8 @@ from celery.utils.log import get_task_logger
 # Application imposts
 from .patching_load import getPatching
 from .patching_style import applyTableStyle
+from .inventory_load import getInventory
+from .inventory_style import applyTableStyle as applyInventoryStyle
 
 
 # TODO load this from config
@@ -38,4 +40,14 @@ def getQueuedPatching(self):
     df = getPatching()
     logger.info("ending run")
     html = applyTableStyle(df)
+    return html
+
+
+@celery.task(bind=True)
+def getQueuedInventory(self):
+    logger.info(self.request.id)
+    df = getInventory()
+    html = applyInventoryStyle(df)
+    html = html.set_table_attributes('class="fixedhead"').render()
+
     return html

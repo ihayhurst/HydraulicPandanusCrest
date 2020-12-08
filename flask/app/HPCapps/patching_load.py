@@ -5,7 +5,7 @@
 """
 Load Patching files and create a summary dataframe
 
-Can be called as a command line to proces json to dataframe 
+Can be called as a command line to proces json to dataframe
 show head / tail and column stats
 show any JSON files that are not valid
 
@@ -53,6 +53,7 @@ def readDataFileToFrame(filename):
     drop long list of patches
     return dataframe
     """
+    data = None
     with open(filename) as json_file:
         try:
             data = json.load(json_file)

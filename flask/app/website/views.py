@@ -54,6 +54,13 @@ def patching():
     return render_template("patching.html", JOBID=job.id, title=title)
 
 
+@website.route("/allinventory")
+def inventory_all():
+    title = "GBJH Linux Inventory"
+    job = tasks.getQueuedInventory.delay() 
+    return render_template("inventory.html", JOBID=job.id, title=title)
+
+
 @website.route('/progress')
 def progress():
     '''
@@ -86,4 +93,3 @@ def result():
         return job.result
     else:
         return 404
-

@@ -14,12 +14,13 @@
 
 <body>
     <header>
-        <div class="container">
+        <div class="navbar">
             <strong><nav>
                 <ul class="menu">
                     <li><a href="{{ url_for('website.index') }}">Home</a></li>
-                    <li><a href="{{ url_for('website.patching') }}">Show patching</a></li>
-                    <li><a href="{{ url_for('website.queue') }}">Show Grid queue</a></li>
+                    <li><a href="{{ url_for('website.patching') }}">Patching</a></li>
+                    <li><a href="{{ url_for('website.inventory_all') }}">Inventory</a></li>
+                    <li><a href="{{ url_for('website.queue') }}">Grid queue</a></li>
                 </ul>
             </nav></strong>
         </div>

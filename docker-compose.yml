@@ -17,8 +17,9 @@ services:
       #- /mnt/svm-chem/grid/univa:/mnt/svm-chem/grid/univa:ro
     expose:
       - 8080
+    #Real host and domainname if ssl certs used  
     #hostname: gbjhccx00
-    #domainname: eame.syngenta.org
+    #domainname: region.company.org
 
   nginx:
     build: ./nginx
@@ -37,7 +38,7 @@ services:
     build: ./flask
     container_name: worker
     restart: always 
-    command: "celery -A app.HPCapps.tasks.celery worker --loglevel=INFO"
+    command: "celery -A app.HPCapps.tasks.celery worker --loglevel=DEBUG"
     user: nobody
     links:
         - redis

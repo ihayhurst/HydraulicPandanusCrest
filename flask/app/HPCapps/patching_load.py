@@ -2,16 +2,27 @@
 # I.M. Hayhurst 2020 06 19
 # /home/admin/patching/cache/*.json files
 
+"""
+Load Patching files and create a summary dataframe
+
+Can be called as a command line to proces json to dataframe
+show head / tail and column stats
+show any JSON files that are not valid
+
+getPatching called as module from route
+"""
+
 import sys
 import pandas as pd
 import json
 import glob
 from datetime import datetime as dt
-from multiprocessing import Pool
+from billiard.pool import Pool
 
 
 def getPatching():
     """
+    Call from route to load json from directory of hostname.json files
     Fetch list of dataframes and pass to concatenation
     Return dataframe.
     """
@@ -22,7 +33,12 @@ def getPatching():
 
 
 def loadDataFiles():
-    # path = r'/Users/ihayhurst/Google Drive/Code/python/cache'
+    """
+    Generate list of patching.json files
+    Divide among pool threads
+    Pool threads read json into dataframes
+    return list of dataframe objects
+    """
     path = r"/data/patching"
     all_files = glob.glob(path + "/*.json")
     li = []
@@ -32,26 +48,34 @@ def loadDataFiles():
 
 
 def readDataFileToFrame(filename):
+    """
+    Read data file JSON into datadrame
+    drop long list of patches
+    return dataframe
+    """
+    data = None
     with open(filename) as json_file:
         try:
-            d = json.load(json_file)
+            data = json.load(json_file)
         except ValueError:
             print(f"Dodgy JSON mate aint it =={filename}==")
+        df = normaliseToDataframe(data)
+    return df
 
-        df = pd.json_normalize(d, errors="ignore")
-        # Drop long list of individual patches before concatenation
-        df = df[
-            df.columns.drop(list(df.filter(regex="update-candidates"))).drop(
-                "last-update"
-            )
-        ]
+
+def normaliseToDataframe(data):
+    """
+    """
+    df = pd.json_normalize(data, errors="ignore")
+    # Drop long list of individual patches before concatenation
+    df = df[df.columns.drop(list(df.filter(regex="update-candidates"))).drop("last-update")]
     return df
 
 
 def concatToDataframe(li):
     """
     Take list of dataframes, concatenate
-    Return dataframe.
+    Return single dataframe.
     """
     df = pd.concat(li, axis=0, ignore_index=True)
     return df

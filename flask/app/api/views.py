@@ -5,8 +5,14 @@ import datetime
 import markdown
 import os
 
-invapi = Blueprint("invapi", __name__)
-api = Api(invapi)
+api_pages = Blueprint("api_pages", __name__)
+api = Api(api_pages)
+
+"""
+TODO stripout MOA api and rewrite to call hpc patch  / inventoy
+left for now so I don't need to rediscover all the quirks and syntax needed
+all over again
+"""
 
 
 def getData(sql):
@@ -26,12 +32,12 @@ def dump_date(thing):
     return thing
 
 
-@invapi.route("/")
-def invapi_home():
+@api_pages.route("/")
+def api_home():
     """Present some documentation"""
 
     # Open the README file
-    with open(os.path.join(invapi.root_path) + "/README.md", "r") as markdown_file:
+    with open(os.path.join(api_pages.root_path) + "/README.md", "r") as markdown_file:
 
         # Read the content of the file
         content = markdown_file.read()

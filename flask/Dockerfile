@@ -13,4 +13,5 @@ RUN        pip install --no-cache-dir -r requirements.txt
 # server = "python manage.py runserver 0.0.0.0:8000"
 #ENTRYPOINT ["pipenv", "run", "server"]
 #uwsgi has wggi.py equivalent run.py configured in in app.ini
+ENV MPLCONFIGDIR=/tmp/
 CMD ["uwsgi", "app.ini"]

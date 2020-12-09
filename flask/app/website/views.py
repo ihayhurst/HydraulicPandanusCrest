@@ -40,10 +40,15 @@ def queue():
 def inventory_host(hostname):
     title = f"Inventory page for {hostname}"
     invdf = inventory_load_host.getInventoryDetail(hostname)
-    #invdf = inventory_style.applyTableStyle(invdf)
     patchdf = patching_load_host.getPatchingDetail(hostname)
     patchdf = inventory_style.applyTableStyle(patchdf).render()
-    return render_template("inventory_host.html", title=title, hostname=hostname, data=invdf, patching=patchdf)
+    return render_template(
+        "inventory_host.html",
+        title=title,
+        hostname=hostname,
+        data=invdf,
+        patching=patchdf,
+    )
 
 
 @website.route("/showpatching")
@@ -57,37 +62,41 @@ def patching():
 @website.route("/allinventory")
 def inventory_all():
     title = "GBJH Linux Inventory"
-    job = tasks.getQueuedInventory.delay() 
+    job = tasks.getQueuedInventory.delay()
     return render_template("inventory.html", JOBID=job.id, title=title)
 
 
-@website.route('/progress')
+@website.route("/progress")
 def progress():
-    '''
+    """
     Get the progress of our task and return it using a JSON object
-    '''
-    jobid = request.values.get('jobid')
+    """
+    jobid = request.values.get("jobid")
     if jobid:
         job = tasks.get_job(jobid)
-        if job.state == 'PROGRESS':
-            return json.dumps(dict(
-                state=job.state,
-                progress=job.result['current']*1.0/job.result['total'],
-            ))
-        elif job.state == 'SUCCESS':
-            return json.dumps(dict(
-                state=job.state,
-                progress=1.0,
-            ))
-    return '{}'
+        if job.state == "PROGRESS":
+            return json.dumps(
+                dict(
+                    state=job.state,
+                    progress=job.result["current"] * 1.0 / job.result["total"],
+                )
+            )
+        elif job.state == "SUCCESS":
+            return json.dumps(
+                dict(
+                    state=job.state,
+                    progress=1.0,
+                )
+            )
+    return "{}"
 
 
-@website.route('/patchresult')
+@website.route("/patchresult")
 def result():
-    '''
+    """
     Pull our generated .png binary from redis and return it
-    '''
-    jobid = request.values.get('jobid')
+    """
+    jobid = request.values.get("jobid")
     if jobid:
         job = tasks.get_job(jobid)
         return job.result

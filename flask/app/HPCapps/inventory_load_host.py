@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 import json
 import requests
-import ssl
 import base64
 import pandas as pd
-from  .inventory_style import applyTableStyle
+from .inventory_style import applyTableStyle
 
 # private token authentication
 # curl -k --header "PRIVATE-TOKEN: bvci5iEFxxUzt1WmUqxt" "https://gitlab.rt.intra/api/v4/projects/983/"
@@ -79,17 +78,22 @@ def normaliseToDataframe(data):
     """
     record = pd.json_normalize(data)
     # drop the cols that need normalizing
-    discard_cols = ['contacts', 'networks', 'categories']
+    discard_cols = ["contacts", "networks", "categories"]
     record.drop([x for x in discard_cols], axis=1, inplace=True)
-    record2 = record[['distribution', 'hardware']].copy()
-    record = record[['id', 'description']]
+    record2 = record[["distribution", "hardware"]].copy()
+    record = record[["id", "description"]]
     contacts = pd.json_normalize(data, "contacts")
     networks = pd.json_normalize(data, "networks")
     categories = pd.json_normalize(data, "categories")
     categories = categories.T
     html = applyTableStyle(record)
     html = html.set_properties(subset=["description"], **{"width": "100%"}).render()
-    html = html + applyTableStyle(record2).set_properties(subset=["hardware"], **{"width": "50%"}).render()
+    html = (
+        html
+        + applyTableStyle(record2)
+        .set_properties(subset=["hardware"], **{"width": "50%"})
+        .render()
+    )
     html = html + f"<h4>Contacts</h4>{applyTableStyle(contacts).render()}"
     html = html + f"<h4>Networks</h4>{applyTableStyle(networks).render()}"
     html = html + f"<h4>Categories</h4>{applyTableStyle(categories).render()}"

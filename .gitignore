@@ -4,4 +4,4 @@
 *.pyc
 .vscode/*
 certs/*
-*instance/*
+*/instance/*

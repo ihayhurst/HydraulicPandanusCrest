@@ -1,10 +1,9 @@
 # I.M. Hayhurst 2020 06 30
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, current_app
 from flask import Blueprint
 import flask
 import json
-
 # Application imports direct or via celery tasks
 from ..HPCapps import uqueue
 from ..HPCapps import inventory_load_host
@@ -21,12 +20,13 @@ website = Blueprint(
 )
 
 app = Flask(__name__)
+
 flaskVer = flask.__version__
 
 
 @website.route("/")  # Needs a landing page about HPC
 def index():
-    return render_template("index.html", flaskVer=flaskVer)
+    return render_template("index.html", flaskVer=flaskVer, appver=current_app.config['APP_NAME']) 
 
 
 @website.route("/queue")

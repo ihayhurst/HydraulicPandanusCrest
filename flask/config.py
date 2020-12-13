@@ -1,4 +1,4 @@
 class Config(object):
-    APP_NAME = "HPC-spog"
+    APP_NAME = "HPC-homedev"
 class Production(Config):
-    pass
+    APP_NAME = "HPC-homeprod"

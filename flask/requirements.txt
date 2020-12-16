@@ -1,6 +1,5 @@
 click==7.1.2
 Flask==1.1.2
-Flask-Bootstrap==3.3.7.1
 Flask-RESTful==0.3.8
 itsdangerous==1.1.0
 Jinja2==2.11.2
@@ -12,5 +11,7 @@ matplotlib==3.3.3
 numpy==1.19.4
 pandas==1.1.4
 requests==2.25.0
-celery[redis]
+celery==4.4.7
+redis==3.5.3
 msgpack-python
+flower==0.9.5

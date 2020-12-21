@@ -17,7 +17,7 @@ import pandas as pd
 import json
 import glob
 from datetime import datetime as dt
-from billiard.pool import Pool
+from billiard.pool import Pool, ThreadPool
 
 
 def getPatching():
@@ -42,8 +42,8 @@ def loadDataFiles():
     path = r"/data/patching"
     all_files = glob.glob(path + "/*.json")
     li = []
-    pool = Pool(4)
-    li = pool.map(readDataFileToFrame, all_files)
+    with ThreadPool(processes=8) as pool:
+        li = pool.map(readDataFileToFrame, all_files)
     return li
 
 
@@ -59,6 +59,7 @@ def readDataFileToFrame(filename):
             data = json.load(json_file)
         except ValueError:
             print(f"Dodgy JSON mate aint it =={filename}==")
+            pass
         df = normaliseToDataframe(data)
     return df
 
@@ -96,7 +97,8 @@ def processDataframe(df):
     ].apply(pd.to_datetime, unit="s")
 
     # Drop hostname (FQDN) and use id as Hostname.
-    df.drop(["hostname"], axis=1, inplace=True)
+    if "hostname" in df.columns:
+        df.drop(["hostname"], axis=1, inplace=True)
 
     # Calculate how long since patches have been available
     df["first-update-detected-time"] = df.apply(

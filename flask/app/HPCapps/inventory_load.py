@@ -7,7 +7,7 @@ import pandas as pd
 import json
 import glob
 from datetime import datetime as dt
-from billiard.pool import Pool
+from billiard.pool import Pool, ThreadPool
 
 
 def getInventory():
@@ -32,8 +32,8 @@ def loadDataFiles():
     path = r"/data/inventory"
     all_files = glob.glob(path + "/*.json")
     li = []
-    pool = Pool(4)
-    li = pool.map(readDataFileToFrame, all_files)
+    with ThreadPool(processes=8) as pool:
+        li = pool.map(readDataFileToFrame, all_files)
     return li
 
 

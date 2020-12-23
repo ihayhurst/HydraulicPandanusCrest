@@ -17,8 +17,7 @@ import pandas as pd
 import json
 import glob
 from datetime import datetime as dt
-from billiard.pool import Pool, ThreadPool
-
+import gevent
 
 def getPatching():
     """
@@ -42,8 +41,8 @@ def loadDataFiles():
     path = r"/data/patching"
     all_files = glob.glob(path + "/*.json")
     li = []
-    with ThreadPool(processes=8) as pool:
-        li = pool.map(readDataFileToFrame, all_files)
+    pool = gevent.pool.Pool(1000)
+    li = pool.map(readDataFileToFrame, all_files)
     return li
 
 

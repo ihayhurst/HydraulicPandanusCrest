@@ -7,7 +7,7 @@ import pandas as pd
 import json
 import glob
 from datetime import datetime as dt
-from billiard.pool import Pool, ThreadPool
+import gevent
 
 
 def getInventory():
@@ -32,14 +32,14 @@ def loadDataFiles():
     path = r"/data/inventory"
     all_files = glob.glob(path + "/*.json")
     li = []
-    with ThreadPool(processes=8) as pool:
-        li = pool.map(readDataFileToFrame, all_files)
+    pool = gevent.pool.Pool(1000)
+    li = pool.map(readDataFileToFrame, all_files)
     return li
 
 
 def readDataFileToFrame(filename):
     """
-    Read data file JSON into datadrame
+    Read data file JSON into dataframe
     drop long list of patches
     return dataframe
     """

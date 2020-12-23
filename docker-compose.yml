@@ -38,7 +38,7 @@ services:
     build: ./flask
     container_name: worker
     restart: always 
-    command: "celery -A app.HPCapps.tasks.celery worker --loglevel=DEBUG"
+    command: "celery -A app.HPCapps.tasks.celery worker -P gevent -c1000 --loglevel=DEBUG"
     user: nobody
     links:
         - redis
@@ -55,17 +55,17 @@ services:
     #depends_on:
       #- redis
       
-  monitor:
-    build:
-      context: ./flask
-      dockerfile: Dockerfile
-    ports:
-     - "5555:5555"
-    entrypoint: flower
-    command: "flower -A app.HPCapps.tasks.celery --port=5555 --broker=redis://redis:6379"
-    depends_on:
-      - redis
-    volumes: ['./flask:/app:ro']
+  #monitor:
+    #build:
+      #context: ./flask
+      #dockerfile: Dockerfile
+    #ports:
+     #- "5555:5555"
+    #entrypoint: flower
+    #command: "flower -A app.HPCapps.tasks.celery --port=5555 --broker=redis://redis:6379"
+    #depends_on:
+     # - redis
+    #volumes: ['./flask:/app:ro']
 
 volumes:
     app: {}

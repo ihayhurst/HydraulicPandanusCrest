@@ -14,5 +14,4 @@ requests==2.25.0
 celery==5.0.5
 redis==3.5.3
 msgpack-python
-eventlet==0.30.0
 gevent==20.12.0

@@ -23,8 +23,8 @@ def filePatchingHost(host):
     with open(filename) as json_file:
         try:
             data = json.load(json_file)
-        except ValueError:
-            print(f"Dodgy JSON mate aint it =={filename}==")
+        except ValueError as err:
+            print(f"Dodgy JSON mate aint it =={filename}== has {err}")
     return data
 
 

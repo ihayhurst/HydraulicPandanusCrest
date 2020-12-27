@@ -17,7 +17,11 @@ import pandas as pd
 import json
 import glob
 from datetime import datetime as dt
+from celery.utils.log import get_task_logger
 import gevent
+
+
+logger = get_task_logger(__name__)
 
 def getPatching():
     """
@@ -56,19 +60,31 @@ def readDataFileToFrame(filename):
     with open(filename) as json_file:
         try:
             data = json.load(json_file)
-        except ValueError:
-            print(f"Dodgy JSON mate aint it =={filename}==")
-            pass
+        except ValueError as err:
+            logger.error(f"Dodgy JSON mate aint it =={filename}== has {err}")
+            #lastscan = int(dt.now().timestamp())
+            #data = f'{{"id": "{filename}", "unixtime": {lastscan}, "description": "{str(err)}",  "owner": "", "hostname": "{filename}", "boot-time": {lastscan}, "release": "", "last-update": {lastscan}, "first-update-detected-time": "", "updates": "" }}'
+            #data = json.loads(data)
+            #writeOut(data, filename)
+
         df = normaliseToDataframe(data)
     return df
 
+def writeOut(data, filename):
+    """present to debug"""
+    out_filename = f"{filename}-corrections.json"
+    out_file = open(out_filename, "w") 
+    json.dump(data, out_file, indent = 6) 
+    out_file.close()
+    return
 
 def normaliseToDataframe(data):
-    """
-    """
+    """"""
     df = pd.json_normalize(data, errors="ignore")
     # Drop long list of individual patches before concatenation
-    df = df[df.columns.drop(list(df.filter(regex="update-candidates"))).drop("last-update")]
+    df = df[
+        df.columns.drop(list(df.filter(regex="update-candidates"))).drop("last-update")
+    ]
     return df
 
 

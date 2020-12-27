@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, current_app
 from flask import Blueprint
 import flask
 import json
+from datetime import datetime as dt
 # Application imports direct or via celery tasks
 from ..HPCapps import uqueue
 from ..HPCapps import inventory_load_host
@@ -56,7 +57,14 @@ def patching():
     title = "GBJH Linux Patching Status"
     # job.id passed to template so job data loaded by javascript
     job = tasks.getQueuedPatching.delay()
-    return render_template("patching.html", JOBID=job.id, title=title)
+    now = dt.now()
+    timeString = now.strftime("%A, %d %b %Y %H:%M:%S")
+    templateData = {
+        'JOBID': job.id,
+        'title': title,
+        'timeString': timeString
+        }
+    return render_template("patching.html", **templateData)
 
 
 @website.route("/allinventory")

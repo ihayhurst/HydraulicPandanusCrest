@@ -11,6 +11,7 @@ def applyTableStyle(df):
         ),
         dict(selector="caption", props=[("caption-side", "bottom")]),
         dict(selector="td a", props=[("display", "block")]),
+        dict(selector="table", props=[("width", "850px")]),
     ]
     patchingStyle = (
         df.style.set_table_styles(styles)

@@ -53,6 +53,7 @@ def getQueuedPatching(self):
 def getQueuedInventory(self):
     logger.info(self.request.id)
     html = "<h3> Your task young Padowan; failed it has</h3>"
+    df = None
     try:
         df = getInventory()
     except SoftTimeLimitExceeded:

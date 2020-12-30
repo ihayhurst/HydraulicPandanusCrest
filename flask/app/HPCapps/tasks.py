@@ -39,6 +39,7 @@ def getQueuedPatching(self):
     logger.info(self.request.id)
     logger.info("startung run")
     html = "<h3> Your task young Padowan; failed it has</h3>"
+    df = None
     try:
         df = getPatching()
         logger.info("ending run")

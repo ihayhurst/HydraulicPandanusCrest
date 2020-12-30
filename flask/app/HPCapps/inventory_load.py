@@ -7,6 +7,8 @@ import pandas as pd
 import json
 import glob
 from datetime import datetime as dt
+from celery import current_task
+
 
 import gevent
 
@@ -17,10 +19,21 @@ def getInventory():
     Fetch list of dataframes and pass to concatenation
     Return dataframe.
     """
+    NTOTAL = 4
+    update_task(0.5, NTOTAL)
     li = loadDataFiles()
+    update_task(1, NTOTAL)
     df = concatToDataframe(li)
+    update_task(2, NTOTAL)
     df = processDataframe(df)
+    update_task(3, NTOTAL)
     return df
+
+
+def update_task(progress, NTOTAL):
+    current_task.update_state(state='PROGRESS',
+               meta={'current':progress,'total':NTOTAL})
+    return 999
 
 
 def loadDataFiles():

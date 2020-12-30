@@ -33,6 +33,7 @@ services:
 
   redis:
     image: redis
+    container_name: redis
 
   worker:
     build: ./flask

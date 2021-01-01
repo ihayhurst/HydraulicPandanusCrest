@@ -34,6 +34,9 @@ services:
   redis:
     image: redis
     container_name: redis
+    restart: always
+    sysctls: 
+      net.core.somaxconn: "1024"
 
   worker:
     build: ./flask

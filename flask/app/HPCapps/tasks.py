@@ -1,3 +1,10 @@
+import redis
+import zlib
+import pickle
+import matplotlib.pyplot as plt
+import base64
+import io
+
 from celery import Celery
 from celery.result import AsyncResult
 from celery.utils.log import get_task_logger
@@ -10,11 +17,15 @@ from .inventory_load import getInventory
 from .inventory_style import applyTableStyle as applyInventoryStyle
 
 
+
 # TODO load this from config
 CELERY_BROKER_URL = "redis://redis:6379"
 CELERY_RESULT_BACKEND = "redis://redis:6379"
+EXPIRATION_SECONDS = 600
 
 
+redis_url='redis://:redis:6379/0'
+r = redis.StrictRedis(host='redis', port=6379, db=0)
 # Initialize Celery
 celery = Celery(
     'worker',
@@ -42,6 +53,8 @@ def getQueuedPatching(self):
     df = None
     try:
         df = getPatching()
+        df_sum = summaryTable(df)
+        makePie(df_sum)
         logger.info("ending run")
         html = applyTableStyle(df)
     except SoftTimeLimitExceeded:
@@ -65,3 +78,16 @@ def getQueuedInventory(self):
 def clean_up_in_a_hurry():
     logger.error('Failed to execute job, timeout')
 
+def summaryTable(df):
+    df_sum = df[['release', 'hostname', 'owner']].groupby('release')['owner'].count()
+    return df_sum
+
+def makePie(df):
+    plot = df.plot.pie()
+    pic_IOBytes = io.BytesIO()
+    plt.savefig(pic_IOBytes, format='png')
+    pic_IOBytes.seek(0)
+    pic_hash = base64.b64encode(pic_IOBytes.read())
+
+    r.set("pie_release.png", pic_hash)
+    return    

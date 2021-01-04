@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, current_app
 from flask import Blueprint
 import flask
 import json
+import redis
 from datetime import datetime as dt
 # Application imports direct or via celery tasks
 from ..HPCapps import uqueue
@@ -24,6 +25,8 @@ app = Flask(__name__)
 
 flaskVer = flask.__version__
 
+redis_url='redis://:redis:6379/0'
+r = redis.StrictRedis(host='redis', port=6379, db=0)
 
 @website.route("/")  # Needs a landing page about HPC
 def index():
@@ -110,3 +113,9 @@ def result():
         return job.result
     else:
         return 404
+
+@website.route("/distropie")
+def distropie():
+    b64pierelease = r.get("pie_release.png")
+    b64pierelease = b64pierelease.decode('utf-8')
+    return render_template("distropie.html", image = b64pierelease )

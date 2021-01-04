@@ -8,6 +8,7 @@ import os
 api_pages = Blueprint("api_pages", __name__)
 api = Api(api_pages)
 
+
 """
 TODO stripout MOA api and rewrite to call hpc patch  / inventoy
 left for now so I don't need to rediscover all the quirks and syntax needed

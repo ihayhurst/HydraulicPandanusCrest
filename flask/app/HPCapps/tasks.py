@@ -79,12 +79,21 @@ def clean_up_in_a_hurry():
     logger.error('Failed to execute job, timeout')
 
 def summaryTable(df):
-    df_sum = df[['release', 'hostname', 'owner']].groupby('release')['owner'].count()
+    df_sum = df[['release', 'hostname']].groupby('release')['hostname'].count()
     return df_sum
 
 def makePie(df):
-    fig, ax = plt.subplots(figsize=(12,12))
+    plt.rcParams['text.color'] = 'white'
+    fig, ax = plt.subplots(figsize=(9,9))
+    fig.set_facecolor('#38373a')
+    my_circle=plt.Circle( (0,0), 0.7, color='#38373a')
+    plt.axes().set_ylabel('')
+ 
+    # Pieplot + circle on it
+    p=plt.gcf()
+    p.gca().add_artist(my_circle)
     plot = df.plot.pie()
+
     pic_IOBytes = io.BytesIO()
     plt.savefig(pic_IOBytes, format='png')
     pic_IOBytes.seek(0)

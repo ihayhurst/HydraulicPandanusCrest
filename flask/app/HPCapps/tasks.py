@@ -83,11 +83,11 @@ def summaryTable(df):
     return df_sum
 
 def makePie(df):
+    fig, ax = plt.subplots(figsize=(12,12))
     plot = df.plot.pie()
     pic_IOBytes = io.BytesIO()
     plt.savefig(pic_IOBytes, format='png')
     pic_IOBytes.seek(0)
     pic_hash = base64.b64encode(pic_IOBytes.read())
-
     r.set("pie_release.png", pic_hash)
     return    

@@ -84,7 +84,7 @@ def summaryTable(df):
 
 def makePie(df):
     plt.rcParams['text.color'] = 'white'
-    fig, ax = plt.subplots(figsize=(9,9))
+    fig, ax = plt.subplots(figsize=(11,9))
     fig.set_facecolor('#38373a')
     my_circle=plt.Circle( (0,0), 0.7, color='#38373a')
     plt.axes().set_ylabel('')

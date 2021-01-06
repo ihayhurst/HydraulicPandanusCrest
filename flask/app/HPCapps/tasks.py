@@ -2,6 +2,7 @@ import redis
 import zlib
 import pickle
 import matplotlib.pyplot as plt
+import numpy as np
 import base64
 import io
 
@@ -53,8 +54,14 @@ def getQueuedPatching(self):
     df = None
     try:
         df = getPatching()
+        # df.to_csv(r'/data/patching/patching.csv')
+        logger.info("Make graphics")
         df_sum = summaryTable(df)
-        makePie(df_sum)
+        fig = makePie(df_sum)
+        figToRdis(fig, "pie_release.png")
+
+        fig = makeScatter(df)
+        figToRdis(fig, "scatter_patching.png")
         logger.info("ending run")
         html = applyTableStyle(df)
     except SoftTimeLimitExceeded:
@@ -87,16 +94,49 @@ def makePie(df):
     fig, ax = plt.subplots(figsize=(11,9))
     fig.set_facecolor('#38373a')
     my_circle=plt.Circle( (0,0), 0.7, color='#38373a')
-    plt.axes().set_ylabel('')
- 
-    # Pieplot + circle on it
+    df.name=''  #remove series name
+    # Pieplot + circle on it to make doughnut
     p=plt.gcf()
     p.gca().add_artist(my_circle)
     plot = df.plot.pie()
+    return fig
 
+
+def makeScatter(df):
+    osrelease = df.release.unique()
+    os_dict = dict(zip(osrelease, range(len(osrelease))))
+    label = [*os_dict]
+    label = sorted(label)
+    
+    ncolors = len(label)
+    x = df["days-pending"]
+    y = df["boot-time"]
+    c = df.release.map(os_dict)
+    plt.rcParams["text.color"] = "white"
+
+    fig, ax = plt.subplots(figsize=(12, 8))
+    pic = ax.scatter(x, y, c=c, cmap="jet", alpha=1)
+
+    cb = plt.colorbar(pic, label="Distribution", orientation="vertical")
+    cb.set_ticks(np.linspace(0, ncolors, ncolors))
+    cb.set_ticklabels(label)
+
+    ax.axvline(x=60, color="red", linestyle="-", alpha=0.7)
+    ax.axvline(x=50, color="orange", linestyle="--", alpha=0.3)
+    ax.axhline(y=60, color="red", linestyle="-", alpha=0.7)
+    ax.axhline(y=50, color="orange", linestyle="--", alpha=0.3)
+    ax.set_xlabel("Days patches pending")
+    ax.set_ylabel("Days since last booted")
+
+    ax.set_ylim([0, 100])
+    ax.set_xlim([0, 100])
+    return fig
+
+
+def figToRdis(fig, filenamekey):
     pic_IOBytes = io.BytesIO()
     plt.savefig(pic_IOBytes, format='png')
     pic_IOBytes.seek(0)
     pic_hash = base64.b64encode(pic_IOBytes.read())
-    r.set("pie_release.png", pic_hash)
-    return    
+    r.set(filenamekey, pic_hash)
+    return

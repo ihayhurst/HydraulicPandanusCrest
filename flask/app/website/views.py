@@ -119,3 +119,10 @@ def distropie():
     b64pierelease = r.get("pie_release.png")
     b64pierelease = b64pierelease.decode('utf-8')
     return render_template("distropie.html", image = b64pierelease )
+
+
+@website.route("/scatter")
+def scatter():
+    b64pierelease = r.get("scatter_patching.png")
+    b64pierelease = b64pierelease.decode('utf-8')
+    return render_template("scatterpatch.html", image = b64pierelease )

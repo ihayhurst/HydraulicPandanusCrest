@@ -18,7 +18,6 @@ from .inventory_load import getInventory
 from .inventory_style import applyTableStyle as applyInventoryStyle
 
 
-
 # TODO load this from config
 CELERY_BROKER_URL = "redis://redis:6379"
 CELERY_RESULT_BACKEND = "redis://redis:6379"
@@ -50,7 +49,7 @@ def get_job(job_id):
 def getQueuedPatching(self):
     logger.info(self.request.id)
     logger.info("startung run")
-    html = "<h3> Your task young Padowan; failed it has</h3>"
+    html = "<h3> Your task, young Padowan; failed it has.</h3>"
     df = None
     try:
         df = getPatching()
@@ -72,7 +71,7 @@ def getQueuedPatching(self):
 @celery.task(bind=True, hard_time_limit=6)
 def getQueuedInventory(self):
     logger.info(self.request.id)
-    html = "<h3> Your task young Padowan; failed it has</h3>"
+    html = "<h3> Your task, young Padowan; failed it has.</h3>"
     df = None
     try:
         df = getInventory()

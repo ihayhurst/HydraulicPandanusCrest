@@ -16,6 +16,7 @@ def applyTableStyle(df):
     patchingStyle = (
         df.style.set_table_styles(styles)
         .hide_index()
+        .hide_columns(['hardware_info.children', 'lshw'])
         .set_precision(0)
         # .render()
     )

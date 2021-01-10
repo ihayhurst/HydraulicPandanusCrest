@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
 import requests
+#import ssl
 import base64
 import pandas as pd
 from .inventory_style import applyTableStyle
@@ -65,8 +66,8 @@ def fileInventoryHost(host):
     with open(filename) as json_file:
         try:
             data = json.load(json_file)
-        except ValueError:
-            print(f"Dodgy JSON mate aint it =={filename}==")
+        except ValueError as err:
+            logger.error(f"Dodgy JSON mate aint it =={filename}== has {err}")
         except FileNotFoundError:
             return None
     return data

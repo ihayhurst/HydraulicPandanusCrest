@@ -21,7 +21,7 @@ from .inventory_style import applyTableStyle as applyInventoryStyle
 # TODO load this from config
 CELERY_BROKER_URL = "redis://redis:6379"
 CELERY_RESULT_BACKEND = "redis://redis:6379"
-EXPIRATION_SECONDS = 600
+#EXPIRATION_SECONDS = 600
 
 
 redis_url='redis://:redis:6379/0'

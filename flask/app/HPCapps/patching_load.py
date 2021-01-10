@@ -73,11 +73,6 @@ def readDataFileToFrame(filename):
             data = json.load(json_file)
         except ValueError as err:
             logger.error(f"Dodgy JSON mate aint it =={filename}== has {err}")
-            #lastscan = int(dt.now().timestamp())
-            #data = f'{{"id": "{filename}", "unixtime": {lastscan}, "description": "{str(err)}",  "owner": "", "hostname": "{filename}", "boot-time": {lastscan}, "release": "", "last-update": {lastscan}, "first-update-detected-time": "", "updates": "" }}'
-            #data = json.loads(data)
-            #writeOut(data, filename)
-
         df = normaliseToDataframe(data)
     return df
 

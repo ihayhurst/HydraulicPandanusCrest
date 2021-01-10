@@ -1,6 +1,6 @@
 # HydraulicPandanusCrest
 
-Docker nginx/flask/uwsgi/celery/redis stack for managing patching and inventory json records on about 250 linux servers, vms and workstations
+Docker/nginx/uwsgi/flask/celery with gevent /redis stack for managing patching and inventory json records on about 250 linux servers, vms and workstations
 
 ## Docker containers
 
@@ -10,7 +10,7 @@ Orchestrated with docker-compose
 - flask - slim buster python 3.8/9 for flask website, api, HPCtools,
 - worker - slim buster python 3.8/9 for celery workers
 - redis - messaage broker backend for celery tasks
-- flower - monitor celery jobs
+- flower - monitor celery jobs (only enabled for dev)
 
 In the HPC environment background scripts run to check host machines patches pending, hardware physical or virtual etc. They generate and store centraly  a /patching/hostname.json
 all known machines have an /inventory/hostname.json with what when where who type info

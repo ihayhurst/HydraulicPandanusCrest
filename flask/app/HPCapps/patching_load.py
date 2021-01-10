@@ -31,7 +31,7 @@ def getPatching():
     Return dataframe.
     """
     NTOTAL = 4
-    update_task(0.5, NTOTAL)
+    update_task(0.2, NTOTAL)
     li = loadDataFiles()
     update_task(1, NTOTAL)
     df = concatToDataframe(li)
@@ -81,6 +81,7 @@ def readDataFileToFrame(filename):
         df = normaliseToDataframe(data)
     return df
 
+
 def writeOut(data, filename):
     """present to debug"""
     out_filename = f"{filename}-corrections.json"
@@ -90,7 +91,8 @@ def writeOut(data, filename):
     return
 
 def normaliseToDataframe(data):
-    """"""
+    """
+    """
     df = pd.json_normalize(data, errors="ignore")
     # Drop long list of individual patches before concatenation
     df = df[

@@ -127,7 +127,7 @@ def makeScatter(df):
     ax.set_xlabel("Days patches pending")
     ax.set_ylabel("Days since last booted")
 
-    ax.set_ylim([0, 100])
+    ax.set_ylim([0, 180])
     ax.set_xlim([0, 100])
     return fig
 

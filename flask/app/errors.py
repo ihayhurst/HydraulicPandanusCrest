@@ -8,11 +8,14 @@ errors = Blueprint('errors', __name__)
 def handle_unexpected_error(error):
     status_code = 500
     success = False
+    err_message= repr(error)
     response = {
         'success': success,
         'error': {
             'type': 'UnexpectedException',
-            'message': 'An unexpected error has occurred.'
+            'message': 'An unexpected error has occurred.',
+            'error':err_message
+
         }
     }
 
@@ -31,6 +34,6 @@ def handle_error(error):
         }
     }
 
-    #return jsonify(response), status_code
+
     return jsonify(response), status_code
 """

@@ -5,6 +5,7 @@ from flask import Blueprint
 import flask
 import json
 import redis
+import markdown
 from datetime import datetime as dt
 # Application imports direct or via celery tasks
 from ..HPCapps import uqueue
@@ -54,6 +55,24 @@ def inventory_host(hostname):
         patching=patchdf,
     )
 
+
+@website.route("/notes/<hostname>", methods=["GET", "POST"])
+def notes_host(hostname):
+    path = r"/data/notes/"
+    filename = f"{path}{hostname}.md"
+    with open(filename, "r") as markdown_file:
+
+        # Read the content of the file
+        content = markdown_file.read()
+
+        # Convert to HTML
+        md = markdown.markdown(content, extensions=["tables", "fenced_code", "toc", "codehilite", "admonition"])
+
+    templateData = {
+        'title': f"Operational notes for {hostname}",
+        'content': md
+    }
+    return render_template("notes.html", **templateData)
 
 @website.route("/showpatching")
 def patching():

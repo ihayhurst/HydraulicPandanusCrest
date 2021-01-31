@@ -1,5 +1,7 @@
     /* static/mystyle.css */
-    
+@import "admonition.css";
+
+
     header {
         background-color: #2B2B2B;
         height: 35px;
@@ -25,7 +27,7 @@
 */
     
     a {
-        color: green;
+        color: orange;
     }
     
     html,

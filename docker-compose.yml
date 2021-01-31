@@ -12,8 +12,9 @@ services:
       - APP_NAME=HPCadmin
     volumes:
       - ./flask:/app
-      - ../patching/:/data/patching
-      - ../inventory/:/data/inventory
+      - ../patching/cache/:/data/patching
+      - ../inventory/config/:/data/inventory
+      - ../inventory/notes/:/data/notes
       #- /mnt/svm-chem/grid/univa:/mnt/svm-chem/grid/univa:ro
     expose:
       - 8080
@@ -48,8 +49,8 @@ services:
         - redis
     volumes:
         - ./flask/:/app:ro
-        - ../patching/:/data/patching
-        - ../inventory/:/data/inventory
+        - ../patching/cache/:/data/patching
+        - ../inventory/config/:/data/inventory
 
   #celery-beat:
    # build: ./flask

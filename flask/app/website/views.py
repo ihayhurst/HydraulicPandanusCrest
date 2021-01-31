@@ -43,17 +43,16 @@ def queue():
 
 @website.route("/inventory/<hostname>", methods=["GET", "POST"])
 def inventory_host(hostname):
-    title = f"Inventory page for {hostname}"
     invdf = inventory_load_host.getInventoryDetail(hostname)
     patchdf = patching_load_host.getPatchingDetail(hostname)
     patchdf = inventory_style.applyTableStyle(patchdf).render()
-    return render_template(
-        "inventory_host.html",
-        title=title,
-        hostname=hostname,
-        data=invdf,
-        patching=patchdf,
-    )
+    templateData = {
+        'title': f"Inventory page for {hostname}",
+        'hostname': hostname,
+        'data': invdf,
+        'patching': patchdf
+    }
+    return render_template("inventory_host.html", **templateData)
 
 
 @website.route("/notes/<hostname>", methods=["GET", "POST"])
@@ -70,7 +69,8 @@ def notes_host(hostname):
 
     templateData = {
         'title': f"Operational notes for {hostname}",
-        'content': md
+        'content': md,
+        'hostname': hostname
     }
     return render_template("notes.html", **templateData)
 

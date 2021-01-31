@@ -1,4 +1,7 @@
 {% extends "base.html" %} {% block content%}
+<ul>
+    <li><a href="../notes/{{ hostname }}"> Operational notes for {{ hostname }}</a></li>
+</ul>
 <article>
     <h2>{{ hostname }}</h2>
     {{ data|safe }}

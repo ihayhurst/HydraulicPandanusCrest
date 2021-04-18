@@ -32,7 +32,7 @@ r = redis.StrictRedis(host='redis', port=6379, db=0)
 @website.route("/")  # Needs a landing page about HPC
 def index():
     templateData = {
-        'flaskver': flaskVer,
+        'flaskVer': flaskVer,
         'appver': current_app.config['APP_NAME']
 
     }

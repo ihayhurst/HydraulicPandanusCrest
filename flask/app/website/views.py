@@ -31,7 +31,12 @@ r = redis.StrictRedis(host='redis', port=6379, db=0)
 
 @website.route("/")  # Needs a landing page about HPC
 def index():
-    return render_template("index.html", flaskVer=flaskVer, appver=current_app.config['APP_NAME'])
+    templateData = {
+        'flaskver': flaskVerappver,
+        'appver': current_app.config['APP_NAME']
+
+    }
+    return render_template("index.html", **templateData)
 
 
 @website.route("/queue")

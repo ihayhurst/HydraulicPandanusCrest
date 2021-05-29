@@ -1,0 +1,70 @@
+{% extends "base.html" %} {% block content %}
+
+<h3> Timeline plot  </h3>
+<br/><img src="data:image/png;base64, {{image}}" alt=" Timeline plot"> 
+<div id="patchesLoading"> Generating plot...
+    <br/>
+    <br/>JOB: {{JOBID}}
+    </br/>
+    <style>
+        #prog {
+            width: 400px;
+            border: 1px solid orange;
+            height: 20px;
+        }
+
+        #bar {
+            width: 0px;
+            background-color: orange;
+            height: 20px;
+        }
+    </style>
+
+</div>
+<div id="wrapper">
+    <div id="prog">
+        <div id="bar"></div>
+    </div>
+</div>
+<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+<script>
+    var end_file;
+
+    function poll() {
+        $.ajax("{{url_for('website.progress', jobid=JOBID)}}", {
+            dataType: "json",
+            success: function(resp) {
+                $("#bar").css({
+                    width: $("#prog").width() * resp.progress
+                });
+                console.log(resp)
+                if (resp.progress >= 0.99) {
+                    $("#bar").css({
+                        backgroundColor: "green"
+                    });
+
+                    $("#wrapper").html('');
+                    $.get("patchresult?jobid={{JOBID}}", function(data, status) {
+                        end_file = data;
+                        $("#patchesLoading").html(end_file);
+                        console.log("success")
+                    });
+                    return;
+                } else {
+                    setTimeout(poll, 250.0);
+                }
+
+            }
+        });
+
+    }
+
+
+
+    $(function() {
+        var JOBID = "{{ JOBID }}";
+        poll();
+
+    });
+</script>
+{% endblock %}

@@ -2,9 +2,11 @@ import redis
 import zlib
 import pickle
 import matplotlib.pyplot as plt
+from matplotlib.dates import date2num
 import numpy as np
 import base64
 import io
+import seaborn as sns
 
 from celery import Celery
 from celery.result import AsyncResult
@@ -81,12 +83,32 @@ def getQueuedInventory(self):
     html = html.set_table_attributes('class="fixedhead"').render()
     return html
 
+@celery.task(bind=True, hard_time_limit=6)
+def processProjectlist(self, *args, **kwargs):
+    """ Make df from uploaded timeline, return html of processed timeline
+    """
+    self.update_state(state='PROGRESS', meta={'current':1,'total':3})
+    filename = kwargs.get('filename') 
+    df = pickle.loads(filename)
+    self.update_state(state='PROGRESS', meta={'current':2,'total':3})
+    fig = timelineGraph(df)
+    figToRdis(fig, "timeline.png")
+    self.update_state(state='PROGRESS', meta={'current':3,'total':3})
+    # fetch (roundtrip to redis not necessary but saves writing the code again)
+    b64timeline = r.get("timeline.png")
+    b64timeline = b64timeline.decode('utf-8')
+    html = f"""<img src="data:image/png;base64, {b64timeline}" alt=" Timeline plot">"""
+    return html
+
+
 def clean_up_in_a_hurry():
     logger.error('Failed to execute job, timeout')
+
 
 def summaryTable(df):
     df_sum = df[['release', 'hostname']].groupby('release')['hostname'].count()
     return df_sum
+
 
 def makePie(df):
     plt.rcParams['text.color'] = 'white'
@@ -114,7 +136,7 @@ def makeScatter(df):
     plt.rcParams["text.color"] = "white"
 
     fig, ax = plt.subplots(figsize=(12, 8))
-    pic = ax.scatter(x, y, c=c, cmap="jet", alpha=1)
+    pic = ax.scatter(x, y, c=c, cmap="tab20c", alpha=1)
 
     cb = plt.colorbar(pic, label="Distribution", orientation="vertical")
     cb.set_ticks(np.linspace(0, ncolors, ncolors))
@@ -129,6 +151,51 @@ def makeScatter(df):
 
     ax.set_ylim([0, 180])
     ax.set_xlim([0, 100])
+    return fig
+
+def timelineGraph(df):
+    """Draw graph of event label between time points on timeline
+    """
+    color_labels = df.Project.unique()
+    rgb_values = sns.color_palette("Paired", len(color_labels))
+    color_map = dict(zip(color_labels, rgb_values))
+    labels = df["Project"]
+    fig, axes = plt.subplots(2, 1, sharex=True, figsize=(16, 10))
+    fig.autofmt_xdate()
+    axes[0] = plt.subplot2grid((6, 1), (0, 0), rowspan=5)
+    color = "tab:blue"
+    axes[0].grid(which="major", axis="x")
+    axes[0].tick_params(axis="both", which="major", labelsize=6)
+    axes[0].tick_params(axis="both", which="minor", labelsize=6)
+    axes[0].set_ylabel("Project", color=color)
+    axes[0].spines["right"].set_position(("axes", 1))
+    axes[0].xaxis_date()
+    patches = [
+        plt.plot(
+            [],
+            [],
+            marker="o",
+            ms=10,
+            ls="",
+            mec=None,
+            color=rgb_values[i],
+            label="{:s}".format(color_labels[i]),
+        )[0]
+        for i in range(len(color_labels))
+    ]
+    axes[0].legend(handles=patches, bbox_to_anchor=(0, 1), loc="upper left")
+    axes[0].hlines(
+        labels,
+        date2num(df.Begin),
+        date2num(df.End),
+        linewidth=6,
+        color=df.Project.map(color_map),
+        alpha=0.8,
+    )
+    # axes[0].plot(date2num(df_sub_ref.Date), df_sub_ref.User, "kx", linewidth=10)
+
+    fig.tight_layout()
+    #plt.show()
     return fig
 
 

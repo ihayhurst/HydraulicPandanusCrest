@@ -8,7 +8,7 @@ import json
 import redis
 import markdown
 from datetime import datetime as dt
-rom werkzeug.utils import secure_filename
+from werkzeug.utils import secure_filename
 from urllib.parse import urlparse
 import pickle
 import pandas as pd
@@ -216,7 +216,7 @@ def respond():
         build_id = data['builds'][0]['id']
         user_email = data['builds'][0]['user']['email']
         web_url = data['project']['web_url']
-        msg = Message('Pipeline artefacts available for download', sender = f'root@{sender}', recipients = [f'{user_email}', 'ian.hayhurst@syngenta.com'])
+        msg = Message('Pipeline artefacts available for download', sender = f'root@{sender}', recipients = [f'{user_email}'])
         msg.body = f""" Your pipeline has new artefacts available {web_url}/-/jobs/{build_id}/artifacts/download?file_type=archive
                     User: {user_email}
                     """

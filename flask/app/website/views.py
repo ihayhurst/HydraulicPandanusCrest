@@ -47,7 +47,18 @@ mail = Mail(app)
 
 @website.route("/")  # Needs a landing page about HPC
 def index():
+    # Open the README file
+    with open(os.path.join(website.root_path) + "/Home.md", "r") as markdown_file:
+
+        # Read the content of the file
+        content = markdown_file.read()
+
+        # Convert to HTML
+        md = markdown.markdown(content, extensions=["tables", "fenced_code", "toc"])
+        #return md
+
     templateData = {
+        'content': md,
         'flaskVer': flaskVer,
         'appver': current_app.config['APP_NAME'],
         'ldap_port': current_app.config['LDAP_PORT'],

@@ -1,7 +1,9 @@
 {% extends "base.html" %} {% block content %}
 
-<hr/>
-<h6>Flask Version:> {{ flaskVer }}</h6>
+<hr/> {{ content|safe }}
+<hr>
+<h6>Settings included for debug or status</h6>
+<h6>Flask Version: {{ flaskVer }}</h6>
 <h6>Application Name: {{ appver }}</h6>
 <h6>ldap_port Name: {{ ldap_port }}</h6>
 <h6>Home: {{ home }}</h6>

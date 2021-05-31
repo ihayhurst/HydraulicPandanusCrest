@@ -1,7 +1,16 @@
 # I.M. Hayhurst 2020 06 30
 
-from flask import Flask, render_template, request, redirect, current_app, Response, flash, url_for
-from flask import Blueprint
+from flask import (
+    Flask,
+    Blueprint,
+    render_template,
+    request,
+    redirect,
+    current_app,
+    Response,
+    flash,
+    url_for,
+)
 import flask
 from flask_mail import Mail, Message
 import json
@@ -14,6 +23,7 @@ import pickle
 import pandas as pd
 import os
 import io
+
 # Application imports direct or via celery tasks
 from ..HPCapps import uqueue
 from ..HPCapps import inventory_load_host
@@ -31,17 +41,17 @@ website = Blueprint(
 
 app = Flask(__name__)
 # TODO move to config file
-app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
-app.config['UPLOAD_EXTENSIONS'] = ['csv', 'txt']
-app.config['UPLOAD_PATH'] = './uploads'
-#172.26.44.22 IP for mail-eame.syngenta.org'
-app.config['MAIL_SERVER']='172.26.44.22'
-app.config['MAIL_PORT']='25'
-app.config['MAIL_USERNAME']='root'
+app.config["MAX_CONTENT_LENGTH"] = 1024 * 1024
+app.config["UPLOAD_EXTENSIONS"] = ["csv", "txt"]
+app.config["UPLOAD_PATH"] = "./uploads"
+# 172.26.44.22 IP for mail-eame.syngenta.org'
+app.config["MAIL_SERVER"] = "172.26.44.22"
+app.config["MAIL_PORT"] = "25"
+app.config["MAIL_USERNAME"] = "root"
 flaskVer = flask.__version__
-redis_url='redis://:redis:6379/0'
-r = redis.StrictRedis(host='redis', port=6379, db=0)
-app.config.task_serializer = 'pickle' #not working added to task line directly
+redis_url = "redis://:redis:6379/0"
+r = redis.StrictRedis(host="redis", port=6379, db=0)
+app.config.task_serializer = "pickle"  # not working added to task line directly
 mail = Mail(app)
 
 
@@ -55,14 +65,13 @@ def index():
 
         # Convert to HTML
         md = markdown.markdown(content, extensions=["tables", "fenced_code", "toc"])
-        #return md
 
     templateData = {
-        'content': md,
-        'flaskVer': flaskVer,
-        'appver': current_app.config['APP_NAME'],
-        'ldap_port': current_app.config['LDAP_PORT'],
-        'home': os.path.join(app.config['UPLOAD_PATH'], "wibble")
+        "content": md,
+        "flaskVer": flaskVer,
+        "appver": current_app.config["APP_NAME"],
+        "ldap_port": current_app.config["LDAP_PORT"],
+        "home": os.path.join(app.config["UPLOAD_PATH"], "wibble"),
     }
     return render_template("index.html", **templateData)
 
@@ -80,10 +89,10 @@ def inventory_host(hostname):
     patchdf = patching_load_host.getPatchingDetail(hostname)
     patchdf = inventory_style.applyTableStyle(patchdf).render()
     templateData = {
-        'title': f"Inventory page for {hostname}",
-        'hostname': hostname,
-        'data': invdf,
-        'patching': patchdf
+        "title": f"Inventory page for {hostname}",
+        "hostname": hostname,
+        "data": invdf,
+        "patching": patchdf,
     }
     return render_template("inventory_host.html", **templateData)
 
@@ -98,14 +107,18 @@ def notes_host(hostname):
         content = markdown_file.read()
 
         # Convert to HTML
-        md = markdown.markdown(content, extensions=["tables", "fenced_code", "toc", "codehilite", "admonition"])
+        md = markdown.markdown(
+            content,
+            extensions=["tables", "fenced_code", "toc", "codehilite", "admonition"],
+        )
 
     templateData = {
-        'title': f"Operational notes for {hostname}",
-        'content': md,
-        'hostname': hostname
+        "title": f"Operational notes for {hostname}",
+        "content": md,
+        "hostname": hostname,
     }
     return render_template("notes.html", **templateData)
+
 
 @website.route("/showpatching")
 def patching():
@@ -114,11 +127,7 @@ def patching():
     job = tasks.getQueuedPatching.delay()
     now = dt.now()
     timeString = now.strftime("%A, %d %b %Y %H:%M:%S")
-    templateData = {
-        'JOBID': job.id,
-        'title': title,
-        'timeString': timeString
-        }
+    templateData = {"JOBID": job.id, "title": title, "timeString": timeString}
     return render_template("patching.html", **templateData)
 
 
@@ -166,73 +175,84 @@ def result():
     else:
         return 404
 
+
 @website.route("/distropie")
 def distropie():
     b64pierelease = r.get("pie_release.png")
-    b64pierelease = b64pierelease.decode('utf-8')
-    return render_template("distropie.html", image = b64pierelease )
+    b64pierelease = b64pierelease.decode("utf-8")
+    return render_template("distropie.html", image=b64pierelease)
 
 
 @website.route("/scatter")
 def scatter():
     b64pierelease = r.get("scatter_patching.png")
-    b64pierelease = b64pierelease.decode('utf-8')
-    return render_template("scatterpatch.html", image = b64pierelease )
+    b64pierelease = b64pierelease.decode("utf-8")
+    return render_template("scatterpatch.html", image=b64pierelease)
+
 
 @website.route("timeline_upload", methods=["GET", "POST"])
 def uploader():
-    if  request.method == 'GET':
+    if request.method == "GET":
         return render_template("timeline_upload.html")
 
-    elif request.method == 'POST':
+    elif request.method == "POST":
         # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
+        if "file" not in request.files:
+            flash("No file part")
             return redirect(request.url)
-        file = request.files['file']
+        file = request.files["file"]
         # if user does not select file, browser also
         # submit an empty part without filename
-        if file.filename == '':
-            flash('No selected file', 'error')
+        if file.filename == "":
+            flash("No selected file", "error")
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            flash(f'{filename}Loaded', 'info')
+            flash(f"{filename}Loaded", "info")
             df = pd.read_csv(file)
             pickled_df = pickle.dumps(df)
             # file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-            job = tasks.processProjectlist.apply_async(kwargs={"filename": pickled_df}, serializer='pickle')
-            #return redirect(url_for('timeline')), 
-        return render_template("timeline.html", JOBID=job.id) 
+            job = tasks.processProjectlist.apply_async(
+                kwargs={"filename": pickled_df}, serializer="pickle"
+            )
+            # return redirect(url_for('timeline')),
+        return render_template("timeline.html", JOBID=job.id)
 
-
-    
 
 def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in app.config["UPLOAD_EXTENSIONS"]
+    return (
+        "." in filename
+        and filename.rsplit(".", 1)[1].lower() in app.config["UPLOAD_EXTENSIONS"]
+    )
+
 
 @website.route("/timeline")
 def timeline():
     b64timeline = r.get("timeline.png")
-    b64timeline = b64timeline.decode('utf-8')
-    return render_template("timeline.html",  image = b64timeline)
+    b64timeline = b64timeline.decode("utf-8")
+    return render_template("timeline.html", image=b64timeline)
 
 
 @website.route("/webhook", methods=["POST"])
 def respond():
     data = request.json
     sender = urlparse(request.host).scheme
-    if data['object_kind'] == "pipeline" and data['builds'][0]['status'] == 'success':
-        build_id = data['builds'][0]['id']
-        user_email = data['builds'][0]['user']['email']
-        web_url = data['project']['web_url']
-        msg = Message('Pipeline artefacts available for download', sender = f'root@{sender}', recipients = [f'{user_email}'])
+    if data["object_kind"] == "pipeline" and data["builds"][0]["status"] == "success":
+        build_id = data["builds"][0]["id"]
+        user_email = data["builds"][0]["user"]["email"]
+        web_url = data["project"]["web_url"]
+        msg = Message(
+            "Pipeline artefacts available for download",
+            sender=f"root@{sender}",
+            recipients=[f"{user_email}"],
+        )
         msg.body = f""" Your pipeline has new artefacts available {web_url}/-/jobs/{build_id}/artifacts/download?file_type=archive
                     User: {user_email}
                     """
         mail.send(msg)
     else:
-        print(" Build has no artefacts or recieved webhook we don't know what to do with")
+        print(
+            " Build has no artefacts or recieved webhook we don't know what to do with"
+        )
 
     return Response(status=200)

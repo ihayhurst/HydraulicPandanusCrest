@@ -3,8 +3,10 @@
 
 class Config(object):
     APP_NAME = "HPC-without-instanceconfig active"
-    LDAP_PORT = "389"
     SECRET_KEY = "justsoitworksoutofgit-overridewithinstanceconf"
+
+    # LDAP_PORT for AD lookup (TODO)
+    LDAP_PORT = "389"
 
     # Uploads
     MAX_CONTENT_LENGTH = 1024 * 1024

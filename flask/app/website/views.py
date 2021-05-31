@@ -203,18 +203,17 @@ def uploader():
             flash(f"{filename}Loaded", "info")
             df = pd.read_csv(file)
             pickled_df = pickle.dumps(df)
-            # file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
+            # file.save(os.path.join(current_app.config['UPLOAD_PATH'], filename))
             job = tasks.processProjectlist.apply_async(
                 kwargs={"filename": pickled_df}, serializer="pickle"
             )
-            # return redirect(url_for('timeline')),
         return render_template("timeline.html", JOBID=job.id)
 
 
 def allowed_file(filename):
     return (
         "." in filename
-        and filename.rsplit(".", 1)[1].lower() in app.config["UPLOAD_EXTENSIONS"]
+        and filename.rsplit(".", 1)[1].lower() in current_app.config["UPLOAD_EXTENSIONS"]
     )
 
 

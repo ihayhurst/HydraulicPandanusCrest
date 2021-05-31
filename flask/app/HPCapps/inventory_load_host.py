@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import json
 import requests
-#import ssl
+
+# import ssl
 import base64
 import pandas as pd
 from .inventory_style import applyTableStyle
@@ -81,10 +82,10 @@ def normaliseToDataframe(data):
     # drop the cols that need normalizing
     discard_cols = ["contacts", "networks", "categories"]
     record.drop([x for x in discard_cols], axis=1, inplace=True)
-    if 'hardware' in record.columns:
-       hardware = record[["hardware"]].copy()
+    if "hardware" in record.columns:
+        hardware = record[["hardware"]].copy()
     else:
-       hardware = None 
+        hardware = None
     record = record[["id", "description"]]
     contacts = pd.json_normalize(data, "contacts")
     networks = pd.json_normalize(data, "networks")

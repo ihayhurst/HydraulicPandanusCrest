@@ -12,7 +12,7 @@ def create_app():
 
     app.config.from_object("config.Production")
     # Override config with instance if present
-    app.config.from_pyfile('flask.cfg', silent=True)
+    app.config.from_pyfile("flask.cfg", silent=True)
 
     with app.app_context():
         app.register_blueprint(website, url_prefix="/")

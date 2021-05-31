@@ -1,4 +1,3 @@
-
 def applyTableStyle(df):
     styles = [
         hover(),
@@ -57,9 +56,9 @@ def colorGrade(val):
 def endOfLife(s):
     columns = len(s)
     if "- EOL" in s["updates"]:
-        return ['font-style: italic;color: white']*columns
+        return ["font-style: italic;color: white"] * columns
     else:
-        return ['']*columns
+        return [""] * columns
 
 
 def oldscandate(s):
@@ -70,9 +69,9 @@ def oldscandate(s):
     """
     columns = len(s)
     if s["last-scan"] >= 7:
-        return ['color: rgba(128,128,255,0.7)']*columns
+        return ["color: rgba(128,128,255,0.7)"] * columns
     else:
-        return ['']*columns
+        return [""] * columns
 
 
 def make_clickable(val):
@@ -81,7 +80,7 @@ def make_clickable(val):
 
 def make_human(val):
     if val == 0:
-        return 'Today'
+        return "Today"
     else:
         return val
 

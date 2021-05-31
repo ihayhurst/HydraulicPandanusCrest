@@ -32,7 +32,7 @@ def normaliseToDataframe(data):
     """
     parse update-candidates JSON data to dataframe
     """
-    df = pd.json_normalize(data["update-candidates"],  errors="ignore")
+    df = pd.json_normalize(data["update-candidates"], errors="ignore")
     return df
 
 
@@ -42,6 +42,6 @@ def processDataFrame(df):
     Return munged dataframe
     """
     # Sort by repo
-    if 'repo' in df.columns:
+    if "repo" in df.columns:
         df.sort_values(by=["repo"], ascending=True, inplace=True)
     return df

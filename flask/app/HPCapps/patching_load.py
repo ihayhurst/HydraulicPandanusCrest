@@ -24,6 +24,7 @@ import gevent
 
 logger = get_task_logger(__name__)
 
+
 def getPatching():
     """
     Call from route to load json from directory of hostname.json files
@@ -40,9 +41,11 @@ def getPatching():
     update_task(3, NTOTAL)
     return df
 
+
 def update_task(progress, NTOTAL):
-    current_task.update_state(state='PROGRESS',
-               meta={'current':progress,'total':NTOTAL})
+    current_task.update_state(
+        state="PROGRESS", meta={"current": progress, "total": NTOTAL}
+    )
     return 999
 
 
@@ -80,14 +83,14 @@ def readDataFileToFrame(filename):
 def writeOut(data, filename):
     """present to debug"""
     out_filename = f"{filename}-corrections.json"
-    out_file = open(out_filename, "w") 
-    json.dump(data, out_file, indent = 6) 
+    out_file = open(out_filename, "w")
+    json.dump(data, out_file, indent=6)
     out_file.close()
     return
 
+
 def normaliseToDataframe(data):
-    """
-    """
+    """"""
     df = pd.json_normalize(data, errors="ignore")
     # Drop long list of individual patches before concatenation
     df = df[

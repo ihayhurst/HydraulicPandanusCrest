@@ -31,8 +31,9 @@ def getInventory():
 
 
 def update_task(progress, NTOTAL):
-    current_task.update_state(state='PROGRESS',
-               meta={'current':progress,'total':NTOTAL})
+    current_task.update_state(
+        state="PROGRESS", meta={"current": progress, "total": NTOTAL}
+    )
     return 999
 
 
@@ -68,8 +69,7 @@ def readDataFileToFrame(filename):
 
 
 def normaliseToDataframe(data):
-    """
-    """
+    """"""
     df = pd.json_normalize(data, errors="ignore")
     return df
 

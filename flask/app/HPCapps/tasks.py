@@ -23,27 +23,23 @@ from .inventory_style import applyTableStyle as applyInventoryStyle
 # TODO load this from config
 CELERY_BROKER_URL = "redis://redis:6379"
 CELERY_RESULT_BACKEND = "redis://redis:6379"
-#EXPIRATION_SECONDS = 600
+# EXPIRATION_SECONDS = 600
 
 
-redis_url='redis://:redis:6379/0'
-r = redis.StrictRedis(host='redis', port=6379, db=0)
+redis_url = "redis://:redis:6379/0"
+r = redis.StrictRedis(host="redis", port=6379, db=0)
 # Initialize Celery
-celery = Celery(
-    'worker',
-    broker=CELERY_BROKER_URL,
-    backend=CELERY_RESULT_BACKEND
-)
-celery.conf.accept_content = ['json', 'msgpack', 'pickle']
-celery.conf.result_serializer = 'pickle'
+celery = Celery("worker", broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND)
+celery.conf.accept_content = ["json", "msgpack", "pickle"]
+celery.conf.result_serializer = "pickle"
 logger = get_task_logger(__name__)
 
 
 def get_job(job_id):
-    '''
+    """
     To be called from our web app.
     The job ID is passed and the celery job is returned.
-    '''
+    """
     return AsyncResult(job_id, app=celery)
 
 
@@ -83,41 +79,41 @@ def getQueuedInventory(self):
     html = html.set_table_attributes('class="fixedhead"').render()
     return html
 
+
 @celery.task(bind=True, hard_time_limit=6)
 def processProjectlist(self, *args, **kwargs):
-    """ Make df from uploaded timeline, return html of processed timeline
-    """
-    self.update_state(state='PROGRESS', meta={'current':1,'total':3})
-    filename = kwargs.get('filename') 
+    """Make df from uploaded timeline, return html of processed timeline"""
+    self.update_state(state="PROGRESS", meta={"current": 1, "total": 3})
+    filename = kwargs.get("filename")
     df = pickle.loads(filename)
-    self.update_state(state='PROGRESS', meta={'current':2,'total':3})
+    self.update_state(state="PROGRESS", meta={"current": 2, "total": 3})
     fig = timelineGraph(df)
     figToRdis(fig, "timeline.png")
-    self.update_state(state='PROGRESS', meta={'current':3,'total':3})
+    self.update_state(state="PROGRESS", meta={"current": 3, "total": 3})
     # fetch (roundtrip to redis not necessary but saves writing the code again)
     b64timeline = r.get("timeline.png")
-    b64timeline = b64timeline.decode('utf-8')
+    b64timeline = b64timeline.decode("utf-8")
     html = f"""<img src="data:image/png;base64, {b64timeline}" alt=" Timeline plot">"""
     return html
 
 
 def clean_up_in_a_hurry():
-    logger.error('Failed to execute job, timeout')
+    logger.error("Failed to execute job, timeout")
 
 
 def summaryTable(df):
-    df_sum = df[['release', 'hostname']].groupby('release')['hostname'].count()
+    df_sum = df[["release", "hostname"]].groupby("release")["hostname"].count()
     return df_sum
 
 
 def makePie(df):
-    plt.rcParams['text.color'] = 'white'
-    fig, ax = plt.subplots(figsize=(11,9))
-    fig.set_facecolor('#38373a')
-    my_circle=plt.Circle( (0,0), 0.7, color='#38373a')
-    df.name=''  #remove series name
+    plt.rcParams["text.color"] = "white"
+    fig, ax = plt.subplots(figsize=(11, 9))
+    fig.set_facecolor("#38373a")
+    my_circle = plt.Circle((0, 0), 0.7, color="#38373a")
+    df.name = ""  # remove series name
     # Pieplot + circle on it to make doughnut
-    p=plt.gcf()
+    p = plt.gcf()
     p.gca().add_artist(my_circle)
     plot = df.plot.pie()
     return fig
@@ -128,7 +124,7 @@ def makeScatter(df):
     os_dict = dict(zip(osrelease, range(len(osrelease))))
     label = [*os_dict]
     label = sorted(label)
-    
+
     ncolors = len(label)
     x = df["days-pending"]
     y = df["boot-time"]
@@ -153,9 +149,9 @@ def makeScatter(df):
     ax.set_xlim([0, 100])
     return fig
 
+
 def timelineGraph(df):
-    """Draw graph of event label between time points on timeline
-    """
+    """Draw graph of event label between time points on timeline"""
     color_labels = df.Project.unique()
     rgb_values = sns.color_palette("Paired", len(color_labels))
     color_map = dict(zip(color_labels, rgb_values))
@@ -195,13 +191,13 @@ def timelineGraph(df):
     # axes[0].plot(date2num(df_sub_ref.Date), df_sub_ref.User, "kx", linewidth=10)
 
     fig.tight_layout()
-    #plt.show()
+    # plt.show()
     return fig
 
 
 def figToRdis(fig, filenamekey):
     pic_IOBytes = io.BytesIO()
-    plt.savefig(pic_IOBytes, format='png')
+    plt.savefig(pic_IOBytes, format="png")
     pic_IOBytes.seek(0)
     pic_hash = base64.b64encode(pic_IOBytes.read())
     r.set(filenamekey, pic_hash)

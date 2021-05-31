@@ -40,18 +40,10 @@ website = Blueprint(
 )
 
 app = Flask(__name__)
-# TODO move to config file
-app.config["MAX_CONTENT_LENGTH"] = 1024 * 1024
-app.config["UPLOAD_EXTENSIONS"] = ["csv", "txt"]
-app.config["UPLOAD_PATH"] = "./uploads"
-# 172.26.44.22 IP for mail-eame.syngenta.org'
-app.config["MAIL_SERVER"] = "172.26.44.22"
-app.config["MAIL_PORT"] = "25"
-app.config["MAIL_USERNAME"] = "root"
 flaskVer = flask.__version__
 redis_url = "redis://:redis:6379/0"
 r = redis.StrictRedis(host="redis", port=6379, db=0)
-app.config.task_serializer = "pickle"  # not working added to task line directly
+# app.config.task_serializer = "pickle"  # not working added to task line directly
 mail = Mail(app)
 
 
@@ -71,7 +63,7 @@ def index():
         "flaskVer": flaskVer,
         "appver": current_app.config["APP_NAME"],
         "ldap_port": current_app.config["LDAP_PORT"],
-        "home": os.path.join(app.config["UPLOAD_PATH"], "wibble"),
+        "home": os.path.join(current_app.config["UPLOAD_PATH"], "wibble"),
     }
     return render_template("index.html", **templateData)
 

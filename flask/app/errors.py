@@ -21,10 +21,12 @@ def handle_unexpected_error(error):
 
     return jsonify(response), status_code
 
-"""    
+# enable to handle errors defined in application stack
+# https://opensource.com/article/17/3/python-flask-exceptions
+"""
 def handle_error(error):
     message = [str(x) for x in error.args]
-    #status_code = error.status_code
+    status_code = error.status_code
     success = False
     response = {
         'success': success,

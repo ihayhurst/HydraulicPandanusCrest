@@ -13,7 +13,7 @@ from celery.result import AsyncResult
 from celery.utils.log import get_task_logger
 from celery.exceptions import SoftTimeLimitExceeded
 
-# Application imposts
+# Application imports
 from .patching_load import getPatching
 from .patching_style import applyTableStyle
 from .inventory_load import getInventory
@@ -153,19 +153,20 @@ def makeScatter(df):
 def timelineGraph(df):
     """Draw graph of event label between time points on timeline"""
     color_labels = df.Project.unique()
+    df["Events"] = df[['Project', 'Activity']].apply(lambda x: '-'.join(map(str, x)), axis=1)
     rgb_values = sns.color_palette("Paired", len(color_labels))
     color_map = dict(zip(color_labels, rgb_values))
-    labels = df["Project"]
-    fig, axes = plt.subplots(2, 1, sharex=True, figsize=(16, 10))
+    labels = df["Events"]
+    fig, ax = plt.subplots(figsize=(16, 10))
     fig.autofmt_xdate()
-    axes[0] = plt.subplot2grid((6, 1), (0, 0), rowspan=5)
+    # axes[0] = plt.subplot2grid((6, 1), (0, 0), rowspan=5)
     color = "tab:blue"
-    axes[0].grid(which="major", axis="x")
-    axes[0].tick_params(axis="both", which="major", labelsize=6)
-    axes[0].tick_params(axis="both", which="minor", labelsize=6)
-    axes[0].set_ylabel("Project", color=color)
-    axes[0].spines["right"].set_position(("axes", 1))
-    axes[0].xaxis_date()
+    ax.grid(which="major", axis="x")
+    ax.tick_params(axis="both", which="major", labelsize=6)
+    ax.tick_params(axis="both", which="minor", labelsize=6)
+    ax.set_ylabel("Project", color=color)
+    ax.spines["right"].set_position(("axes", 1))
+    ax.xaxis_date()
     patches = [
         plt.plot(
             [],
@@ -179,19 +180,26 @@ def timelineGraph(df):
         )[0]
         for i in range(len(color_labels))
     ]
-    axes[0].legend(handles=patches, bbox_to_anchor=(0, 1), loc="upper left")
-    axes[0].hlines(
-        labels,
+    ax.legend(handles=patches, bbox_to_anchor=(0, 1), loc="upper left")
+    ax.hlines(
+        df.Events,
         date2num(df.Begin),
         date2num(df.End),
         linewidth=6,
         color=df.Project.map(color_map),
         alpha=0.8,
     )
-    # axes[0].plot(date2num(df_sub_ref.Date), df_sub_ref.User, "kx", linewidth=10)
+    """
+    rects = ax.patches
+    style = dict(size=10, color='gray')
+    activity = df.Activity
 
+    for rect, label in zip(rects, activity):
+        logger.info(rect, activity)
+        ax.annotate(rect.get_x(), rect.get_height(), 'wibble',
+                ha='center', va='bottom', **style)
+    """
     fig.tight_layout()
-    # plt.show()
     return fig
 
 

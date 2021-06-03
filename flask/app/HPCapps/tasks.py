@@ -155,7 +155,7 @@ def timelineGraph(df):
     color_labels = df.Project.unique()
     rgb_values = sns.color_palette("Paired", len(color_labels))
     color_map = dict(zip(color_labels, rgb_values))
-    labels = df["Project"]
+    labels = df["Activity"]
     fig, axes = plt.subplots(2, 1, sharex=True, figsize=(16, 10))
     fig.autofmt_xdate()
     axes[0] = plt.subplot2grid((6, 1), (0, 0), rowspan=5)
@@ -188,6 +188,7 @@ def timelineGraph(df):
         color=df.Project.map(color_map),
         alpha=0.8,
     )
+    #axes[0].text(date2num(df.Begin), date2num(df.End), df.Activity, ha='center', va='center')
     # axes[0].plot(date2num(df_sub_ref.Date), df_sub_ref.User, "kx", linewidth=10)
 
     fig.tight_layout()

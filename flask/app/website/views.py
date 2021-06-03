@@ -43,7 +43,6 @@ app = Flask(__name__)
 flaskVer = flask.__version__
 redis_url = "redis://:redis:6379/0"
 r = redis.StrictRedis(host="redis", port=6379, db=0)
-# app.config.task_serializer = "pickle"  # not working added to task line directly
 mail = Mail(app)
 
 

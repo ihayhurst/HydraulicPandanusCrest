@@ -10,6 +10,7 @@ services:
     environment:
       - FLASK_ENV=development
       - APP_NAME=HPCadmin
+      - TZ=Europe/London
     volumes:
       - ./flask:/app
       - ../patching/cache/:/data/patching
@@ -43,6 +44,8 @@ services:
     build: ./flask
     container_name: worker
     restart: always 
+    environment:
+      - TZ=Europe/London
     command: "celery -A app.HPCapps.tasks.celery worker -P gevent -c1000 --loglevel=DEBUG"
     user: nobody
     links:

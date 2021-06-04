@@ -189,9 +189,6 @@ def timelineGraph(df):
         color=df.Project.map(color_map),
         alpha=0.8,
     )
-    #axes[0].text(date2num(df.Begin), date2num(df.End), df.Activity, ha='center', va='center')
-    # axes[0].plot(date2num(df_sub_ref.Date), df_sub_ref.User, "kx", linewidth=10)
-
     """
     rects = ax.patches
     style = dict(size=10, color='gray')

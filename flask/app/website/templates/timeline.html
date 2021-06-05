@@ -1,7 +1,8 @@
 {% extends "base.html" %} {% block content %}
 
 <h3> Timeline plot  </h3>
-<br/><img src="data:image/png;base64, {{image}}" alt=" Timeline plot"> 
+<br/>
+{% if JOBID%}
 <div id="patchesLoading"> Generating plot...
     <br/>
     <br/>JOB: {{JOBID}}
@@ -26,6 +27,10 @@
         <div id="bar"></div>
     </div>
 </div>
+{% endif %}
+{% if not JOBID %}
+<img src="data:image/png;base64, {{image}}" alt=" Timeline plot">
+{% endif %}
 <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
 <script>
     var end_file;

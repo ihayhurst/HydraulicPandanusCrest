@@ -1,7 +1,6 @@
 # I.M. Hayhurst 2020 06 30
 
 from flask import (
-    Flask,
     Blueprint,
     render_template,
     request,
@@ -12,7 +11,7 @@ from flask import (
     url_for,
 )
 import flask
-from flask_mail import Mail, Message
+from flask_mail import  Message
 import json
 import redis
 import markdown
@@ -39,11 +38,11 @@ website = Blueprint(
     template_folder="templates",
 )
 
-app = Flask(__name__)
+#app = Flask(__name__)
 flaskVer = flask.__version__
 redis_url = "redis://:redis:6379/0"
 r = redis.StrictRedis(host="redis", port=6379, db=0)
-mail = Mail(app)
+#mail = Mail(app)
 
 
 @website.route("/")  # Needs a landing page about HPC

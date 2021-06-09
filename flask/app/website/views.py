@@ -189,7 +189,7 @@ def uploader():
     elif request.method == "POST":
         # check if the post request has the file part
         if "file" not in request.files:
-            flash("No file part")
+            flash("No file part", error)
             return redirect(request.url)
         file = request.files["file"]
         # if user does not select file, browser also
@@ -199,7 +199,7 @@ def uploader():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            flash(f"{filename}Loaded", "info")
+            flash(f"{filename} Loaded", "info")
             df = pd.read_csv(file)
             pickled_df = pickle.dumps(df)
             # file.save(os.path.join(current_app.config['UPLOAD_PATH'], filename))

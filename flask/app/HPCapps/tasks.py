@@ -130,9 +130,9 @@ def makePie(df):
 
 def makeScatter(df):
     osrelease = df.release.unique()
+    osrelease = sorted(osrelease)
     os_dict = dict(zip(osrelease, range(len(osrelease))))
     label = [*os_dict]
-    label = sorted(label)
 
     ncolors = len(label)
     x = df["days-pending"]
@@ -141,7 +141,7 @@ def makeScatter(df):
     plt.rcParams["text.color"] = "white"
 
     fig, ax = plt.subplots(figsize=(12, 8))
-    pic = ax.scatter(x, y, c=c, cmap="tab20c", alpha=1)
+    pic = ax.scatter(x, y, c=c, cmap="tab20", alpha=1)
 
     cb = plt.colorbar(pic, label="Distribution", orientation="vertical")
     cb.set_ticks(np.linspace(0, ncolors, ncolors))

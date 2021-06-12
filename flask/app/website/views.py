@@ -189,7 +189,7 @@ def uploader():
     elif request.method == "POST":
         # check if the post request has the file part
         if "file" not in request.files:
-            flash("No file part", error)
+            flash("No file part", "error")
             return redirect(request.url)
         file = request.files["file"]
         # if user does not select file, browser also

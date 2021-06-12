@@ -79,6 +79,15 @@ def getQueuedInventory(self):
     html = html.set_table_attributes('class="fixedhead"').render()
     return html
 
+@celery.task(bind=True, hard_time_limit=6)
+def getQueuedInventoryJSON(self):
+    logger.info(self.request.id)
+    try:
+        df = getInventory()
+    except SoftTimeLimitExceeded:
+         clean_up_in_a_hurry()
+    data = df.to_dict(orient='records')
+    return data, 201
 
 @celery.task(bind=True, hard_time_limit=6)
 def processProjectlist(self, *args, **kwargs):

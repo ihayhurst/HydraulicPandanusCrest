@@ -21,4 +21,5 @@ Dashboard status of on prem vm cluster, and compute grid
 
 - API: /api/ root loads README.md as html with and API usage details
     - API section was developed to deliver RESTful view af Oracle database, code remains to implement a later API calls to databases if required
-    - *TODO: include REST view of inventory files with fields mapped to format suitable to upload to CMDB (configuration management DB)*
+    - /api/inventory JSON view of all inventory files for upload to CMDB
+    - *TODO: any field mapping required of CMDB (configuration management DB)*

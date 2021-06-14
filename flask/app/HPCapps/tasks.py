@@ -87,7 +87,7 @@ def getQueuedInventoryJSON(self):
     except SoftTimeLimitExceeded:
          clean_up_in_a_hurry()
     data = df.to_dict(orient='records')
-    return data, 201
+    return data
 
 @celery.task(bind=True, hard_time_limit=6)
 def processProjectlist(self, *args, **kwargs):
@@ -154,8 +154,10 @@ def makeScatter(df):
     ax.set_xlabel("Days patches pending")
     ax.set_ylabel("Days since last booted")
 
-    ax.set_ylim([0, 180])
-    ax.set_xlim([0, 100])
+    #ax.set_ylim([0, 180])
+    ax.set_yscale('log')
+    #ax.set_xlim([0, 100])
+    ax.set_xscale('log')
     return fig
 
 

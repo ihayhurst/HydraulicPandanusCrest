@@ -1,6 +1,7 @@
 """ 
-TODO: load all inventory hostname.json files in a directory into a dataframe
-create a summary dataframe
+Loads all inventory hostname.json files in a directory into a dataframe
+create a combined dataframe
+return dataframe or JSON
 """
 import sys
 import pandas as pd
@@ -55,15 +56,14 @@ def loadDataFiles():
 def readDataFileToFrame(filename):
     """
     Read data file JSON into dataframe
-    drop long list of patches
     return dataframe
     """
     data = None
     with open(filename) as json_file:
         try:
             data = json.load(json_file)
-        except ValueError:
-            print(f"Dodgy JSON mate aint it =={filename}==")
+        except ValueError as err:
+            logger.error(f"Dodgy JSON mate aint it =={filename}== has {err}")
         df = normaliseToDataframe(data)
     return df
 

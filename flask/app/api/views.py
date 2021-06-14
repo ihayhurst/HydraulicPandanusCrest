@@ -7,6 +7,7 @@ import os
 from time import sleep
 import pandas as pd
 from ..HPCapps import tasks
+from ..HPCapps import inventory_load_host
 
 api_pages = Blueprint("api_pages", __name__)
 api = Api(api_pages)
@@ -34,12 +35,20 @@ def api_home():
 
 
 class Inventory(Resource):
-    def get(self):
-        job = tasks.getQueuedInventoryJSON.delay()
-        sleep(1)
-        print(url_for('api_pages.taskstatus', jobid=job.id))
-        #return 'accepted', 202, {'Location': url_for('api_pages.taskstatus', jobid=job.id)}
-        return redirect(url_for('api_pages.taskstatus', jobid=job.id))
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument("hostid", type=str, location="args")
+        super(Inventory, self).__init__()
+
+    def get(self, hostid=None):
+        if hostid is not None:
+            data = inventory_load_host.fileInventoryHost(hostid)
+            return data, 201
+
+        else:
+            job = tasks.getQueuedInventoryJSON.delay()
+            sleep(1)
+            return redirect(url_for('api_pages.taskstatus', jobid=job.id))
 
 
 class GetTaskStatus(Resource):
@@ -70,4 +79,5 @@ class GetTaskStatus(Resource):
 # Resources
 # Inventory
 api.add_resource(Inventory, "/inventory", endpoint="inventory")
+api.add_resource(Inventory, "/inventory/<hostid>", endpoint="inventoryhost")
 api.add_resource(GetTaskStatus, '/status/<jobid>', endpoint='taskstatus')

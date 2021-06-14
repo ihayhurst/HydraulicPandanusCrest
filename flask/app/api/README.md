@@ -15,7 +15,12 @@ for a single value or multiple values
 
 **Definition** 
 
-| Endpoint                       | Expected return                      |
-|:-------------------------------|:-------------------------------------|
-| `GET /api/inventory`           | - returns all inventory entries      |
-[api/inventory](./inventory)
+| Endpoint                       | Expected return                               |
+|:-------------------------------|:----------------------------------------------|
+| `GET /api/inventory`           | - returns all inventory entries               |
+| `GET /api/inventory/hostid`    | - returns inventory entries for specific host |
+
+**Example**
+
+[api/inventory](./inventory)   
+[api/inventory/gbjhvice066](./inventory/gbjhvice066)

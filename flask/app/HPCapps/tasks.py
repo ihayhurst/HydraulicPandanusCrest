@@ -1,5 +1,4 @@
 import redis
-import zlib
 import pickle
 import matplotlib.pyplot as plt
 from matplotlib.dates import date2num
@@ -7,6 +6,7 @@ import numpy as np
 import base64
 import io
 import seaborn as sns
+import simplejson
 from boltons.iterutils import remap
 
 from celery import Celery
@@ -90,10 +90,13 @@ def getQueuedInventoryJSON(self):
     # Remove NaN, replace with empty string
     df.fillna('', inplace=True)
     data = df.to_dict(orient='records')
+    #data=simplejson.dumps(data, ignore_nan=True,default=datetime.datetime.isoformat)
+    #data=simplejson.dumps(data, ignore_nan=True)
     # Create Clean version with empty keys dropped
     drop_falsey = lambda path, key, value: bool(value)
     clean = remap(data, visit=drop_falsey)
     return clean
+    # return data
 
 @celery.task(bind=True, hard_time_limit=6)
 def processProjectlist(self, *args, **kwargs):

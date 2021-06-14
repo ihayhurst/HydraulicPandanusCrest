@@ -7,6 +7,7 @@ import numpy as np
 import base64
 import io
 import seaborn as sns
+from boltons.iterutils import remap
 
 from celery import Celery
 from celery.result import AsyncResult
@@ -86,8 +87,13 @@ def getQueuedInventoryJSON(self):
         df = getInventory()
     except SoftTimeLimitExceeded:
          clean_up_in_a_hurry()
+    # Remove NaN, replace with empty string
+    df.fillna('', inplace=True)
     data = df.to_dict(orient='records')
-    return data
+    # Create Clean version with empty keys dropped
+    drop_falsey = lambda path, key, value: bool(value)
+    clean = remap(data, visit=drop_falsey)
+    return clean
 
 @celery.task(bind=True, hard_time_limit=6)
 def processProjectlist(self, *args, **kwargs):
@@ -141,7 +147,7 @@ def makeScatter(df):
     plt.rcParams["text.color"] = "white"
 
     fig, ax = plt.subplots(figsize=(12, 8))
-    pic = ax.scatter(x, y, c=c, cmap="tab20", alpha=1)
+    pic = ax.scatter(x, y, c=c, cmap="tab20", alpha=1, clip_on=False)
 
     cb = plt.colorbar(pic, label="Distribution", orientation="vertical")
     cb.set_ticks(np.linspace(0, ncolors, ncolors))

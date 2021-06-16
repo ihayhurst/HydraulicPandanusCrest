@@ -1,10 +1,11 @@
 # HPC-GBJH dashboard  API
+
 - [HPC-GBJH dashboard API]
-  * [Usage](#usage)
-    + [Inventory](#inventory)
-    
+  - [Usage](#usage)
+    - [Inventory](#inventory)
 
 ## Usage
+
 All responses will have the form
 Content-Type application/json
 
@@ -13,14 +14,15 @@ for a single value or multiple values
 
 ### Inventory
 
-**Definition** 
+#### Definition
 
 | Endpoint                       | Expected return                               |
 |:-------------------------------|:----------------------------------------------|
 | `GET /api/inventory`           | - returns all inventory entries               |
 | `GET /api/inventory/hostid`    | - returns inventory entries for specific host |
 
-**Example**
+#### Example(s)
 
-[api/inventory](./inventory)   
+[api/inventory](./inventory)
+
 [api/inventory/gbjhvice066](./inventory/gbjhvice066)

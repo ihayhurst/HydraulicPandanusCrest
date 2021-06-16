@@ -24,7 +24,7 @@ def filePatchingHost(host):
         try:
             data = json.load(json_file)
         except ValueError as err:
-            logger.error(f"Dodgy JSON mate aint it =={filename}== has {err}")
+            print(f"Dodgy JSON mate aint it =={filename}== has {err}")
     return data
 
 

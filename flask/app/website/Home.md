@@ -20,6 +20,6 @@ Dashboard status of on prem vm cluster, and compute grid
 - *TODO: Some sort of traffic light with availability Time since last ping etc.*
 
 - API: /api/ root loads README.md as html with and API usage details
-  - API section was developed to deliver RESTful view af Oracle database, code remains to implement a later API calls to databases if required
+  - API section was developed to deliver RESTful services
   - /api/inventory JSON view of all inventory files for upload to CMDB
   - *TODO: any field mapping required of CMDB (configuration management DB)*

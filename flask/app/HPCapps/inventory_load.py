@@ -3,13 +3,11 @@ Loads all inventory hostname.json files in a directory into a dataframe
 create a combined dataframe
 return dataframe or JSON
 """
-import sys
 import pandas as pd
 import json
 import glob
 from datetime import datetime as dt
 from celery import current_task
-
 
 import gevent
 

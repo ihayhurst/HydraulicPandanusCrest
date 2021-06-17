@@ -6,7 +6,7 @@ import numpy as np
 import base64
 import io
 import seaborn as sns
-import simplejson
+import pandas as pd
 from boltons.iterutils import remap
 
 from celery import Celery
@@ -69,6 +69,10 @@ def getQueuedPatching(self):
 
 @celery.task(bind=True, hard_time_limit=6)
 def getQueuedInventory(self):
+    """
+    get inventory df
+    return html
+    """
     logger.info(self.request.id)
     html = "<h3> Your task, young Padowan; failed it has.</h3>"
     df = None
@@ -82,6 +86,10 @@ def getQueuedInventory(self):
 
 @celery.task(bind=True, hard_time_limit=6)
 def getQueuedInventoryJSON(self):
+    """
+    get inventory df
+    return dict (let restful do the JSON conversion)
+    """
     logger.info(self.request.id)
     try:
         df = getInventory()
@@ -89,14 +97,19 @@ def getQueuedInventoryJSON(self):
          clean_up_in_a_hurry()
     # Remove NaN, replace with empty string
     df.fillna('', inplace=True)
+    df.rename(columns={"id": "hostname"}, inplace=True)
+    selection=['Linux']
+    exclusion=['decommissioned']
+    #df[pd.DataFrame(df.categories.tolist()).isin(selection).any(1).values]
+    mask = df.categories.apply(lambda x: any(item for item in selection if item in x))
+    df = df[mask]
+    mask = df.categories.apply(lambda x: any(item for item in exclusion if item not in x))
+    df = df[mask]
     data = df.to_dict(orient='records')
-    #data=simplejson.dumps(data, ignore_nan=True,default=datetime.datetime.isoformat)
-    #data=simplejson.dumps(data, ignore_nan=True)
-    # Create Clean version with empty keys dropped
-    drop_falsey = lambda path, key, value: bool(value)
-    clean = remap(data, visit=drop_falsey)
-    return clean
-    # return data
+    # Create clean version with empty keys dropped
+    data = dropEmptyKeys(data)
+    return data
+
 
 @celery.task(bind=True, hard_time_limit=6)
 def processProjectlist(self, *args, **kwargs):
@@ -123,6 +136,10 @@ def summaryTable(df):
     df_sum = df[["release", "hostname"]].groupby("release")["hostname"].count()
     return df_sum
 
+def dropEmptyKeys(dict):
+    drop_falsey = lambda path, key, value: bool(value)
+    clean = remap(dict, visit=drop_falsey)
+    return clean
 
 def makePie(df):
     plt.rcParams["text.color"] = "white"

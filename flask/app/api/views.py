@@ -47,7 +47,7 @@ class Inventory(Resource):
 
         else:
             job = tasks.getQueuedInventoryJSON.delay()
-            sleep(1)
+            #sleep(1)
             return redirect(url_for('api_pages.taskstatus', jobid=job.id))
 
 
@@ -70,7 +70,7 @@ class GetTaskStatus(Resource):
         task = tasks.get_job(jobid)
         if task is None:
             abort(404)
-        if task.state  !="SUCCESS":
+        if task.state  != "SUCCESS":
             # return '', 202, {'Location': url_for('api_pages.GetTaskStatus', jobid=jobid)}
             return redirect(url_for('api_pages.taskstatus', jobid=jobid))
         return task.result, 201

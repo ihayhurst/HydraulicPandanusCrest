@@ -1,8 +1,6 @@
 from flask import Flask
 from flask_mail import Mail
-#from .website.views import website
 
-# from extensidbons import *
 # Set Globals
 mail = Mail()
 

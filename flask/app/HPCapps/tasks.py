@@ -6,7 +6,6 @@ import numpy as np
 import base64
 import io
 import seaborn as sns
-import pandas as pd
 from boltons.iterutils import remap
 
 from celery import Celery

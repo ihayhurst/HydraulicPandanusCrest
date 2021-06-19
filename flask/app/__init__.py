@@ -1,8 +1,5 @@
 from flask import Flask
-from flask_mail import Mail
 
-# Set Globals
-mail = Mail()
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
@@ -12,6 +9,7 @@ def create_app():
     app.config.from_pyfile("flask.cfg", silent=True)
     
     #Initialise Plugins
+    from .extensions import mail
     mail.init_app(app)
 
     with app.app_context():

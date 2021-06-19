@@ -11,7 +11,7 @@ from flask import (
     url_for,
 )
 import flask
-from flask_mail import  Message
+from flask_mail import Message
 import json
 import redis
 import markdown
@@ -29,6 +29,7 @@ from ..HPCapps import inventory_load_host
 from ..HPCapps import patching_load_host
 from ..HPCapps import tasks
 from ..HPCapps import inventory_style
+from ..extensions import mail
 
 website = Blueprint(
     "website",
@@ -38,11 +39,9 @@ website = Blueprint(
     template_folder="templates",
 )
 
-#app = Flask(__name__)
 flaskVer = flask.__version__
 redis_url = "redis://:redis:6379/0"
 r = redis.StrictRedis(host="redis", port=6379, db=0)
-#mail = Mail(app)
 
 
 @website.route("/")  # Needs a landing page about HPC
@@ -225,14 +224,14 @@ def timeline():
 @website.route("/webhook", methods=["POST"])
 def respond():
     data = request.json
-    sender = urlparse(request.host).scheme
+    sender = urlparse(request.host).path
     if data["object_kind"] == "pipeline" and data["builds"][0]["status"] == "success":
         build_id = data["builds"][0]["id"]
         user_email = data["builds"][0]["user"]["email"]
         web_url = data["project"]["web_url"]
         msg = Message(
             "Pipeline artefacts available for download",
-            sender=f"root@{sender}",
+            sender=f"<root@{sender}>",
             recipients=[f"{user_email}"],
         )
         msg.body = f""" Your pipeline has new artefacts available {web_url}/-/jobs/{build_id}/artifacts/download?file_type=archive

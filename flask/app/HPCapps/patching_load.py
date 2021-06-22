@@ -56,8 +56,8 @@ def loadDataFiles():
     Pool threads read json into dataframes
     return list of dataframe objects
     """
-    path = r"/data/patching"
-    all_files = glob.glob(path + "/*.json")
+    path = r"/data/patching/"
+    all_files = glob.glob(path + "*.json")
     li = []
     pool = gevent.pool.Pool(1000)
     li = pool.map(readDataFileToFrame, all_files)

@@ -13,9 +13,7 @@ services:
       - TZ=Europe/London
     volumes:
       - ./flask:/app
-      - ../patching/cache/:/data/patching
-      - ../inventory/config/:/data/inventory
-      - ../inventory/notes/:/data/notes
+      - ../inventory/data:/data
       #- /mnt/svm-chem/grid/univa:/mnt/svm-chem/grid/univa:ro
     expose:
       - 8080
@@ -52,8 +50,7 @@ services:
         - redis
     volumes:
         - ./flask/:/app:ro
-        - ../patching/cache/:/data/patching
-        - ../inventory/config/:/data/inventory
+        - ../inventory/data:/data
 
   #celery-beat:
    # build: ./flask

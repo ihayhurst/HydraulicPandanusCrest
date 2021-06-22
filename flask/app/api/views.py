@@ -4,7 +4,6 @@ from flask_restful import Api, Resource, reqparse, url_for, abort
 import datetime
 import markdown
 import os
-from time import sleep
 import pandas as pd
 from ..HPCapps import tasks
 from ..HPCapps import inventory_load_host

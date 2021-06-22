@@ -7,6 +7,7 @@ import os
 import pandas as pd
 from ..HPCapps import tasks
 from ..HPCapps import inventory_load_host
+from ..HPCapps import cmdb_load
 
 api_pages = Blueprint("api_pages", __name__)
 api = Api(api_pages)
@@ -31,6 +32,12 @@ def api_home():
         # Convert to HTML
         md = markdown.markdown(content, extensions=["tables", "fenced_code", "toc"])
         return md
+
+class Makecmdb(Resource):
+    def get(self):
+        filename="cmdb"
+        data = cmdb_load(filename)
+        return data, 201
 
 
 class Inventory(Resource):
@@ -79,4 +86,5 @@ class GetTaskStatus(Resource):
 # Inventory
 api.add_resource(Inventory, "/inventory", endpoint="inventory")
 api.add_resource(Inventory, "/inventory/<hostid>", endpoint="inventoryhost")
+api.add_resource(Makecmdb, "/cmdb", endpoint="cmdb-file")
 api.add_resource(GetTaskStatus, '/status/<jobid>', endpoint='taskstatus')

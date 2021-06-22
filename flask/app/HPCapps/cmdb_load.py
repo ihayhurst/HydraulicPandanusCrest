@@ -44,7 +44,6 @@ def processDataframe(df):
     df.fillna('', inplace=True)
     #df.rename(columns={"id": "hostname"}, inplace=True)
     data = df.to_dict(orient='records')
-
     # Create clean version with empty keys dropped
     data = dropEmptyKeys(data)
     return data

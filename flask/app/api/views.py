@@ -36,7 +36,7 @@ def api_home():
 class Makecmdb(Resource):
     def get(self):
         filename="cmdb"
-        data = cmdb_load(filename)
+        data = cmdb_load.getFlatInventory(filename)
         return data, 201
 
 

@@ -85,4 +85,26 @@ def processDataframe(df):
     """Accept df return df after any colum rename ,drop etc. required
     """
     print("processing")
+    #replace NaN with empty string
+    df.fillna('', inplace=True)
+    #df = InventoryProcess.categoryInclude(df, tags=['Linux'])
+    #df = InventoryProcess.categoryExclude(df, tags=['decommissioned', 'offline'])
+
     return df
+
+class InventoryProcess:
+    def categoryInclude(df, tags=None):
+        if tags is not None:
+            mask = df.categories.apply(lambda x: any(item for item in tags if item in x))
+            df = df[mask]
+            return df
+        else:
+            return df
+
+    def categoryExclude(df, tags=None):
+        if tags is not None:
+            mask = df.categories.apply(lambda x: all(item for item in tags if item in x))
+            df = df[mask]
+            return df
+        else:
+            return df

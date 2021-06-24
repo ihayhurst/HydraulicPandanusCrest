@@ -1,6 +1,4 @@
-{% extends "base.html" %} {% block content %}
-
-<hr/> {{ content|safe }}
+{% extends "base.html" %} {% block content %} {{ content|safe }}
 <hr>
 <h6>Settings included for debug or status</h6>
 <h6>Flask Version: {{ flaskVer }}</h6>

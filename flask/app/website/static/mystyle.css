@@ -1,9 +1,7 @@
     /* static/mystyle.css */
-
-@import "admonition.css";
-@import "dropdown.css";
-
-
+    
+    @import "admonition.css";
+    @import "dropdown.css";
     header {
         background-color: #2B2B2B;
         height: 35px;
@@ -18,19 +16,23 @@
         top: 0;
         width: 100%;
     }
-   .navbar a {
+    
+    .navbar a {
         float: left;
         font-size: 16px;
         color: #e7a11e;
         text-align: center;
         padding: 14px 16px;
         text-decoration: none;
-    } 
+    }
+    
     .navbar a:hover {
         background-color: red;
     }
+    
     .container {
         margin-top: 42px;
+        position: absolute;
         z-index: -1;
     }
     /*
@@ -67,10 +69,11 @@
     td {
         padding: 5px;
     }
+    
     .fixedhead {
         z-index: 10;
     }
- 
+    
     .fixedhead table {
         text-align: left;
         position: relative;
@@ -98,11 +101,10 @@
     .menu #navitem {
         display: inline;
     }
-    
-   /*.menu li+li {
+    /*.menu li+li {
         margin-left: 15px;
     }*/
-
+    
     .menu #navitem a {
         color: #ecb44c;
         text-decoration: none;
@@ -165,6 +167,7 @@
         white-space: pre-wrap;
         font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New;
     }
+    
     .alert {
         padding: 15px;
         margin-bottom: 20px;
@@ -172,11 +175,13 @@
         border-radius: 4px;
         text-align: left;
     }
+    
     .alert-success {
         color: #3c763d;
         background-color: #dff0d8;
         border-color: #d6e9c6;
     }
+    
     .alert-warning {
         color: #8a6d3b;
         background-color: #fcf8e3;

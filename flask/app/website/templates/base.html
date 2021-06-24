@@ -15,8 +15,8 @@
 
 <body>
     <header>
-        <div class="navbar">
-            <nav>
+        <nav>
+            <div class="navbar">
                 <ul class="menu">
                     <li id="navitem"><a href="{{ url_for('website.index') }}" id="menuitem">Home</a></li>
                     <li id="navitem">
@@ -24,9 +24,9 @@
                             <button class="dropbtn">&#9660 Patching</button>
                             <div class="dropdown-content">
                                 <ul class="dropdown-items">
-                                 <li><a href="{{ url_for('website.patching') }}">Patching</a></li>
-                                 <li><a href="{{ url_for('website.distropie') }}">Distro-graph</a></li>
-                                 <li><a href="{{ url_for('website.scatter') }}">Patching-scatter</a></li>
+                                    <li><a href="{{ url_for('website.patching') }}">Patching</a></li>
+                                    <li><a href="{{ url_for('website.distropie') }}">Distro-graph</a></li>
+                                    <li><a href="{{ url_for('website.scatter') }}">Patching-scatter</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -35,20 +35,15 @@
                     <li id="navitem"><a href="{{ url_for('website.queue') }}">Grid queue</a></li>
                     <li id="navitem"><a href="{{ url_for('api_pages.api_home') }}">API</a></li>
                 </ul>
-            </nav>
-        </div>
+            </div>
+        </nav>
     </header>
     <div class="container">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-            {% for category, message in messages %}
-            <div class="alert alert-{{ category }}" >
-                <span>{{ message }}</span>
-            </div>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
-        {% block content %} {% endblock %}
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %} {% endif %} {% endwith %} {% block content %} {% endblock %}
         <div>
 </body>
 

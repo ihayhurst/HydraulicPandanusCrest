@@ -2,7 +2,8 @@
 
 - [HPC-GBJH dashboard API]
   - [Usage](#usage)
-    - [Inventory](#inventory)
+    - [Inventory](#Inventory)
+    - [cmdb](#CMDB)
 
 ## Usage
 
@@ -26,3 +27,15 @@ for a single value or multiple values
 [api/inventory](./inventory)
 
 [api/inventory/gbjhvice066](./inventory/gbjhvice066)
+
+### CMDB
+
+#### Definition
+
+| Endpoint             | Expected return                               |
+|:---------------------|:----------------------------------------------|
+| `GET /api/cmdb`      | - returns all inventory cmdb style flat JSON  |
+
+#### Example
+
+[api/cmdb](./cmdb)

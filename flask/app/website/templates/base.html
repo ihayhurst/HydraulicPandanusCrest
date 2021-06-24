@@ -16,17 +16,26 @@
 <body>
     <header>
         <div class="navbar">
-            <strong><nav>
+            <nav>
                 <ul class="menu">
-                    <li><a href="{{ url_for('website.index') }}">Home</a></li>
-                    <li><a href="{{ url_for('website.patching') }}">Patching</a></li>
-                    <li><a href="{{ url_for('website.distropie') }}">Distro-graph</a></li>
-                    <li><a href="{{ url_for('website.scatter') }}">Patching-scatter</a></li>
-                    <li><a href="{{ url_for('website.inventory_all') }}">Inventory</a></li>
-                    <li><a href="{{ url_for('website.queue') }}">Grid queue</a></li>
-                    <li><a href="{{ url_for('api_pages.api_home') }}">API</a></li>
+                    <li id="navitem"><a href="{{ url_for('website.index') }}" id="menuitem">Home</a></li>
+                    <li id="navitem">
+                        <div class="dropdown">
+                            <button class="dropbtn">&#9660 Patching</button>
+                            <div class="dropdown-content">
+                                <ul class="dropdown-items">
+                                 <li><a href="{{ url_for('website.patching') }}">Patching</a></li>
+                                 <li><a href="{{ url_for('website.distropie') }}">Distro-graph</a></li>
+                                 <li><a href="{{ url_for('website.scatter') }}">Patching-scatter</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li id="navitem"><a href="{{ url_for('website.inventory_all') }}">Inventory</a></li>
+                    <li id="navitem"><a href="{{ url_for('website.queue') }}">Grid queue</a></li>
+                    <li id="navitem"><a href="{{ url_for('api_pages.api_home') }}">API</a></li>
                 </ul>
-            </nav></strong>
+            </nav>
         </div>
     </header>
     <div class="container">

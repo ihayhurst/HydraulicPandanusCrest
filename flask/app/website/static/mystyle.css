@@ -1,6 +1,7 @@
     /* static/mystyle.css */
 
 @import "admonition.css";
+@import "dropdown.css";
 
 
     header {
@@ -17,9 +18,20 @@
         top: 0;
         width: 100%;
     }
-    
+   .navbar a {
+        float: left;
+        font-size: 16px;
+        color: #e7a11e;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    } 
+    .navbar a:hover {
+        background-color: red;
+    }
     .container {
         margin-top: 42px;
+        z-index: -1;
     }
     /*
   width: 1024px;
@@ -28,7 +40,7 @@
 */
     
     a {
-        color: orange;
+        color: #ecb44c;
     }
     
     html,
@@ -39,11 +51,11 @@
     }
     
      ::selection {
-        background: #4ace4f;
+        background: #1ee7a1;
     }
     
      ::-moz-selection {
-        background: #4ace4f;
+        background: #1ee7a1;
     }
     
     .tableborder {
@@ -55,16 +67,20 @@
     td {
         padding: 5px;
     }
-    
+    .fixedhead {
+        z-index: 10;
+    }
+ 
     .fixedhead table {
         text-align: left;
         position: relative;
+        top: 70px;
     }
     
     .fixedhead th {
         background: #000033;
         position: sticky;
-        top: 42px;
+        top: 70px;
     }
     
     input[type="radio"] {
@@ -79,20 +95,20 @@
         margin-top: 8px;
     }
     
-    .menu li {
+    .menu #navitem {
         display: inline;
     }
     
-    .menu li+li {
+   /*.menu li+li {
         margin-left: 15px;
-    }
-    
-    .menu li a {
-        color: orange;
+    }*/
+
+    .menu #navitem a {
+        color: #ecb44c;
         text-decoration: none;
     }
     
-    .menu li a:hover {
+    .menu #navitem a:hover {
         background-color: #666;
     }
     
@@ -128,7 +144,7 @@
         transition: 0.3s;
         outline: none;
         color: #fff;
-        background-color: orange;
+        background-color: #ecb44c;
         border: none;
         border-radius: 15px;
         box-shadow: 0 2px #999;

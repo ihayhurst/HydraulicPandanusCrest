@@ -95,12 +95,7 @@ def getQueuedInventoryJSON(self):
     except SoftTimeLimitExceeded:
          clean_up_in_a_hurry()
     df.rename(columns={"id": "hostname"}, inplace=True)
-    selection=['Linux']
-    exclusion=['decommissioned', 'offline']
-    mask = df.categories.apply(lambda x: any(item for item in selection if item in x))
-    df = df[mask]
-    mask = df.categories.apply(lambda x: all(item for item in exclusion if item in x))
-    df = df[mask]
+    #df[pd.DataFrame(df.categories.tolist()).isin(selection).any(1).values]
     data = df.to_dict(orient='records')
     # Create clean version with empty keys dropped
     data = dropEmptyKeys(data)

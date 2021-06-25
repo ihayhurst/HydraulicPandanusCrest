@@ -83,6 +83,7 @@ def getQueuedInventory(self):
     html = html.set_table_attributes('class="fixedhead"').render()
     return html
 
+
 @celery.task(bind=True, hard_time_limit=6)
 def getQueuedInventoryJSON(self):
     """
@@ -93,10 +94,10 @@ def getQueuedInventoryJSON(self):
     try:
         df = getInventory()
     except SoftTimeLimitExceeded:
-         clean_up_in_a_hurry()
+        clean_up_in_a_hurry()
     df.rename(columns={"id": "hostname"}, inplace=True)
-    #df[pd.DataFrame(df.categories.tolist()).isin(selection).any(1).values]
-    data = df.to_dict(orient='records')
+    # df[pd.DataFrame(df.categories.tolist()).isin(selection).any(1).values]
+    data = df.to_dict(orient="records")
     # Create clean version with empty keys dropped
     data = dropEmptyKeys(data)
     return data
@@ -127,10 +128,12 @@ def summaryTable(df):
     df_sum = df[["release", "hostname"]].groupby("release")["hostname"].count()
     return df_sum
 
+
 def dropEmptyKeys(dict):
     drop_falsey = lambda path, key, value: bool(value)
     clean = remap(dict, visit=drop_falsey)
     return clean
+
 
 def makePie(df):
     plt.rcParams["text.color"] = "white"
@@ -171,17 +174,19 @@ def makeScatter(df):
     ax.set_xlabel("Days patches pending")
     ax.set_ylabel("Days since last booted")
 
-    #ax.set_ylim([0, 180])
-    ax.set_yscale('log')
-    #ax.set_xlim([0, 100])
-    ax.set_xscale('log')
+    # ax.set_ylim([0, 180])
+    ax.set_yscale("log")
+    # ax.set_xlim([0, 100])
+    ax.set_xscale("log")
     return fig
 
 
 def timelineGraph(df):
     """Draw graph of event label between time points on timeline"""
     color_labels = df.Project.unique()
-    df["Events"] = df[['Project', 'Activity']].apply(lambda x: '-'.join(map(str, x)), axis=1)
+    df["Events"] = df[["Project", "Activity"]].apply(
+        lambda x: "-".join(map(str, x)), axis=1
+    )
     rgb_values = sns.color_palette("Paired", len(color_labels))
     color_map = dict(zip(color_labels, rgb_values))
     labels = df["Events"]

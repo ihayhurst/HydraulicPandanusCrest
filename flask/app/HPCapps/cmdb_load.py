@@ -27,7 +27,9 @@ def fileInventoryHost(host):
         try:
             data = json.load(json_file)
         except ValueError as err:
-            raise RuntimeError(f"Dodgy JSON mate aint it =={filename}== has {err}") from err
+            raise RuntimeError(
+                f"Dodgy JSON mate aint it =={filename}== has {err}"
+            ) from err
         except FileNotFoundError:
             return None
     return data
@@ -40,14 +42,15 @@ def normaliseToDataframe(data):
     df = pd.json_normalize(data)
     return df
 
+
 def processDataframe(df):
-    df.fillna('', inplace=True)
-    #df.rename(columns={"id": "hostname"}, inplace=True)
-    data = df.to_dict(orient='records')
+    df.fillna("", inplace=True)
+    # df.rename(columns={"id": "hostname"}, inplace=True)
+    data = df.to_dict(orient="records")
     # Create clean version with empty keys dropped
     data = dropEmptyKeys(data)
     return data
-    
+
 
 def dropEmptyKeys(dict):
     drop_falsey = lambda path, key, value: bool(value)

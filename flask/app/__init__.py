@@ -7,9 +7,10 @@ def create_app():
     app.config.from_object("config.Production")
     # Override config with instance if present
     app.config.from_pyfile("flask.cfg", silent=True)
-    
-    #Initialise Plugins
+
+    # Initialise Plugins
     from .extensions import mail
+
     mail.init_app(app)
 
     with app.app_context():

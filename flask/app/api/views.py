@@ -4,7 +4,6 @@ from flask_restful import Api, Resource, reqparse, url_for, abort
 import datetime
 import markdown
 import os
-import pandas as pd
 from ..HPCapps import tasks
 from ..HPCapps import inventory_load_host
 from ..HPCapps import cmdb_load
@@ -33,9 +32,10 @@ def api_home():
         md = markdown.markdown(content, extensions=["tables", "fenced_code", "toc"])
         return md
 
+
 class Makecmdb(Resource):
     def get(self):
-        filename="cmdb"
+        filename = "cmdb"
         data = cmdb_load.getFlatInventory(filename)
         return data, 201
 
@@ -53,8 +53,8 @@ class Inventory(Resource):
 
         else:
             job = tasks.getQueuedInventoryJSON.delay()
-            #sleep(1)
-            return redirect(url_for('api_pages.taskstatus', jobid=job.id))
+            # sleep(1)
+            return redirect(url_for("api_pages.taskstatus", jobid=job.id))
 
 
 class GetTaskStatus(Resource):
@@ -76,9 +76,9 @@ class GetTaskStatus(Resource):
         task = tasks.get_job(jobid)
         if task is None:
             abort(404)
-        if task.state  != "SUCCESS":
+        if task.state != "SUCCESS":
             # return '', 202, {'Location': url_for('api_pages.GetTaskStatus', jobid=jobid)}
-            return redirect(url_for('api_pages.taskstatus', jobid=jobid))
+            return redirect(url_for("api_pages.taskstatus", jobid=jobid))
         return task.result, 201
 
 
@@ -87,4 +87,4 @@ class GetTaskStatus(Resource):
 api.add_resource(Inventory, "/inventory", endpoint="inventory")
 api.add_resource(Inventory, "/inventory/<hostid>", endpoint="inventoryhost")
 api.add_resource(Makecmdb, "/cmdb", endpoint="cmdb-file")
-api.add_resource(GetTaskStatus, '/status/<jobid>', endpoint='taskstatus')
+api.add_resource(GetTaskStatus, "/status/<jobid>", endpoint="taskstatus")

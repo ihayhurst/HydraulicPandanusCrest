@@ -1,4 +1,4 @@
-""" 
+"""
 Loads all inventory hostname.json files in a directory into a dataframe
 create a combined dataframe
 return dataframe or JSON

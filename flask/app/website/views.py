@@ -21,7 +21,7 @@ from urllib.parse import urlparse
 import pickle
 import pandas as pd
 import os
-import io
+import ssl
 
 # Application imports direct or via celery tasks
 from ..HPCapps import uqueue
@@ -43,8 +43,9 @@ flaskVer = flask.__version__
 redis_url = "redis://:redis:6379/0"
 r = redis.StrictRedis(host="redis", port=6379, db=0)
 
+ssl._create_default_https_context = ssl._create_unverified_context
 
-@website.route("/")  # Needs a landing page about HPC
+@website.route("/")
 def index():
     # Open the README file
     with open(os.path.join(website.root_path) + "/Home.md", "r") as markdown_file:
@@ -63,6 +64,15 @@ def index():
         "home": os.path.join(current_app.config["UPLOAD_PATH"], "wibble"),
     }
     return render_template("index.html", **templateData)
+
+
+@website.route("/cmdb")
+def cmdb():
+    data = pd.read_json('http://nginx:/api/cmdb')
+    data.fillna('', inplace=True)
+    data = inventory_style.applyTableStyle(data).render()
+    templateData = {"content": data}
+    return render_template("cmdb.html", **templateData), 201
 
 
 @website.route("/queue")
@@ -120,7 +130,7 @@ def patching():
     return render_template("patching.html", **templateData)
 
 
-@website.route("/allinventory")
+@website.route("/inventory")
 def inventory_all():
     title = "GBJH Linux Inventory"
     job = tasks.getQueuedInventory.delay()

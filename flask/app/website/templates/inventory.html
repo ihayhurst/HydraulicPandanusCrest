@@ -1,6 +1,7 @@
 {% extends "base.html" %} {% block content %}
 
 <h3 id="wibble">Inventory Status from cache scan</h3>
+<ul><li>For the JSON representation use the api <a href="{{ url_for('api_pages.inventory') }}">inventory</a></li></ul>
 <div id="patchesLoading">Reading in fresh patching data. Please wait.
     <br/>
     <br/>JOB: {{JOBID}}

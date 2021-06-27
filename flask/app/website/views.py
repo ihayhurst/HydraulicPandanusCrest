@@ -70,8 +70,10 @@ def index():
 def cmdb():
     data = pd.read_json('http://nginx:/api/cmdb')
     data.fillna('', inplace=True)
-    data = inventory_style.applyTableStyle(data).render()
-    templateData = {"content": data}
+    data = inventory_style.applyTableStyle(data)
+    html = data.set_table_attributes('class="fixedhead"').render()
+
+    templateData = {"content": html}
     return render_template("cmdb.html", **templateData), 201
 
 

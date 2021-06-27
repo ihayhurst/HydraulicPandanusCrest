@@ -1,6 +1,6 @@
 # HydraulicPandanusCrest
 
-Docker/nginx/uwsgi/flask/celery with gevent /redis stack for managing patching and inventory json records on about 250 linux servers, vms and workstations
+Docker, nginx, uwsgi, flask, celery (with gevent) and redis stack for managing patching and inventory json records on about 250 linux servers, vms and workstations
 
 ## Docker containers
 
@@ -10,7 +10,6 @@ Orchestrated with docker-compose
 - flask - slim buster python 3.8/9 for flask website, api, HPCtools,
 - worker - slim buster python 3.8/9 for celery workers
 - redis - messaage broker backend for celery tasks
-
 
 In the HPC environment background scripts (not in this repo yet) run to check host machines for patches pending, hardware physical or virtual etc.
 Each host has an inventory file with it's known config (hardware / virtualisation, network, mem, cpu, role, contact /owner) **docroot**/inventory/config/**hostname**.json

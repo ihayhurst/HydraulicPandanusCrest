@@ -45,6 +45,7 @@ r = redis.StrictRedis(host="redis", port=6379, db=0)
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
+
 @website.route("/")
 def index():
     # Open the README file
@@ -222,7 +223,8 @@ def uploader():
 def allowed_file(filename):
     return (
         "." in filename
-        and filename.rsplit(".", 1)[1].lower() in current_app.config["UPLOAD_EXTENSIONS"]
+        and filename.rsplit(".", 1)[1].lower()
+        in current_app.config["UPLOAD_EXTENSIONS"]
     )
 
 

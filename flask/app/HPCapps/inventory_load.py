@@ -6,10 +6,11 @@ return dataframe or JSON
 import pandas as pd
 import json
 import glob
-from datetime import datetime as dt
 from celery import current_task
-
+from celery.utils.log import get_task_logger
 import gevent
+
+logger = get_task_logger(__name__)
 
 
 def getInventory():
@@ -82,20 +83,22 @@ def concatToDataframe(li):
 
 
 def processDataframe(df):
-    """Accept df return df after any colum rename ,drop etc. required
-    """
+    """Accept df return df after any colum rename ,drop etc. required"""
     print("processing")
-    #replace NaN with empty string
-    df.fillna('', inplace=True)
-    #df = InventoryProcess.categoryInclude(df, tags=['Linux'])
-    #df = InventoryProcess.categoryExclude(df, tags=['decommissioned', 'offline'])
+    # replace NaN with empty string
+    df.fillna("", inplace=True)
+    # df = InventoryProcess.categoryInclude(df, tags=['Linux'])
+    # df = InventoryProcess.categoryExclude(df, tags=['decommissioned', 'offline'])
 
     return df
+
 
 class InventoryProcess:
     def categoryInclude(df, tags=None):
         if tags is not None:
-            mask = df.categories.apply(lambda x: any(item for item in tags if item in x))
+            mask = df.categories.apply(
+                lambda x: any(item for item in tags if item in x)
+            )
             df = df[mask]
             return df
         else:
@@ -103,7 +106,9 @@ class InventoryProcess:
 
     def categoryExclude(df, tags=None):
         if tags is not None:
-            mask = df.categories.apply(lambda x: all(item for item in tags if item in x))
+            mask = df.categories.apply(
+                lambda x: all(item for item in tags if item in x)
+            )
             df = df[mask]
             return df
         else:

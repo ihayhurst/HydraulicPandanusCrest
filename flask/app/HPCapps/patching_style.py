@@ -15,7 +15,8 @@ def applyTableStyle(df):
     ]
 
     patchingStyle = (
-        df.style.applymap(colorGrade, subset=["boot-time", "days-pending"])
+        df.style.applymap(colorGrade, subset=["days-pending"])
+        .applymap(rebootAdvised, subset=["boot-time"])
         .set_table_attributes('class="fixedhead"')
         .set_precision(0)
         .apply(oldscandate, axis=1)
@@ -31,6 +32,13 @@ def applyTableStyle(df):
     )
     return patchingStyle
 
+def rebootAdvised(val):
+    if val >= 120:
+        color = 'red'
+    else:
+        color = 'white'
+    return f"color: {color}"
+
 
 def hover(hover_color="#000033"):
     return dict(selector="tr:hover", props=[("background-color", "%s" % hover_color)])
@@ -42,11 +50,11 @@ def colorGrade(val):
     the css property `'color: red'` for timedelta over specified
     strings, black otherwise.
     """
-    patchingCritical = 60
-    patchingUrgent = 50
-    if val >= patchingCritical:
+    Critical = 60
+    Urgent = 50
+    if val >= Critical:
         color = "red"
-    elif val >= patchingUrgent:
+    elif val >= Urgent:
         color = "orange"
     else:
         color = "white"

@@ -169,8 +169,8 @@ def makeScatter(df):
 
     ax.axvline(x=60, color="red", linestyle="-", alpha=0.7)
     ax.axvline(x=50, color="orange", linestyle="--", alpha=0.3)
-    ax.axhline(y=60, color="red", linestyle="-", alpha=0.7)
-    ax.axhline(y=50, color="orange", linestyle="--", alpha=0.3)
+    ax.axhline(y=120, color="red", linestyle="-", alpha=0.7)
+    ax.axhline(y=100, color="orange", linestyle="--", alpha=0.3)
     ax.set_xlabel("Days patches pending")
     ax.set_ylabel("Days since last booted")
 

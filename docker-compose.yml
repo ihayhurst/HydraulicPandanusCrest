@@ -49,7 +49,7 @@ services:
     links:
         - redis
     volumes:
-        - ./flask/:/app:ro
+        - ./flask:/app:ro
         - ../inventory/data:/data
 
   #celery-beat:

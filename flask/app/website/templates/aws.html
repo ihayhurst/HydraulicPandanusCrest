@@ -1,0 +1,6 @@
+{% extends "base.html" %} {% block content%}
+<h2>{{ title }}</h2>
+<ul>
+    <li>For the JSON representation use the api <a href="{{ url_for('api_pages.aws-ecicl') }}">ECICL</a></li>
+</ul>
+{{ content|safe }} {% endblock %}

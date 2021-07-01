@@ -91,5 +91,5 @@ class GetTaskStatus(Resource):
 api.add_resource(Inventory, "/inventory", endpoint="inventory")
 api.add_resource(Inventory, "/inventory/<hostid>", endpoint="inventoryhost")
 api.add_resource(Makecmdb, "/cmdb", endpoint="cmdb-file")
-api.add_resource(AWStest, "/aws", endpoint="aws-test")
+api.add_resource(AWStest, "/aws", endpoint="aws-ecicl")
 api.add_resource(GetTaskStatus, "/status/<jobid>", endpoint="taskstatus")

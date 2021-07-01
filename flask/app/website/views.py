@@ -69,13 +69,24 @@ def index():
 
 @website.route("/cmdb")
 def cmdb():
-    data = pd.read_json('http://nginx:/api/cmdb')
-    data.fillna('', inplace=True)
+    data = pd.read_json("http://nginx:/api/cmdb")
+    data.fillna("", inplace=True)
     data = inventory_style.applyTableStyle(data)
     html = data.set_table_attributes('class="fixedhead"').render()
 
     templateData = {"content": html}
     return render_template("cmdb.html", **templateData), 201
+
+
+@website.route("/aws")
+def aws():
+    data = pd.read_json("http://nginx:/api/aws")
+    data.fillna("", inplace=True)
+    data = inventory_style.applyTableStyle(data)
+    html = data.set_table_attributes('class="fixedhead"').render()
+
+    templateData = {"content": html}
+    return render_template("aws.html", **templateData), 201
 
 
 @website.route("/queue")

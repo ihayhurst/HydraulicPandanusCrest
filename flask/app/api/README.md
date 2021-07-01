@@ -4,6 +4,7 @@
   - [Usage](#usage)
     - [Inventory](#Inventory)
     - [cmdb](#CMDB)
+    - [aws](#AWS)
 
 ## Usage
 
@@ -39,3 +40,15 @@ for a single value or multiple values
 #### Example
 
 [api/cmdb](./cmdb)
+
+### AWS
+
+#### Definition
+
+| Endpoint             | Expected return                               |
+|:---------------------|:----------------------------------------------|
+| `GET /api/aws`       | - returns all aws inventory style flat JSON   |
+
+#### Example
+
+[api/aws](./aws)

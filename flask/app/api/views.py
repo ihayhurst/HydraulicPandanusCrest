@@ -58,7 +58,6 @@ class Inventory(Resource):
 class AWStest(Resource):
     def get(self):
         data = aws_load.get_Instances()
-        
         return data, 201
 
 

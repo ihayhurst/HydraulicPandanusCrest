@@ -1,12 +1,10 @@
 from flask import Blueprint
 from werkzeug.utils import redirect
-from flask_restful import Api, Resource, reqparse, url_for, abort
+from flask_restful import Api, Resource, reqparse, url_for, abort, current_app
 import datetime
 import markdown
 import os
-from ..HPCapps import tasks
-from ..HPCapps import inventory_load_host
-from ..HPCapps import cmdb_load
+from ..HPCapps import tasks, cmdb_load, aws_load, inventory_load_host
 
 api_pages = Blueprint("api_pages", __name__)
 api = Api(api_pages)
@@ -57,6 +55,13 @@ class Inventory(Resource):
             return redirect(url_for("api_pages.taskstatus", jobid=job.id))
 
 
+class AWStest(Resource):
+    def get(self):
+        data = aws_load.get_Instances()
+        
+        return data, 201
+
+
 class GetTaskStatus(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
@@ -87,4 +92,5 @@ class GetTaskStatus(Resource):
 api.add_resource(Inventory, "/inventory", endpoint="inventory")
 api.add_resource(Inventory, "/inventory/<hostid>", endpoint="inventoryhost")
 api.add_resource(Makecmdb, "/cmdb", endpoint="cmdb-file")
+api.add_resource(AWStest, "/aws", endpoint="aws-test")
 api.add_resource(GetTaskStatus, "/status/<jobid>", endpoint="taskstatus")

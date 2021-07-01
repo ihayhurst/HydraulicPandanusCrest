@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # I.M. Hayhurst 2020 06 19
-# /home/admin/patching/cache/*.json files
+# /home/admin/inventory/data/patching/*.json files
 
 """
 Load Patching files and create a summary dataframe
@@ -141,6 +141,8 @@ def processDataframe(df):
     df.rename(columns={"unixtime": "last-scan"}, inplace=True)
     df["last-scan"] = df.apply(lambda row: dt.now() - row["last-scan"], axis=1)
     df["last-scan"] = df["last-scan"].dt.days
+
+    # Centos Release string
     df["release"].replace(
         to_replace=r"(CentOS).*(\s\d+)\.(\d+)(?:.).*",
         value=r"\1 \2.\3",

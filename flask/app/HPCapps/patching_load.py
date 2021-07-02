@@ -20,6 +20,7 @@ from datetime import datetime as dt
 from celery.utils.log import get_task_logger
 from celery import current_task
 import gevent
+import numpy as np
 
 
 logger = get_task_logger(__name__)
@@ -137,6 +138,11 @@ def processDataframe(df):
     df["boot-time"] = df.apply(lambda row: dt.now() - row["boot-time"], axis=1)
     df["boot-time"] = df["boot-time"].dt.days
 
+    # Add to critical list if boot time > 180 days
+    filters =[(df["boot-time"] >=180), (df["boot-time"]<180)]
+    values =["True", None]
+    df["critical"] = np.select(filters, values)
+
     # Calculate how long since last scan
     df.rename(columns={"unixtime": "last-scan"}, inplace=True)
     df["last-scan"] = df.apply(lambda row: dt.now() - row["last-scan"], axis=1)
@@ -182,13 +188,14 @@ def processDataframe(df):
             "owner",
             "description",
             "updates",
+            "critical",
             "last-scan",
         ]
     ].copy()
     # Sort by days since last patched
     df.sort_values(
-        by=["last-scan", "days-pending", "boot-time"],
-        ascending=[True, False, False],
+        by=["last-scan","critical",  "days-pending", "boot-time"],
+        ascending=[True, False, False, False],
         inplace=True,
     )
     return df

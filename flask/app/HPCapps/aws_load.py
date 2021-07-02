@@ -30,9 +30,14 @@ def get_Instances():
             .Instances.values
         )[0]
     )[["ImageId", "PrivateIpAddress", "InstanceType", "State.Name", "Tags"]]
-    df["Name"] = df.Tags.apply(
-        lambda r: r[0]["Value"]
-    )  # Get the name from the tags dict
-    df.drop(["Tags"], axis=1, inplace=True)
+    # df["Name"] = df.Tags.apply( lambda r: r[0]["Value"])
+    df["Name"] = df.Tags.apply( lambda r: r[0]["Value"] if r[0]["Key"]== "Name" else "Untagged")
+    # df.drop(["Tags"], axis=1, inplace=True)
     data = df.to_dict(orient="records")
     return data
+
+def nameTag(df): # not used yet
+    for dicts in df:
+        next(item for item in dicts if item["Key"] == "Name")
+    
+    return 

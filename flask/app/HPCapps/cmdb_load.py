@@ -45,12 +45,14 @@ def normaliseToDataframe(data):
 
 def processDataframe(df):
     df.fillna("", inplace=True)
+    """
     # remove [] and single quotes
     df["IP Address"] = df["IP Address"].astype(str).str[1:-1]
     df["IP Address"].replace(
         to_replace=r"\'+([^\']*)\'", value=r"\1", regex=True, inplace=True
     )
     # df.rename(columns={"id": "hostname"}, inplace=True)
+    """
     data = df.to_dict(orient="records")
     # Create clean version with empty keys dropped
     data = dropEmptyKeys(data)

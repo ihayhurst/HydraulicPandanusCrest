@@ -24,6 +24,7 @@ def applyTableStyle(df):
         .set_properties(subset=["owner"], **{"width": "300px"})
         .set_properties(subset=["release"], **{"width": "130px"})
         .hide_index()
+        .hide_columns(["critical"])
         .format({"days-pending": zero_pending})
         .format({"hostname": make_clickable})
         .format({"last-scan": make_human})
@@ -64,7 +65,7 @@ def colorGrade(val):
 def endOfLife(s):
     columns = len(s)
     if "- EOL" in s["updates"]:
-        return ["font-style: italic;color: white"] * columns
+        return ["font-style: italic;"] * columns
     else:
         return [""] * columns
 

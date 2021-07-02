@@ -8,7 +8,6 @@ from flask import (
     current_app,
     Response,
     flash,
-    url_for,
 )
 import flask
 from flask_mail import Message
@@ -259,7 +258,9 @@ def respond():
             sender=f"<root@{sender}>",
             recipients=[f"{user_email}"],
         )
-        msg.body = f""" Your pipeline has new artefacts available {web_url}/-/jobs/{build_id}/artifacts/download?file_type=archive
+        msg.body = f"""
+                    Your pipeline has new artefacts available:
+                    {web_url}/-/jobs/{build_id}/artifacts/download?file_type=archive
                     User: {user_email}
                     """
         mail.send(msg)

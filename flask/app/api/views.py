@@ -1,6 +1,6 @@
 from flask import Blueprint
 from werkzeug.utils import redirect
-from flask_restful import Api, Resource, reqparse, url_for, abort, current_app
+from flask_restful import Api, Resource, reqparse, url_for, abort
 import datetime
 import markdown
 import os

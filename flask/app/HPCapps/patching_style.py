@@ -33,11 +33,12 @@ def applyTableStyle(df):
     )
     return patchingStyle
 
+
 def rebootAdvised(val):
     if val >= 120:
-        color = 'red'
+        color = "#CF6679"
     else:
-        color = 'white'
+        color = "white"
     return f"color: {color}"
 
 
@@ -54,7 +55,7 @@ def colorGrade(val):
     Critical = 60
     Urgent = 50
     if val >= Critical:
-        color = "red"
+        color = "#CF6679"
     elif val >= Urgent:
         color = "orange"
     else:
@@ -78,7 +79,7 @@ def oldscandate(s):
     """
     columns = len(s)
     if s["last-scan"] >= 7:
-        return ["color: rgba(128,128,255,0.7)"] * columns
+        return ["color: rgba(204,134,253,0.7)"] * columns
     else:
         return [""] * columns
 

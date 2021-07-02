@@ -1,7 +1,5 @@
-import json
 import pandas as pd
 import boto3
-from boltons.iterutils import remap
 import datetime
 from flask import current_app
 
@@ -31,13 +29,16 @@ def get_Instances():
         )[0]
     )[["ImageId", "PrivateIpAddress", "InstanceType", "State.Name", "Tags"]]
     # df["Name"] = df.Tags.apply( lambda r: r[0]["Value"])
-    df["Name"] = df.Tags.apply( lambda r: r[0]["Value"] if r[0]["Key"]== "Name" else "Untagged")
+    df["Name"] = df.Tags.apply(
+        lambda r: r[0]["Value"] if r[0]["Key"] == "Name" else "Untagged"
+    )
     # df.drop(["Tags"], axis=1, inplace=True)
     data = df.to_dict(orient="records")
     return data
 
-def nameTag(df): # not used yet
+
+def nameTag(df):  # not used yet
     for dicts in df:
         next(item for item in dicts if item["Key"] == "Name")
-    
-    return 
+
+    return

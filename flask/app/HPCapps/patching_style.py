@@ -17,7 +17,6 @@ def applyTableStyle(df):
     patchingStyle = (
         df.style.applymap(colorGrade, subset=["days-pending"])
         .applymap(rebootAdvised, subset=["boot-time"])
-        .set_table_attributes('class="fixedhead"')
         .set_precision(0)
         .apply(oldscandate, axis=1)
         .set_table_styles(styles)
@@ -29,7 +28,7 @@ def applyTableStyle(df):
         .format({"hostname": make_clickable})
         .format({"last-scan": make_human})
         .apply(endOfLife, axis=1)
-        .render()
+        # .render()
     )
     return patchingStyle
 

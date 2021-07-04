@@ -60,9 +60,10 @@ def getQueuedPatching(self):
         fig = makeScatter(df)
         figToRdis(fig, "scatter_patching.png")
         logger.info("ending run")
-        html = applyTableStyle(df)
     except SoftTimeLimitExceeded:
         clean_up_in_a_hurry()
+    html = applyTableStyle(df)
+    html = html.set_table_attributes('class="fixedhead"').render()
     return html
 
 

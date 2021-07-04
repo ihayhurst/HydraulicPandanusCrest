@@ -17,17 +17,5 @@ def applyTableStyle(df):
         df.style.set_table_styles(styles)
         .hide_index()
         .set_precision(0)
-        .apply(stateName, subset=["State.Name"], axis=1)
-        # .render()
     )
     return patchingStyle
-
-
-def stateName(s):
-    # columns = len(s)
-    if "running" in s["State.Name"]:
-        return ["background-color: green;"]
-    elif "stopped" in s["State.Name"]:
-        return ["background-color: red;"]
-    else:
-        return [""] * columns

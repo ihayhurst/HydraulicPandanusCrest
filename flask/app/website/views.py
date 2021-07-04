@@ -85,6 +85,7 @@ def aws():
     data = pd.read_json("http://nginx:/api/aws")
     data.fillna("", inplace=True)
     data = inventory_style.applyTableStyle(data)
+    data =  data.apply(stateName, subset=["State.Name"], axis=1)
     html = data.set_table_attributes('class="fixedhead"').render()
     templateData = {"content": html}
     return render_template("aws.html", **templateData), 201
@@ -284,3 +285,13 @@ def respond():
         )
 
     return Response(status=200)
+
+
+def stateName(s):
+    # columns = len(s)
+    if "running" in s["State.Name"]:
+        return ["background-color: green;"]
+    elif "stopped" in s["State.Name"]:
+        return ["background-color: red;"]
+    else:
+        return [""]

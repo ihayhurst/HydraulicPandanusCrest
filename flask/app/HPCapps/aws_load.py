@@ -27,12 +27,42 @@ def get_Instances():
             .apply(lambda r: r.str[0])
             .Instances.values
         )[0]
-    )[["PrivateIpAddress", "InstanceType", "State.Name", "Tags"]]
-
+    )[["State.Name", "PrivateIpAddress", "InstanceType", "Tags"]]
     tags = list(df["Tags"])
     df_tags = untangleTags(tags)
     df.drop(["Tags"], axis=1, inplace=True)
     df = pd.concat([df, df_tags], axis=1)
+    df.OwnerEmail = (
+        df.OwnerEmail.str.replace(".", " ").str.replace("_", " ").str.title()
+    )
+    df.ContactEmail = (
+        df.ContactEmail.str.replace(".", " ").str.replace("_", " ").str.title()
+    )
+    df.OwnerEmail.replace(r"@.*?$", "", regex=True, inplace=True)
+    df.ContactEmail.replace(r"@.*?$", "", regex=True, inplace=True)
+    df = df[
+        [
+            "State.Name",
+            "Name",
+            "PrivateIpAddress",
+            "InstanceType",
+            "OwnerEmail",
+            "ContactEmail",
+            "OS",
+            "Application",
+            "Purpose",
+            "CostCenter",
+            "ProjectNumber",
+            "AWS-Backup",
+            "AvailabilityGroup",
+            "PatchGroup",
+        ]
+    ]
+    df.sort_values(
+        by=["Application", "OS"],
+        ascending=[True, True],
+        inplace=True,
+    )
     data = df.to_dict(orient="records")
     return data
 

@@ -27,18 +27,41 @@ def get_Instances():
             .apply(lambda r: r.str[0])
             .Instances.values
         )[0]
-    )[["ImageId", "PrivateIpAddress", "InstanceType", "State.Name", "Tags"]]
-    # df["Name"] = df.Tags.apply( lambda r: r[0]["Value"])
-    df["Name"] = df.Tags.apply(
-        lambda r: r[0]["Value"] if r[0]["Key"] == "Name" else "Untagged"
-    )
-    # df.drop(["Tags"], axis=1, inplace=True)
+    )[["PrivateIpAddress", "InstanceType", "State.Name", "Tags"]]
+
+    tags = list(df["Tags"])
+    df_tags = untangleTags(tags)
+    df.drop(["Tags"], axis=1, inplace=True)
+    df = pd.concat([df, df_tags], axis=1)
     data = df.to_dict(orient="records")
     return data
 
 
-def nameTag(df):  # not used yet
-    for dicts in df:
-        next(item for item in dicts if item["Key"] == "Name")
+def untangleTags(df):
+    li = []
+    for item in df:
+        keys = []
+        values = []
+        for dicts in item:
+            keys.append(dicts.get("Key"))
+            values.append(dicts.get("Value"))
+        df = pd.DataFrame([values], columns=keys)
+        li.append(df)
 
-    return
+    df = pd.concat(li, axis=0, ignore_index=True)
+    df = df[
+        [
+            "Name",
+            "ContactEmail",
+            "CostCenter",
+            "OwnerEmail",
+            "AWS-Backup",
+            "OS",
+            "ProjectNumber",
+            "AvailabilityGroup",
+            "Application",
+            "Purpose",
+            "PatchGroup",
+        ]
+    ]
+    return df

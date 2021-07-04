@@ -26,7 +26,7 @@ CELERY_RESULT_BACKEND = "redis://redis:6379"
 # EXPIRATION_SECONDS = 600
 
 
-redis_url = "redis://:redis:6379/0"
+# redis_url = "redis://:redis:6379/0"
 r = redis.StrictRedis(host="redis", port=6379, db=0)
 # Initialize Celery
 celery = Celery("worker", broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND)

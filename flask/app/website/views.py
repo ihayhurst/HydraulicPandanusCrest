@@ -23,11 +23,14 @@ import os
 import ssl
 
 # Application imports direct or via celery tasks
-from ..HPCapps import uqueue
-from ..HPCapps import inventory_load_host
-from ..HPCapps import patching_load_host
-from ..HPCapps import tasks
-from ..HPCapps import inventory_style
+from ..HPCapps import (
+    tasks,
+    uqueue,
+    inventory_load_host,
+    patching_load_host,
+    inventory_style,
+)
+
 from ..extensions import mail
 
 website = Blueprint(
@@ -39,7 +42,8 @@ website = Blueprint(
 )
 
 flaskVer = flask.__version__
-redis_url = "redis://:redis:6379/0"
+# redis_url = "redis://:redis:6379/0"
+# Create Redis object
 r = redis.StrictRedis(host="redis", port=6379, db=0)
 
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -72,7 +76,6 @@ def cmdb():
     data.fillna("", inplace=True)
     data = inventory_style.applyTableStyle(data)
     html = data.set_table_attributes('class="fixedhead"').render()
-
     templateData = {"content": html}
     return render_template("cmdb.html", **templateData), 201
 
@@ -83,7 +86,6 @@ def aws():
     data.fillna("", inplace=True)
     data = inventory_style.applyTableStyle(data)
     html = data.set_table_attributes('class="fixedhead"').render()
-
     templateData = {"content": html}
     return render_template("aws.html", **templateData), 201
 
@@ -92,7 +94,11 @@ def aws():
 def queue():
     gridjobs = uqueue.getGrid()
     jobhistory = uqueue.getGridHistory()
-    return render_template("queue.html", gridjobs=gridjobs, jobhistory=jobhistory)
+    templateData = {
+        "gridjobs": gridjobs,
+        "jobhistory": jobhistory,
+    }
+    return render_template("queue.html", **templateData)
 
 
 @website.route("/inventory/<hostname>", methods=["GET", "POST"])
@@ -139,7 +145,11 @@ def patching():
     job = tasks.getQueuedPatching.delay()
     now = dt.now()
     timeString = now.strftime("%A, %d %b %Y %H:%M:%S")
-    templateData = {"JOBID": job.id, "title": title, "timeString": timeString}
+    templateData = {
+        "JOBID": job.id,
+        "title": title,
+        "timeString": timeString,
+    }
     return render_template("patching.html", **templateData)
 
 
@@ -147,7 +157,11 @@ def patching():
 def inventory_all():
     title = "GBJH Linux Inventory"
     job = tasks.getQueuedInventory.delay()
-    return render_template("inventory.html", JOBID=job.id, title=title)
+    templateData = {
+        "JOBID": job.id,
+        "title": title,
+    }
+    return render_template("inventory.html", **templateData)
 
 
 @website.route("/progress")

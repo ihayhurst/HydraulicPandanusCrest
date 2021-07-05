@@ -33,10 +33,10 @@ def get_Instances():
     df.drop(["Tags"], axis=1, inplace=True)
     df = pd.concat([df, df_tags], axis=1)
     df.OwnerEmail = (
-        df.OwnerEmail.str.replace(".", " ").str.replace("_", " ").str.title()
+        df.OwnerEmail.str.replace(".", " ", regex=True).str.replace("_", " ", regex=True).str.title()
     )
     df.ContactEmail = (
-        df.ContactEmail.str.replace(".", " ").str.replace("_", " ").str.title()
+        df.ContactEmail.str.replace(".", " ", regex=True).str.replace("_", " ", regex=True).str.title()
     )
     df.OwnerEmail.replace(r"@.*?$", "", regex=True, inplace=True)
     df.ContactEmail.replace(r"@.*?$", "", regex=True, inplace=True)

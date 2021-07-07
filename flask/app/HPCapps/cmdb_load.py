@@ -45,6 +45,7 @@ def normaliseToDataframe(data):
 
 def processDataframe(df):
     df.fillna("", inplace=True)
+    df["OS Version"] = df["OS Version"].astype(str)
     """
     # remove [] and single quotes
     df["IP Address"] = df["IP Address"].astype(str).str[1:-1]

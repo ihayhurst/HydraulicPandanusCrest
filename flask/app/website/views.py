@@ -74,6 +74,7 @@ def index():
 def cmdb():
     data = pd.read_json("http://nginx:/api/cmdb")
     data.fillna("", inplace=True)
+    data["OS Version"] = data["OS Version"].astype(str)
     data = inventory_style.applyTableStyle(data)
     html = data.set_table_attributes('class="fixedhead"').render()
     templateData = {"content": html}

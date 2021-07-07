@@ -27,7 +27,7 @@ def get_Instances():
             .apply(lambda r: r.str[0])
             .Instances.values
         )[0]
-    )[["State.Name", "PrivateIpAddress", "InstanceType", "Tags"]]
+    )[["State.Name", "PrivateIpAddress", "InstanceType", "InstanceId", "Tags"]]
     tags = list(df["Tags"])
     df_tags = untangleTags(tags)
     df.drop(["Tags"], axis=1, inplace=True)
@@ -53,6 +53,7 @@ def get_Instances():
             "Purpose",
             "CostCenter",
             "ProjectNumber",
+            "InstanceId",
             "AWS-Backup",
             "AvailabilityGroup",
             "PatchGroup",

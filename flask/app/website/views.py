@@ -291,8 +291,8 @@ def respond():
 def stateName(s):
     # columns = len(s)
     if "running" in s["State.Name"]:
-        return ["background-color: green;"]
+        return ["background-color: #1B5E20;"]
     elif "stopped" in s["State.Name"]:
-        return ["background-color: red;"]
+        return ["background-color: #B71C1C;"]
     else:
         return [""]

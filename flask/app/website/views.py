@@ -213,10 +213,8 @@ def distropie():
 
 @website.route("/scatter")
 def scatter():
-    b64pierelease = r.get("scatter_patching.png")
-    b64pierelease = b64pierelease.decode("utf-8")
     plot = r.get("plotly.data").decode("utf-8")
-    return render_template("scatterpatch.html", image=b64pierelease, plot=plot)
+    return render_template("scatterpatch.html", plot=plot)
 
 
 @website.route("timeline_upload", methods=["GET", "POST"])

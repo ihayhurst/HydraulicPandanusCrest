@@ -7,7 +7,9 @@ import base64
 import io
 import seaborn as sns
 import plotly
-import plotly.graph_objs as go
+
+# import plotly.graph_objs as go
+import plotly.express as px
 import json
 from boltons.iterutils import remap
 
@@ -59,9 +61,6 @@ def getQueuedPatching(self):
         df_sum = summaryTable(df)
         fig = makePie(df_sum)
         figToRdis(fig, "pie_release.png")
-
-        fig = makeScatter(df)
-        figToRdis(fig, "scatter_patching.png")
 
         plotlyData = makePlotlyScatter(df)
         r.set("plotly.data", plotlyData)
@@ -156,64 +155,27 @@ def makePie(df):
     return fig
 
 
-def makeScatter(df):
-    osrelease = df.release.unique()
-    osrelease = sorted(osrelease)
-    os_dict = dict(zip(osrelease, range(len(osrelease))))
-    label = [*os_dict]
-
-    ncolors = len(label)
-    x = df["days-pending"]
-    y = df["boot-time"]
-    c = df.release.map(os_dict)
-    plt.rcParams["text.color"] = "white"
-
-    fig, ax = plt.subplots(figsize=(12, 8))
-    pic = ax.scatter(x, y, c=c, cmap="tab20", alpha=1, clip_on=False)
-
-    cb = plt.colorbar(pic, label="Distribution", orientation="vertical")
-    cb.set_ticks(np.linspace(0, ncolors, ncolors))
-    cb.set_ticklabels(label)
-
-    ax.axvline(x=60, color="red", linestyle="-", alpha=0.7)
-    ax.axvline(x=50, color="orange", linestyle="--", alpha=0.3)
-    ax.axhline(y=120, color="red", linestyle="-", alpha=0.7)
-    ax.axhline(y=100, color="orange", linestyle="--", alpha=0.3)
-    ax.set_xlabel("Days patches pending")
-    ax.set_ylabel("Days since last booted")
-
-    # ax.set_ylim([0, 180])
-    ax.set_yscale("log")
-    # ax.set_xlim([0, 100])
-    ax.set_xscale("log")
-    return fig
-
-
 def makePlotlyScatter(df):
-    osrelease = df.release.unique()
-    osrelease = sorted(osrelease)
-    os_dict = dict(zip(osrelease, range(len(osrelease))))
-    label = [*os_dict]
+    gf = df.sort_values(
+        by="release",
+        ascending=False,
+    )
+    fig = px.scatter(
+        gf,
+        x="days-pending",
+        y="boot-time",
+        color="release",
+        text="hostname",
+        log_x=True,
+        log_y=True,
+        width=1024,
+        height=768,
+    )
+    fig.update_traces(mode="markers")
+    fig.add_hline(y=120, line_color="red")
+    fig.add_vline(x=60, line_color="red")
 
-    ncolors = len(label)
-    xd = df["days-pending"]
-    yd = df["boot-time"]
-    label = df["hostname"]
-    c = df.release.map(os_dict)
-    data = [
-        go.Scatter(
-            df,
-            x=xd,  # assign x as the dataframe column 'x'
-            y=yd,
-            text=label,
-            color=c,
-            log_x=True,
-            log_y=True,
-            mode="markers+text",
-        )
-    ]
-
-    graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 
 

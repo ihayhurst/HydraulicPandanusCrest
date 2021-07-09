@@ -45,13 +45,13 @@ def normaliseToDataframe(data):
 
 def processDataframe(df):
     df.fillna("", inplace=True)
-    df.columns = df.columns.str.replace(' ', '_')
+    df.columns = df.columns.str.replace(" ", "_")
     df["OS_Version"] = df["OS_Version"].astype(str)
     df.sort_values(
         by=["IP_Address", "OS_Version"],
         ascending=[True, True],
-        inplace=True,)
->>>>>>> origin/main
+        inplace=True,
+    )
     data = df.to_dict(orient="records")
     # Create clean version with empty keys dropped
     data = dropEmptyKeys(data)

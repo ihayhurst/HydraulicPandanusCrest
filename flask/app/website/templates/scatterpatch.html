@@ -2,12 +2,11 @@
 
 <h3> Scatter plot pending patches </h3>
 <br/>
-<img src="data:image/png;base64, {{image}}" alt=" Patching Boot time scatter graph">
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
-<div class="chart" id="bargraph">
+<div class="chart" id="scattergraph">
     <script>
         var graphs = {{ plot | safe }};
-        Plotly.plot('bargraph', graphs, {});
+        Plotly.plot('scattergraph', graphs, {});
     </script>
 </div>{% endblock %}

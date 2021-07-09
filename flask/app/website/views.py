@@ -74,7 +74,7 @@ def index():
 def cmdb():
     data = pd.read_json("http://nginx:/api/cmdb")
     data.fillna("", inplace=True)
-    data["OS Version"] = data["OS Version"].astype(str)
+    data["OS_Version"] = data["OS_Version"].astype(str)
     data = inventory_style.applyTableStyle(data)
     html = data.set_table_attributes('class="fixedhead"').render()
     templateData = {"content": html}
@@ -86,7 +86,7 @@ def aws():
     data = pd.read_json("http://nginx:/api/aws")
     data.fillna("", inplace=True)
     data = inventory_style.applyTableStyle(data)
-    data =  data.apply(stateName, subset=["State.Name"], axis=1)
+    data = data.apply(stateName, subset=["State.Name"], axis=1)
     html = data.set_table_attributes('class="fixedhead"').render()
     templateData = {"content": html}
     return render_template("aws.html", **templateData), 201
@@ -215,7 +215,8 @@ def distropie():
 def scatter():
     b64pierelease = r.get("scatter_patching.png")
     b64pierelease = b64pierelease.decode("utf-8")
-    return render_template("scatterpatch.html", image=b64pierelease)
+    plot = r.get("plotly.data").decode("utf-8")
+    return render_template("scatterpatch.html", image=b64pierelease, plot=plot)
 
 
 @website.route("timeline_upload", methods=["GET", "POST"])

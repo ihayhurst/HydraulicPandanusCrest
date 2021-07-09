@@ -6,6 +6,9 @@ import numpy as np
 import base64
 import io
 import seaborn as sns
+import plotly
+import plotly.graph_objs as go
+import json
 from boltons.iterutils import remap
 
 from celery import Celery
@@ -59,6 +62,10 @@ def getQueuedPatching(self):
 
         fig = makeScatter(df)
         figToRdis(fig, "scatter_patching.png")
+
+        plotlyData = makePlotlyScatter(df)
+        r.set("plotly.data", plotlyData)
+
         logger.info("ending run")
     except SoftTimeLimitExceeded:
         clean_up_in_a_hurry()
@@ -180,6 +187,34 @@ def makeScatter(df):
     # ax.set_xlim([0, 100])
     ax.set_xscale("log")
     return fig
+
+
+def makePlotlyScatter(df):
+    osrelease = df.release.unique()
+    osrelease = sorted(osrelease)
+    os_dict = dict(zip(osrelease, range(len(osrelease))))
+    label = [*os_dict]
+
+    ncolors = len(label)
+    xd = df["days-pending"]
+    yd = df["boot-time"]
+    label = df["hostname"]
+    c = df.release.map(os_dict)
+    data = [
+        go.Scatter(
+            df,
+            x=xd,  # assign x as the dataframe column 'x'
+            y=yd,
+            text=label,
+            color=c,
+            log_x=True,
+            log_y=True,
+            mode="markers+text",
+        )
+    ]
+
+    graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
+    return graphJSON
 
 
 def timelineGraph(df):

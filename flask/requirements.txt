@@ -21,3 +21,4 @@ seaborn==0.11.1
 boltons==21.0.0
 fsspec
 boto3
+plotly

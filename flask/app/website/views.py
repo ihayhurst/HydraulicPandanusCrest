@@ -293,5 +293,7 @@ def stateName(s):
         return ["background-color: #1B5E20;"]
     elif "stopped" in s["State.Name"]:
         return ["background-color: #B71C1C;"]
+    elif "stopping" or "pending" in s["State.Name"]:
+        return ["background-color: #B68519;"]
     else:
         return [""]

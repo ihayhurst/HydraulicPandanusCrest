@@ -44,6 +44,7 @@ def normaliseToDataframe(data):
 
 
 def processDataframe(df):
+    df["Disk_space_(GB)"] = df["Disk_space_(GB)"].fillna(0.0).astype(int)
     df.fillna("", inplace=True)
     df.columns = df.columns.str.replace(" ", "_")
     df["OS_Version"] = df["OS_Version"].astype(str)

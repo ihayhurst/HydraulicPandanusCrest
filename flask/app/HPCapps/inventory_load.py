@@ -44,7 +44,7 @@ def loadDataFiles():
     Pool threads read json into dataframes
     return list of dataframe objects
     """
-    path = r"/data/inventory"
+    path = r"/data/config"
     all_files = glob.glob(path + "/*.json")
     li = []
     pool = gevent.pool.Pool(1000)
@@ -92,7 +92,7 @@ def processDataframe(df):
 
     return df
 
-
+# TODO filtering of returned data
 class InventoryProcess:
     def categoryInclude(df, tags=None):
         if tags is not None:

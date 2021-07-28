@@ -19,7 +19,7 @@ def fileInventoryHost(host):
     Load inventory data for named host from filesystem
     """
     data = None
-    path = r"/data/inventory/"
+    path = r"/data/config/"
     filename = f"{path}{host}.json"
     with open(filename) as json_file:
         try:

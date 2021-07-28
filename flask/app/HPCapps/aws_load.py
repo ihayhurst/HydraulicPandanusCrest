@@ -64,6 +64,8 @@ def get_Instances():
         ascending=[True, True],
         inplace=True,
     )
+    #data = dropEmptyKeys(data)
+    df.fillna("", inplace=True)
     data = df.to_dict(orient="records")
     return data
 

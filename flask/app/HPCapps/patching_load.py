@@ -114,37 +114,33 @@ def processDataframe(df):
     Take dataframe, Munge dataframe.
     Return Munged Dataframe.
     """
+    df.rename(columns={"unixtime": "last-scan"}, inplace=True)
+    df.rename(columns={"first-update-detected-time": "days-pending"}, inplace=True)
     # If there is no date for pending patched set it to the last scan time
-    df["first-update-detected-tiem"] = df["first-update-detected-time"].fillna(
-        df["unixtime"], inplace=True
-    )
+    df["days-pending"] = df["days-pending"].fillna(pd.Timestamp.today())
     # Convert unixtime to datetime.
-    df[["unixtime", "boot-time", "first-update-detected-time"]] = df[
-        ["unixtime", "boot-time", "first-update-detected-time"]
-    ].apply(pd.to_datetime, unit="s")
+    df[["last-scan", "boot-time", "days-pending"]] = df[
+        ["last-scan", "boot-time", "days-pending"]
+    ].apply(pd.to_datetime, unit="s", errors="coerce")
 
     # Drop hostname (FQDN) and use id as Hostname.
     if "hostname" in df.columns:
         df.drop(["hostname"], axis=1, inplace=True)
 
     # Calculate how long since patches have been available
-    df["first-update-detected-time"] = df.apply(
-        lambda row: dt.now() - row["first-update-detected-time"], axis=1
-    )
-    df["first-update-detected-time"] = df["first-update-detected-time"].dt.days
-    df.rename(columns={"first-update-detected-time": "days-pending"}, inplace=True)
+    df["days-pending"] = df.apply(lambda row: dt.now() - row["days-pending"], axis=1)
+    df["days-pending"] = df["days-pending"].dt.days
 
     # Calculate how long since last boot, Reduce resolution down to the day
     df["boot-time"] = df.apply(lambda row: dt.now() - row["boot-time"], axis=1)
     df["boot-time"] = df["boot-time"].dt.days
 
     # Add to critical list if boot time > 180 days
-    filters =[(df["boot-time"] >=180), (df["boot-time"]<180)]
-    values =["True", None]
+    filters = [(df["boot-time"] >= 180), (df["boot-time"] < 180)]
+    values = ["True", None]
     df["critical"] = np.select(filters, values)
 
     # Calculate how long since last scan
-    df.rename(columns={"unixtime": "last-scan"}, inplace=True)
     df["last-scan"] = df.apply(lambda row: dt.now() - row["last-scan"], axis=1)
     df["last-scan"] = df["last-scan"].dt.days
 
@@ -194,7 +190,7 @@ def processDataframe(df):
     ].copy()
     # Sort by days since last patched
     df.sort_values(
-        by=["last-scan","critical",  "days-pending", "boot-time"],
+        by=["last-scan", "critical", "days-pending", "boot-time"],
         ascending=[True, False, False, False],
         inplace=True,
     )

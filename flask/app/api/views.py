@@ -83,6 +83,7 @@ class GetTaskStatus(Resource):
         if task.state != "SUCCESS":
             # return '', 202, {'Location': url_for('api_pages.GetTaskStatus', jobid=jobid)}
             return redirect(url_for("api_pages.taskstatus", jobid=jobid))
+
         return task.result, 201
 
 

@@ -17,6 +17,7 @@ def applyTableStyle(df):
     patchingStyle = (
         df.style.applymap(colorGrade, subset=["days-pending"])
         .applymap(rebootAdvised, subset=["boot-time"])
+        .applymap(colorBoolean, subset=["qualys"])
         .set_precision(0)
         .apply(oldscandate, axis=1)
         .set_table_styles(styles)
@@ -62,6 +63,15 @@ def colorGrade(val):
     return f"color: {color}"
 
 
+def colorBoolean(val):
+    color=''
+    if val == True:
+        color = "#1B5E20;" # Green
+    elif val ==False:
+        color = "#B71C1C;" # Red
+    return f"background-color: {color}"
+
+
 def endOfLife(s):
     columns = len(s)
     if "- EOL" in s["updates"]:
@@ -95,7 +105,7 @@ def make_human(val):
 
 
 def zero_pending(val):
-    if val == 0:
+    if val < 1:
         return "n/a"
     else:
         return val

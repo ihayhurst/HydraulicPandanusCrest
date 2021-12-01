@@ -116,6 +116,7 @@ def processDataframe(df):
     """
     df.rename(columns={"unixtime": "last-scan"}, inplace=True)
     df.rename(columns={"first-update-detected-time": "days-pending"}, inplace=True)
+    df.rename(columns={"qualys agent running": "qualys"}, inplace=True)
     # If there is no date for pending patched set it to the last scan time
     df["days-pending"] = df["days-pending"].fillna(pd.Timestamp.today())
     # Convert unixtime to datetime.
@@ -178,6 +179,7 @@ def processDataframe(df):
     df = df[
         [
             "hostname",
+            "qualys",
             "release",
             "days-pending",
             "boot-time",

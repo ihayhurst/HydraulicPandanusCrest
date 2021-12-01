@@ -60,7 +60,7 @@ def get_Instances():
         ]
     ]
     df.sort_values(
-        by=["Application", "OS"],
+        by=["Application", "ContactEmail"],
         ascending=[True, True],
         inplace=True,
     )

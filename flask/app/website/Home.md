@@ -15,7 +15,7 @@ Dashboard status of on prem vm cluster, and compute grid
 - Listener for webhooks (mail-out or action completed git pipelines)
 - Generate timeline or 'landscape' (vm lifecycle or projects etc.)from uploaded CSV file
   - Uploader [link](./timeline_upload), Display last chart [link](./timeline)
-- *TODO: Add container with lmutilities to show products with floating licenses in use*
+- Convert container to ubi8 enabling  lmutil to show products with floating licenses in use
 - *TODO: Incorporate license log visualisations mail-out monthly report via celerybeat*
 - *TODO: Some sort of traffic light with availability Time since last ping etc.*
 

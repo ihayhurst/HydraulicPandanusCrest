@@ -15,21 +15,20 @@ def applyTableStyle(df):
     ]
 
     patchingStyle = (
-        df.style.applymap(colorGrade, subset=["days-pending"])
-        .applymap(rebootAdvised, subset=["boot-time"])
-        .applymap(colorBoolean, subset=["qualys"])
-        .set_precision(0)
-        .apply(oldscandate, axis=1)
-        .set_table_styles(styles)
+        df.style.set_table_styles(styles)
         .set_properties(subset=["owner"], **{"width": "300px"})
         .set_properties(subset=["release"], **{"width": "130px"})
-        .hide_index()
         .hide_columns(["critical"])
-        .format({"days-pending": zero_pending})
-        .format({"hostname": make_clickable})
-        .format({"last-scan": make_human})
+        .hide_index()
         .apply(endOfLife, axis=1)
-        # .render()
+        .apply(oldscandate, axis=1)
+        .applymap(colorGrade, subset=["days-pending"])
+        .applymap(rebootAdvised, subset=["boot-time"])
+        .applymap(colorBoolean, subset=["qualys"])
+        .format(precision=0)
+        .format({"days-pending": zero_pending})
+        .format({"last-scan": make_human})
+        .format({"hostname": make_clickable})
     )
     return patchingStyle
 
@@ -64,11 +63,11 @@ def colorGrade(val):
 
 
 def colorBoolean(val):
-    color=''
+    color = ""
     if val == True:
-        color = "#1B5E20;" # Green
-    elif val ==False:
-        color = "#B71C1C;" # Red
+        color = "#1B5E20;"  # Green
+    elif val == False:
+        color = "#B71C1C;"  # Red
     return f"background-color: {color}"
 
 

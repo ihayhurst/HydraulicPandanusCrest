@@ -1,6 +1,7 @@
 import json
 import pandas as pd
-from boltons.iterutils import remap
+
+# from boltons.iterutils import remap
 
 
 def getFlatInventory(host):
@@ -59,7 +60,6 @@ def processDataframe(df):
     return data
 
 
-def dropEmptyKeys(dict):
-    drop_falsey = lambda path, key, value: bool(value)
-    clean = remap(dict, visit=drop_falsey)
-    return clean
+def dropEmptyKeys(d: dict):
+    items = ((k, v) for k, v in d.items())
+    return {k: v for k, v in items if v}

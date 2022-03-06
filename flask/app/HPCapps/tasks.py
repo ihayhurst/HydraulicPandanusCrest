@@ -131,7 +131,7 @@ def clean_up_in_a_hurry():
 
 
 def summaryTable(df):
-    df_sum = df[df["last-scan"] <30] # Exclude hosts not scanned for over 30 days
+    df_sum = df[df["last-scan"] < 30]  # Exclude hosts not scanned for over 30 days
     df_sum = df_sum[["release", "hostname"]].groupby("release")["hostname"].count()
     return df_sum
 
@@ -156,7 +156,7 @@ def makePie(df):
 
 
 def makePlotlyScatter(df):
-    gf = df[df["last-scan"] <30] # Exclude hosts not seen for over 30 days
+    gf = df[df["last-scan"] < 30]  # Exclude hosts not seen for over 30 days
     gf = gf.sort_values(
         by="release",
         ascending=False,
